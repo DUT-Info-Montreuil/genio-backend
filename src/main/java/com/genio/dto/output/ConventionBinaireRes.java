@@ -1,6 +1,5 @@
 package com.genio.dto.output;
 
-
 public class ConventionBinaireRes {
     private byte[] fichierBinaire;
     private String messageErreur;
@@ -35,6 +34,4 @@ public class ConventionBinaireRes {
     public void setSuccess(boolean success) {
         this.success = success;
     }
-
-
 }

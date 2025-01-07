@@ -1,12 +1,9 @@
 package com.genio.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
-public class Enseignant {
+public class MaitreDeStage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

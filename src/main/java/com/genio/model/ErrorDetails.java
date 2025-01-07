@@ -12,6 +12,7 @@ public class ErrorDetails {
     private String messageErreur;
 
     @Lob
+    @Column(name = "champsManquants", nullable = false)
     private String champsManquants;
 
     @ManyToOne
@@ -29,5 +30,4 @@ public class ErrorDetails {
     public void setHistorisation(Historisation historisation) {
         this.historisation = historisation;
     }
-
 }

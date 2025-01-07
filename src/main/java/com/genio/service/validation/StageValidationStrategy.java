@@ -30,6 +30,9 @@ public class StageValidationStrategy implements ValidationStrategy {
             if (input.getStage().getRemunerationHoraire() == null || !input.getStage().getRemunerationHoraire().matches("^\\d+(\\.\\d{1,2})?€$")) {
                 erreurs.put("stage.remunerationHoraire", ErrorMessages.INVALID_STAGE_HOURLY_PAY);
             }
+            if (input.getStage().getAnneeStage() == null ||!input.getStage().getAnneeStage().matches("^\\d{4}$")) {
+                erreurs.put("stage.anneeStage", ErrorMessages.INVALID_CONVENTION_YEAR);
+            }
         }
 
         return erreurs;

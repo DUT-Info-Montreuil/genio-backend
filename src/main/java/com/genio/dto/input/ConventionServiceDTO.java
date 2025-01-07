@@ -5,95 +5,69 @@ import jakarta.validation.constraints.NotNull;
 
 public class ConventionServiceDTO {
 
-        @NotNull
-        private EtudiantDTO etudiant;
+    @NotNull
+    private EtudiantDTO etudiant;
 
-        @NotNull
-        private TuteurDTO tuteur;
+    @NotNull
+    private MaitreDeStageDTO maitreDeStage;
 
-        @NotNull
-        private OrganismeDTO organisme;
+    @NotNull
+    private OrganismeDTO organisme;
 
-        @NotNull
-        private StageDTO stage;
+    @NotNull
+    private StageDTO stage;
 
-        @NotNull
-        private EnseignantDTO enseignant;
+    @NotNull
+    private TuteurDTO tuteur;
 
-        @NotNull
-        private ConventionDTO convention;
+    @NotNull
+    private Long modeleId;
 
-        @NotNull
-        private String annee;
+    public EtudiantDTO getEtudiant() {
+        return etudiant;
+    }
 
-        @NotNull
-        private Long modeleId;
+    public void setEtudiant(EtudiantDTO etudiant) {
+        this.etudiant = etudiant;
+    }
 
-        private String sujetDuStage;
+    public MaitreDeStageDTO getMaitreDeStage() {
+        return maitreDeStage;
+    }
 
+    public void setMaitreDeStage(MaitreDeStageDTO maitreDeStage) {
+        this.maitreDeStage = maitreDeStage;
+    }
 
-        public EtudiantDTO getEtudiant() {
-            return etudiant;
-        }
+    public OrganismeDTO getOrganisme() {
+        return organisme;
+    }
 
-        public void setEtudiant(EtudiantDTO etudiant) {
-            this.etudiant = etudiant;
-        }
+    public void setOrganisme(OrganismeDTO organisme) {
+        this.organisme = organisme;
+    }
 
-        public TuteurDTO getTuteur() {
-            return tuteur;
-        }
+    public StageDTO getStage() {
+        return stage;
+    }
 
-        public void setTuteur(TuteurDTO tuteur) {
-            this.tuteur = tuteur;
-        }
+    public void setStage(StageDTO stage) {
+        this.stage = stage;
+    }
 
-        public OrganismeDTO getOrganisme() {
-            return organisme;
-        }
+    public TuteurDTO getTuteur() {
+        return tuteur;
+    }
 
-        public void setOrganisme(OrganismeDTO organisme) {
-            this.organisme = organisme;
-        }
+    public void setTuteur(TuteurDTO tuteur) {
+        this.tuteur = tuteur;
+    }
 
-        public StageDTO getStage() {
-            return stage;
-        }
+    public Long getModeleId() {
+        return modeleId;
+    }
 
-        public void setStage(StageDTO stage) {
-            this.stage = stage;
-        }
-
-        public EnseignantDTO getEnseignant() {
-            return enseignant;
-        }
-
-        public void setEnseignant(EnseignantDTO enseignant) {
-            this.enseignant = enseignant;
-        }
-
-        public ConventionDTO getConvention() {
-            return convention;
-        }
-
-        public void setConvention(ConventionDTO convention) {
-            this.convention = convention;
-        }
-
-        public String getAnnee() {
-            return annee;
-        }
-
-        public void setAnnee(String annee) {
-            this.annee = annee;
-        }
-
-        public Long getModeleId() {
-            return modeleId;
-        }
-
-        public void setModeleId(Long modeleId) {
-            this.modeleId = modeleId;
-        }
+    public void setModeleId(Long modeleId) {
+        this.modeleId = modeleId;
+    }
 }
-

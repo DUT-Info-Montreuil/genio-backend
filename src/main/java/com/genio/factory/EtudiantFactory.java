@@ -14,6 +14,7 @@ public class EtudiantFactory {
         etudiant.setNom(etudiantDTO.getNom());
         etudiant.setPrenom(etudiantDTO.getPrenom());
         etudiant.setEmail(etudiantDTO.getEmail());
+
         return etudiant;
     }
 }

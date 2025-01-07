@@ -21,7 +21,6 @@ public class DocxGenerator {
         logger.info("Début de la génération du fichier DOCX...");
         logger.info("Chemin du modèle : {}", templatePath);
         logger.info("Chemin de sortie : {}", outputPath);
-        logger.debug("Placeholders fournis : {}", replacements);
 
         try (InputStream fis = new FileInputStream(templatePath);
              XWPFDocument document = new XWPFDocument(fis)) {
