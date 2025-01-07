@@ -13,22 +13,16 @@ public class TuteurValidationStrategy implements ValidationStrategy {
         Map<String, String> erreurs = new HashMap<>();
 
         if (input.getTuteur() == null) {
-            erreurs.put("tuteur", ErrorMessages.MISSING_TUTOR_NAME);
+            erreurs.put("tuteur", ErrorMessages.MISSING_TEACHER_NAME);
         } else {
             if (input.getTuteur().getNom() == null || input.getTuteur().getNom().isEmpty() || !input.getTuteur().getNom().matches("^[a-zA-Z\\s]+$")) {
-                erreurs.put("tuteur.nom", ErrorMessages.INVALID_TUTOR_NAME);
+                erreurs.put("tuteur.nom", ErrorMessages.INVALID_TEACHER_NAME);
             }
             if (input.getTuteur().getPrenom() == null || input.getTuteur().getPrenom().isEmpty() || !input.getTuteur().getPrenom().matches("^[a-zA-Z\\s]+$")) {
-                erreurs.put("tuteur.prenom", ErrorMessages.INVALID_TUTOR_FIRST_NAME);
+                erreurs.put("tuteur.prenom", ErrorMessages.INVALID_TEACHER_FIRST_NAME);
             }
             if (input.getTuteur().getEmail() == null || !input.getTuteur().getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                erreurs.put("tuteur.email", ErrorMessages.INVALID_TUTOR_EMAIL);
-            }
-            if (input.getTuteur().getTelephone() == null || !input.getTuteur().getTelephone().matches("^\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{2}$")) {
-                erreurs.put("tuteur.telephone", ErrorMessages.INVALID_TUTOR_PHONE);
-            }
-            if (input.getTuteur().getFonction() == null || input.getTuteur().getFonction().isEmpty()) {
-                erreurs.put("tuteur.fonction", ErrorMessages.MISSING_TUTOR_FUNCTION);
+                erreurs.put("tuteur.email", ErrorMessages.INVALID_TEACHER_EMAIL);
             }
         }
 

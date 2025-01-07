@@ -9,7 +9,7 @@ public class ConventionWsDTO {
     private EtudiantDTO etudiant;
 
     @NotNull
-    private TuteurDTO tuteur;
+    private MaitreDeStageDTO maitreDeStage;
 
     @NotNull
     private OrganismeDTO organisme;
@@ -18,25 +18,17 @@ public class ConventionWsDTO {
     private StageDTO stage;
 
     @NotNull
-    private EnseignantDTO enseignant;
-
-    @NotNull
-    private ConventionDTO convention;
-
-    @NotNull
-    private String annee;
+    private TuteurDTO tuteur;
 
     @NotNull
     private Long modeleId;
 
-    public ConventionWsDTO(EtudiantDTO etudiant, TuteurDTO tuteur, OrganismeDTO organisme, StageDTO stage, EnseignantDTO enseignant, ConventionDTO convention, String annee, Long modeleId) {
+    public ConventionWsDTO(EtudiantDTO etudiant, MaitreDeStageDTO maitreDeStage, OrganismeDTO organisme, StageDTO stage, TuteurDTO tuteur, Long modeleId) {
         this.etudiant = etudiant;
-        this.tuteur = tuteur;
+        this.maitreDeStage = maitreDeStage;
         this.organisme = organisme;
         this.stage = stage;
-        this.enseignant = enseignant;
-        this.convention = convention;
-        this.annee = annee;
+        this.tuteur = tuteur;
         this.modeleId = modeleId;
     }
 
@@ -44,8 +36,8 @@ public class ConventionWsDTO {
         return etudiant;
     }
 
-    public TuteurDTO getTuteur() {
-        return tuteur;
+    public MaitreDeStageDTO getMaitreDeStage() {
+        return maitreDeStage;
     }
 
     public OrganismeDTO getOrganisme() {
@@ -56,16 +48,8 @@ public class ConventionWsDTO {
         return stage;
     }
 
-    public EnseignantDTO getEnseignant() {
-        return enseignant;
-    }
-
-    public ConventionDTO getConvention() {
-        return convention;
-    }
-
-    public String getAnnee() {
-        return annee;
+    public TuteurDTO getTuteur() {
+        return tuteur;
     }
 
     public Long getModeleId() {

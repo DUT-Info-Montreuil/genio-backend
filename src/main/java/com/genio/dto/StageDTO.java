@@ -29,7 +29,11 @@ public class StageDTO {
     @NotBlank(message = "L'indication du type de stage professionnel est obligatoire.")
     private String SaeStageProfessionnel;
 
-    public StageDTO(String sujetDuStage, String dateDebutStage, String dateFinStage, String duree, Integer joursTot, Integer heuresTot, String remunerationHoraire, String saeStageProfessionnel) {
+    @NotBlank(message = "L'année de la convention est obligatoire.")
+    @Pattern(regexp = "^\\d{4}$", message = "L'année doit être au format YYYY.")
+    private String anneeStage;
+
+    public StageDTO(String anneeStage, String sujetDuStage, String dateDebutStage, String dateFinStage, String duree, Integer joursTot, Integer heuresTot, String remunerationHoraire, String saeStageProfessionnel) {
         this.sujetDuStage = sujetDuStage;
         this.dateDebutStage = dateDebutStage;
         this.dateFinStage = dateFinStage;
@@ -38,6 +42,15 @@ public class StageDTO {
         this.heuresTot = heuresTot;
         this.remunerationHoraire = remunerationHoraire;
         SaeStageProfessionnel = saeStageProfessionnel;
+        this.anneeStage = anneeStage;
+    }
+
+    public String getAnneeStage() {
+        return anneeStage;
+    }
+
+    public void setAnneeStage(String anneeStage) {
+        this.anneeStage = anneeStage;
     }
 
     public String getSaeStageProfessionnel() {

@@ -1,4 +1,5 @@
 package com.genio.dto;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -29,7 +30,10 @@ public class EtudiantDTO {
     @Email(message = "L'email de l'étudiant doit être valide.")
     private String email;
 
-    public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email) {
+    @NotBlank(message = "Le CPAM de l'étudiant est obligatoire.")
+    private String cpam;
+
+    public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email, String cpam) {
         this.nom = nom;
         this.prenom = prenom;
         this.sexe = sexe;
@@ -37,6 +41,39 @@ public class EtudiantDTO {
         this.adresse = adresse;
         this.telephone = telephone;
         this.email = email;
+        this.cpam = cpam;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCpam() {
+        return cpam;
+    }
+
+    public void setCpam(String cpam) {
+        this.cpam = cpam;
     }
 
     public String getNom() {
@@ -70,5 +107,4 @@ public class EtudiantDTO {
     public String getEmail() {
         return email;
     }
-
 }

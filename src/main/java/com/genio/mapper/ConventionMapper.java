@@ -1,6 +1,5 @@
 package com.genio.mapper;
 
-
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.input.ConventionWsDTO;
 
@@ -13,12 +12,10 @@ public class ConventionMapper {
 
         ConventionServiceDTO serviceDTO = new ConventionServiceDTO();
         serviceDTO.setEtudiant(wsDTO.getEtudiant());
-        serviceDTO.setTuteur(wsDTO.getTuteur());
+        serviceDTO.setMaitreDeStage(wsDTO.getMaitreDeStage());
         serviceDTO.setOrganisme(wsDTO.getOrganisme());
         serviceDTO.setStage(wsDTO.getStage());
-        serviceDTO.setEnseignant(wsDTO.getEnseignant());
-        serviceDTO.setConvention(wsDTO.getConvention());
-        serviceDTO.setAnnee(wsDTO.getAnnee());
+        serviceDTO.setTuteur(wsDTO.getTuteur());
         serviceDTO.setModeleId(wsDTO.getModeleId());
 
         return serviceDTO;

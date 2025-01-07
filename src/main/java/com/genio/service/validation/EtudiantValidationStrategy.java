@@ -36,6 +36,9 @@ public class EtudiantValidationStrategy implements ValidationStrategy {
             if (input.getEtudiant().getDateNaissance() == null || !input.getEtudiant().getDateNaissance().matches("^\\d{4}-\\d{2}-\\d{2}$")) {
                 erreurs.put("etudiant.dateNaissance", ErrorMessages.INVALID_STUDENT_DATE_OF_BIRTH);
             }
+            if (input.getEtudiant().getCpam() == null || input.getEtudiant().getCpam().isEmpty()) {
+                erreurs.put("etudiant.cpam", ErrorMessages.MISSING_CONVENTION_CPAM);
+            }
         }
 
         return erreurs;
