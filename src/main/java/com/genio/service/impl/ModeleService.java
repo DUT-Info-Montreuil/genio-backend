@@ -24,10 +24,9 @@ public class ModeleService {
         this.dataSource = dataSource;
     }
 
-    // Méthode pour insérer des modèles dans la base de données à partir d'un répertoire
     public void insertModeleFromDirectory() throws SQLException, IOException {
         File dir = new File(directoryPath);
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));  // Filtrer les fichiers .docx
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));
 
         if (files != null) {
             for (File file : files) {
@@ -36,7 +35,6 @@ public class ModeleService {
         }
     }
 
-    // Méthode pour insérer un modèle spécifique
     private void insertModele(File templateFile) throws SQLException, IOException {
         byte[] fileBytes = Files.readAllBytes(templateFile.toPath());
 
@@ -46,9 +44,9 @@ public class ModeleService {
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, modelName);  // Nom du modèle
-            preparedStatement.setString(2, modelYear);  // Année extraite du nom du modèle
-            preparedStatement.setBytes(3, fileBytes);  // Fichier binaire du modèle
+            preparedStatement.setString(1, modelName);
+            preparedStatement.setString(2, modelYear);
+            preparedStatement.setBytes(3, fileBytes);
 
             preparedStatement.executeUpdate();
         }

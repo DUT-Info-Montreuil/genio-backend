@@ -25,12 +25,10 @@ public class DocxGenerator {
         try (InputStream fis = new FileInputStream(templatePath);
              XWPFDocument document = new XWPFDocument(fis)) {
 
-            // Remplacer les placeholders dans les paragraphes
             for (XWPFParagraph paragraph : document.getParagraphs()) {
                 replacePlaceholdersInParagraph(paragraph, replacements);
             }
 
-            // Remplacer les placeholders dans les tableaux
             for (XWPFTable table : document.getTables()) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
@@ -41,7 +39,6 @@ public class DocxGenerator {
                 }
             }
 
-            // Sauvegarder le fichier généré
             try (FileOutputStream fos = new FileOutputStream(outputPath)) {
                 document.write(fos);
             }
@@ -58,28 +55,24 @@ public class DocxGenerator {
     private static void replacePlaceholdersInParagraph(XWPFParagraph paragraph, Map<String, String> replacements) {
         StringBuilder paragraphText = new StringBuilder();
 
-        // Récupérer tout le texte dans les runs du paragraphe
         for (XWPFRun run : paragraph.getRuns()) {
             String text = run.getText(0);
             if (text != null) {
                 paragraphText.append(text);
             }
-            run.setText("", 0);  // Effacer le texte du run
+            run.setText("", 0);
         }
 
-        // Remplacer les placeholders
         String updatedText = paragraphText.toString();
         for (Map.Entry<String, String> entry : replacements.entrySet()) {
             updatedText = updatedText.replace("${" + entry.getKey() + "}", entry.getValue());
         }
 
-        // Vérifier si des placeholders non remplacés subsistent
         if (updatedText.contains("${")) {
             logger.warn("Placeholders non remplacés détectés : {}", updatedText);
             throw new RuntimeException("Certains placeholders n'ont pas été remplacés : " + updatedText);
         }
 
-        // Réécrire le texte mis à jour dans le paragraphe
         if (!paragraph.getRuns().isEmpty()) {
             paragraph.getRuns().get(0).setText(updatedText, 0);
         } else {

@@ -101,7 +101,6 @@ class GenioServiceImplTest {
 
     @Test
     void generateConvention_missingData_shouldReturnValidationError() {
-        // Arrange
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(1L);
 

@@ -61,12 +61,10 @@ public class GenioServiceImpl implements GenioService {
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
         try {
-            // Vérification de l'existence du modèle
             logger.debug("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
 
-            // Validation des données
             logger.debug("Validation des données d'entrée...");
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
@@ -74,32 +72,26 @@ public class GenioServiceImpl implements GenioService {
                 String erreursLisibles = erreurs.entrySet().stream()
                         .map(entry -> "Le champ '" + entry.getKey() + "' : " + entry.getValue())
                         .collect(Collectors.joining(", "));
-                // Ne pas créer la convention si des erreurs sont présentes
                 sauvegarderHistorisation(input, null, null, "ECHEC", erreurs);
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
-
-            // Sauvegarde des entités
             logger.debug("Sauvegarde des entités dans la base de données...");
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
 
-            String anneeStage = input.getStage().getAnneeStage(); // Récupère l'année du stage
+            String anneeStage = input.getStage().getAnneeStage();
 
-            // Création de la convention seulement si la validation est réussie
             Convention convention = new Convention();
             convention.setEtudiant(etudiant);
             convention.setMaitreDeStage(maitreDeStage);
             convention.setModele(modele);
             conventionRepository.save(convention);
 
-            // Génération du fichier DOCX
             logger.info("Génération du fichier binaire au format : {}", formatFichierOutput);
             byte[] fichierBinaire = genererFichierDocx(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
-            // Historisation du succès
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
             sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
@@ -121,7 +113,6 @@ public class GenioServiceImpl implements GenioService {
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
         logger.debug("Début de la validation des données...");
 
-        // Création du contexte et ajout des stratégies
         ValidationContext context = new ValidationContext();
         context.addStrategy(new EtudiantValidationStrategy());
         context.addStrategy(new MaitreDeStageValidationStrategy());
@@ -129,30 +120,26 @@ public class GenioServiceImpl implements GenioService {
         context.addStrategy(new OrganismeValidationStrategy());
         context.addStrategy(new StageValidationStrategy());
 
-        // Exécution des validations via les stratégies
         Map<String, String> erreurs = context.executeValidations(input);
 
-        // Validation spécifique au modèle
         if (input.getModeleId() == null) {
             erreurs.put("modeleId", ErrorMessages.MISSING_MODEL_ID);
         }
 
-        // Validation pour 'maitreDeStage' si absent
         if (input.getMaitreDeStage() == null) {
             erreurs.put("maitreDeStage", "Le champ 'maitreDeStage' est obligatoire.");
         }
 
-        // Validation pour 'organisme' si absent
         if (input.getOrganisme() == null || input.getOrganisme().getNom() == null) {
             erreurs.put("organisme", "Le nom de l'organisme est manquant.");
         }
 
-        // Validation pour 'stage' si le sujet du stage est manquant
+
         if (input.getStage() == null || input.getStage().getSujetDuStage() == null) {
             erreurs.put("stage", "Le sujet du stage est manquant.");
         }
 
-        // Validation pour 'tuteur' si le nom de l'enseignant est manquant
+
         if (input.getTuteur() == null || input.getTuteur().getNom() == null) {
             erreurs.put("tuteur", "Le nom de l'enseignant est manquant.");
         }
@@ -174,11 +161,9 @@ public class GenioServiceImpl implements GenioService {
     public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
         logger.info("Début de la sauvegarde de l'historisation avec le statut : {}", status);
         try {
-            // Sérialisation du flux JSON en binaire
             ObjectMapper objectMapper = new ObjectMapper();
             byte[] fluxJsonBinaire = objectMapper.writeValueAsBytes(input);
 
-            // Détails
             String details;
             if (erreurs != null && !erreurs.isEmpty()) {
                 details = "Des erreurs de validation ont été détectées.";
@@ -186,7 +171,6 @@ public class GenioServiceImpl implements GenioService {
                 details = "Aucune erreur détectée.";
             }
 
-            // Création de l'entité Historisation
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
             historisation.setStatus(status);
@@ -199,11 +183,9 @@ public class GenioServiceImpl implements GenioService {
                 historisation.setDocxBinaire(fichierBinaire);
             }
 
-            // Sauvegarde de l'historisation
             historisationRepository.save(historisation);
             logger.info("Historisation sauvegardée avec succès.");
 
-            // Enregistrement des erreurs spécifiques s'il y en a
             if (erreurs != null && !erreurs.isEmpty()) {
                 ErrorDetails errorDetails = new ErrorDetails();
                 errorDetails.setMessageErreur(erreurs.toString());
@@ -212,7 +194,6 @@ public class GenioServiceImpl implements GenioService {
                     champsManquants.append(key).append(" ; ");
                 });
 
-                // Enregistrement des champs manquants
                 errorDetails.setChampsManquants(champsManquants.toString());
                 errorDetails.setHistorisation(historisation);
                 errorDetailsRepository.save(errorDetails);
@@ -252,7 +233,7 @@ public class GenioServiceImpl implements GenioService {
         logger.info("Début de la sauvegarde de la convention.");
         Convention convention = ConventionFactory.createConvention(input, etudiant, maitreDeStage, modele);
         Convention savedConvention = conventionRepository.save(convention);
-        logger.info("Convention sauvegardée avec succès pour l'année : {}", input.getStage().getAnneeStage()); // Utilisation de l'année du stage
+        logger.info("Convention sauvegardée avec succès pour l'année : {}", input.getStage().getAnneeStage());
         return savedConvention;
     }
 
@@ -282,7 +263,6 @@ public class GenioServiceImpl implements GenioService {
         logger.debug("Début de la préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = new HashMap<>();
 
-        // Remplacements pour l'étudiant
         replacements.put("PRENOM_ETUDIANT", safeString(etudiant.getPrenom()));
         replacements.put("NOM_ETUDIANT1", safeString(etudiant.getNom()));
         replacements.put("ADR_ETUDIANT", safeString(input.getEtudiant().getAdresse()));
@@ -292,14 +272,12 @@ public class GenioServiceImpl implements GenioService {
         replacements.put("DATE_NAIS_ETUDIANT", safeString(input.getEtudiant().getDateNaissance()));
         replacements.put("NOM_CPAM", safeString(input.getEtudiant().getCpam()));
 
-        // Remplacements pour le MaitreDeStage
         replacements.put("PRENOM_ENCADRANT", safeString(maitreDeStage.getPrenom()));
         replacements.put("NOM_ENCADRANT", safeString(maitreDeStage.getNom()));
         replacements.put("FONCTION_ENCADRANT", safeString(input.getMaitreDeStage().getFonction()));
         replacements.put("TEL_ENCADRANT", safeString(input.getMaitreDeStage().getTelephone()));
         replacements.put("MEL_ENCADRANT", safeString(maitreDeStage.getEmail()));
 
-        // Remplacements pour l'organisme
         replacements.put("NOM_ORGANISME", safeString(input.getOrganisme().getNom()));
         replacements.put("ADR_ORGANISME", safeString(input.getOrganisme().getAdresse()));
         replacements.put("LIEU_DU_STAGE", safeString(input.getOrganisme().getLieuDuStage()));
@@ -309,7 +287,6 @@ public class GenioServiceImpl implements GenioService {
         replacements.put("QUAL_REPRESENTANT_ORG", safeString(input.getOrganisme().getQualiteRepresentant()));
         replacements.put("NOM_DU_SERVICE", safeString(input.getOrganisme().getNomDuService()));
 
-        // Remplacements pour le stage
         replacements.put("SUJET_DU_STAGE", safeString(input.getStage().getSujetDuStage()));
         replacements.put("DATE_DÉBUT_STAGE", safeString(input.getStage().getDateDebutStage()));
         replacements.put("DATE_FIN_STAGE", safeString(input.getStage().getDateFinStage()));
@@ -320,7 +297,6 @@ public class GenioServiceImpl implements GenioService {
         replacements.put("Stage_Professionnel", safeString(input.getStage().getSaeStageProfessionnel()));
         replacements.put("annee", safeString(input.getStage().getAnneeStage()));
 
-        // Remplacements pour l'tuteur
         if (tuteur != null) {
             replacements.put("TUT_IUT", safeString(tuteur.getPrenom() + " " + tuteur.getNom()));
             replacements.put("TUT_IUT_MEL", safeString(tuteur.getEmail()));
@@ -332,7 +308,6 @@ public class GenioServiceImpl implements GenioService {
         return replacements;
     }
 
-    // Méthode pour retourner une chaîne vide si la valeur est null
     private String safeString(String value) {
         return value != null ? value : "";
     }
