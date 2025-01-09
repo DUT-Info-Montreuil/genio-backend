@@ -1,0 +1,9 @@
+2025-01-09 14:30:10.755 [GENIO] ERROR 10001 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:32:41.556 [GENIO] ERROR 10091 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:40:50.045 [GENIO] ERROR 10331 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:43:08.480 [GENIO] ERROR 10413 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:45:32.072 [GENIO] ERROR 10483 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:54:00.349 [GENIO] ERROR 10717 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:54:34.060 [GENIO] ERROR 10729 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:58:00.838 [GENIO] ERROR 10836 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:58:23.669 [GENIO] ERROR 10850 --- [main] c.g.GenioServiceApplication              : This is an ERROR message

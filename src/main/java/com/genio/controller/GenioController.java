@@ -28,12 +28,6 @@ public class GenioController {
     @Autowired
     private GenioService genioService;
 
-    /**
-     * Endpoint to generate a convention.
-     * @param input The data for the convention.
-     * @param formatFichierOutput The desired file format for the output.
-     * @return A binary response containing the generated convention.
-     */
     @PostMapping("/generer")
     @Operation(summary = "Generate a convention", description = "This endpoint generates a convention based on the input data.")
     public ResponseEntity<ConventionBinaireRes> genererConvention(
@@ -43,25 +37,20 @@ public class GenioController {
         logger.info("Requête reçue pour générer une convention avec format : {}", formatFichierOutput);
 
         try {
-            // Mapping the input DTO to the service DTO
             ConventionServiceDTO serviceInput = ConventionMapper.toServiceDTO(input);
-
-            // Calling the service to generate the convention
             ConventionBinaireRes result = genioService.generateConvention(serviceInput, formatFichierOutput);
 
-            // Checking if the operation was successful
             if (result.isSuccess()) {
                 logger.info("Convention générée avec succès.");
-                return ResponseEntity.ok(result);  // Successful response
+                return ResponseEntity.ok(result);
             } else {
                 logger.warn("Erreur lors de la génération de la convention : {}", result.getMessageErreur());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);  // Error response
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
             }
         } catch (Exception e) {
-            // Handle unexpected errors
             logger.error("Erreur inattendue : {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ConventionBinaireRes(false, null, "Erreur inattendue : " + e.getMessage()));  // Internal server error response
+                    .body(new ConventionBinaireRes(false, null, "Erreur inattendue : " + e.getMessage()));
         }
     }
 }

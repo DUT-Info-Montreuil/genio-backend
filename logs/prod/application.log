@@ -1,0 +1,28 @@
+2025-01-09 15:36:44.125 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 999
+2025-01-09 15:36:44.131 [PROD] [GENIO] ERROR 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Modèle introuvable : Erreur : modèle introuvable avec l'ID 999
+2025-01-09 15:36:44.131 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : ECHEC
+2025-01-09 15:36:44.191 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-09 15:36:44.192 [PROD] [GENIO]  WARN 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Des détails d'erreurs ont été enregistrés.
+2025-01-09 15:36:44.208 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 1
+2025-01-09 15:36:44.211 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'étudiant : John
+2025-01-09 15:36:44.211 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Étudiant sauvegardé avec succès : John
+2025-01-09 15:36:44.211 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde du maitreDeStage : MaitreDeStageNom
+2025-01-09 15:36:44.212 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : MaitreDeStage sauvegardé avec succès : MaitreDeStageNom
+2025-01-09 15:36:44.212 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de tuteur : TuteurNom
+2025-01-09 15:36:44.212 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Tuteur sauvegardé avec succès : TuteurNom
+2025-01-09 15:36:44.213 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Génération du fichier binaire au format : DOCX
+2025-01-09 15:36:44.213 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération du fichier DOCX pour la convention.
+2025-01-09 15:36:44.215 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.DocxGenerator                    : Début de la génération du fichier DOCX...
+2025-01-09 15:36:44.215 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.DocxGenerator                    : Chemin du modèle : /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes/templates/modeleConvention.docx
+2025-01-09 15:36:44.215 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.DocxGenerator                    : Chemin de sortie : output/conventionGenerée.docx
+2025-01-09 15:36:44.809 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.DocxGenerator                    : Fichier DOCX généré avec succès : output/conventionGenerée.docx
+2025-01-09 15:36:44.809 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Fichier DOCX généré avec succès : output/conventionGenerée.docx
+2025-01-09 15:36:44.811 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Enregistrement de l'historisation pour la convention générée avec succès.
+2025-01-09 15:36:44.812 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : SUCCES
+2025-01-09 15:36:44.819 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-09 15:36:44.819 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : La convention a été générée avec succès.
+2025-01-09 15:36:44.824 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 1
+2025-01-09 15:36:44.825 [PROD] [GENIO]  WARN 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Des erreurs de validation ont été détectées : {organisme=Le nom de l'organisme est manquant., maitreDeStage=Le champ 'maitreDeStage' est obligatoire., stage=Le sujet du stage est manquant., tuteur=Le nom de l'enseignant est manquant.}
+2025-01-09 15:36:44.825 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : ECHEC
+2025-01-09 15:36:44.827 [PROD] [GENIO]  INFO 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-09 15:36:44.827 [PROD] [GENIO]  WARN 11685 --- [main] c.g.s.i.GenioServiceImpl                 : Des détails d'erreurs ont été enregistrés.

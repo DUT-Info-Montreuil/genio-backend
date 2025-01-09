@@ -1,0 +1,450 @@
+2025-01-09 14:45:07.164 [GENIO]  INFO 10413 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2022025-01-09 14:30:08.246 [GENIO]  INFO 10001 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+   2025-01-09 14:30:08.430 [GENIO]  INFO 10001 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+   2025-01-09 14:30:08.452 [GENIO]  INFO 10001 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10001 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+   2025-01-09 14:30:08.453 [GENIO]  INFO 10001 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+   2025-01-09 14:30:08.774 [GENIO]  INFO 10001 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2025-01-09 14:30:08.811 [GENIO]  INFO 10001 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+   2025-01-09 14:30:09.065 [GENIO]  INFO 10001 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+   2025-01-09 14:30:09.072 [GENIO]  INFO 10001 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:30:09.074 [GENIO]  INFO 10001 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+   2025-01-09 14:30:09.074 [GENIO]  INFO 10001 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+   2025-01-09 14:30:09.103 [GENIO]  INFO 10001 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+   2025-01-09 14:30:09.103 [GENIO]  INFO 10001 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 632 ms
+   2025-01-09 14:30:09.183 [GENIO]  INFO 10001 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+   2025-01-09 14:30:09.214 [GENIO]  INFO 10001 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+   2025-01-09 14:30:09.230 [GENIO]  INFO 10001 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+   2025-01-09 14:30:09.375 [GENIO]  INFO 10001 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+   2025-01-09 14:30:09.393 [GENIO]  INFO 10001 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+   2025-01-09 14:30:09.557 [GENIO]  INFO 10001 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3a751535
+   2025-01-09 14:30:09.557 [GENIO]  INFO 10001 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+   2025-01-09 14:30:09.612 [GENIO]  INFO 10001 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+   	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+   	Database driver: undefined/unknown
+   	Database version: 9.0.1
+   	Autocommit mode: undefined/unknown
+   	Isolation level: undefined/unknown
+   	Minimum pool size: undefined/unknown
+   	Maximum pool size: undefined/unknown
+   2025-01-09 14:30:10.123 [GENIO]  INFO 10001 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+   2025-01-09 14:30:10.179 [GENIO]  INFO 10001 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:30:10.394 [GENIO]  WARN 10001 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+   2025-01-09 14:30:10.722 [GENIO]  INFO 10001 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:30:10.730 [GENIO]  INFO 10001 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+   2025-01-09 14:30:10.737 [GENIO]  INFO 10001 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.447 seconds (process running for 3.021)
+   2025-01-09 14:30:10.754 [GENIO]  INFO 10001 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+   2025-01-09 14:30:10.755 [GENIO]  WARN 10001 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+   2025-01-09 14:30:10.755 [GENIO] ERROR 10001 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+   2025-01-09 14:32:37.562 [GENIO]  INFO 10001 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+   2025-01-09 14:32:37.568 [GENIO]  INFO 10001 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+   2025-01-09 14:32:37.571 [GENIO]  INFO 10001 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:32:37.573 [GENIO]  INFO 10001 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+   2025-01-09 14:32:37.577 [GENIO]  INFO 10001 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+   2025-01-09 14:32:38.905 [GENIO]  INFO 10091 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+   2025-01-09 14:32:39.100 [GENIO]  INFO 10091 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+   2025-01-09 14:32:39.130 [GENIO]  INFO 10091 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10091 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+   2025-01-09 14:32:39.132 [GENIO]  INFO 10091 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+   2025-01-09 14:32:39.521 [GENIO]  INFO 10091 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2025-01-09 14:32:39.558 [GENIO]  INFO 10091 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 7 JPA repository interfaces.
+   2025-01-09 14:32:39.810 [GENIO]  INFO 10091 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+   2025-01-09 14:32:39.817 [GENIO]  INFO 10091 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:32:39.818 [GENIO]  INFO 10091 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+   2025-01-09 14:32:39.818 [GENIO]  INFO 10091 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+   2025-01-09 14:32:39.846 [GENIO]  INFO 10091 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+   2025-01-09 14:32:39.847 [GENIO]  INFO 10091 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 691 ms
+   2025-01-09 14:32:39.926 [GENIO]  INFO 10091 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+   2025-01-09 14:32:39.955 [GENIO]  INFO 10091 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+   2025-01-09 14:32:39.972 [GENIO]  INFO 10091 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+   2025-01-09 14:32:40.117 [GENIO]  INFO 10091 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+   2025-01-09 14:32:40.134 [GENIO]  INFO 10091 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+   2025-01-09 14:32:40.296 [GENIO]  INFO 10091 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@32513dea
+   2025-01-09 14:32:40.297 [GENIO]  INFO 10091 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+   2025-01-09 14:32:40.350 [GENIO]  INFO 10091 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+   	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+   	Database driver: undefined/unknown
+   	Database version: 9.0.1
+   	Autocommit mode: undefined/unknown
+   	Isolation level: undefined/unknown
+   	Minimum pool size: undefined/unknown
+   	Maximum pool size: undefined/unknown
+   2025-01-09 14:32:40.883 [GENIO]  INFO 10091 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+   2025-01-09 14:32:40.935 [GENIO]  INFO 10091 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:32:41.171 [GENIO]  WARN 10091 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+   2025-01-09 14:32:41.519 [GENIO]  INFO 10091 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:32:41.530 [GENIO]  INFO 10091 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+   2025-01-09 14:32:41.537 [GENIO]  INFO 10091 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.591 seconds (process running for 3.127)
+   2025-01-09 14:32:41.556 [GENIO]  INFO 10091 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+   2025-01-09 14:32:41.556 [GENIO]  WARN 10091 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+   2025-01-09 14:32:41.556 [GENIO] ERROR 10091 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+   2025-01-09 14:39:11.872 [GENIO]  INFO 10091 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+   2025-01-09 14:39:11.878 [GENIO]  INFO 10091 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+   2025-01-09 14:39:11.881 [GENIO]  INFO 10091 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:39:11.883 [GENIO]  INFO 10091 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+   2025-01-09 14:39:11.887 [GENIO]  INFO 10091 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+   2025-01-09 14:40:44.783 [GENIO]  INFO 10309 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+   2025-01-09 14:40:44.787 [GENIO]  INFO 10309 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+   2025-01-09 14:40:44.789 [GENIO]  INFO 10309 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:40:44.791 [GENIO]  INFO 10309 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+   2025-01-09 14:40:44.794 [GENIO]  INFO 10309 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+   2025-01-09 14:40:47.550 [GENIO]  INFO 10331 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+   2025-01-09 14:40:47.740 [GENIO]  INFO 10331 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+   2025-01-09 14:40:47.765 [GENIO]  INFO 10331 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10331 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+   2025-01-09 14:40:47.768 [GENIO]  INFO 10331 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "dev"
+   2025-01-09 14:40:48.107 [GENIO]  INFO 10331 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2025-01-09 14:40:48.143 [GENIO]  INFO 10331 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 7 JPA repository interfaces.
+   2025-01-09 14:40:48.387 [GENIO]  INFO 10331 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+   2025-01-09 14:40:48.400 [GENIO]  INFO 10331 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:40:48.401 [GENIO]  INFO 10331 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+   2025-01-09 14:40:48.401 [GENIO]  INFO 10331 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+   2025-01-09 14:40:48.429 [GENIO]  INFO 10331 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+   2025-01-09 14:40:48.429 [GENIO]  INFO 10331 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 639 ms
+   2025-01-09 14:40:48.502 [GENIO]  INFO 10331 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+   2025-01-09 14:40:48.533 [GENIO]  INFO 10331 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+   2025-01-09 14:40:48.549 [GENIO]  INFO 10331 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+   2025-01-09 14:40:48.689 [GENIO]  INFO 10331 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+   2025-01-09 14:40:48.706 [GENIO]  INFO 10331 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+   2025-01-09 14:40:48.870 [GENIO]  INFO 10331 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ef913a4
+   2025-01-09 14:40:48.871 [GENIO]  INFO 10331 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+   2025-01-09 14:40:48.925 [GENIO]  INFO 10331 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+   	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+   	Database driver: undefined/unknown
+   	Database version: 9.0.1
+   	Autocommit mode: undefined/unknown
+   	Isolation level: undefined/unknown
+   	Minimum pool size: undefined/unknown
+   	Maximum pool size: undefined/unknown
+   2025-01-09 14:40:49.423 [GENIO]  INFO 10331 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+   2025-01-09 14:40:49.481 [GENIO]  INFO 10331 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:40:49.698 [GENIO]  WARN 10331 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+   2025-01-09 14:40:50.014 [GENIO]  INFO 10331 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:40:50.022 [GENIO]  INFO 10331 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+   2025-01-09 14:40:50.028 [GENIO]  INFO 10331 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.435 seconds (process running for 2.979)
+   2025-01-09 14:40:50.045 [GENIO]  INFO 10331 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+   2025-01-09 14:40:50.045 [GENIO]  WARN 10331 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+   2025-01-09 14:40:50.045 [GENIO] ERROR 10331 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+   2025-01-09 14:43:00.273 [GENIO]  INFO 10331 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+   2025-01-09 14:43:00.279 [GENIO]  INFO 10331 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+   2025-01-09 14:43:00.282 [GENIO]  INFO 10331 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:43:00.284 [GENIO]  INFO 10331 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+   2025-01-09 14:43:00.291 [GENIO]  INFO 10331 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+   2025-01-09 14:43:05.921 [GENIO]  INFO 10413 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+   2025-01-09 14:43:06.112 [GENIO]  INFO 10413 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+   2025-01-09 14:43:06.139 [GENIO]  INFO 10413 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10413 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+   2025-01-09 14:43:06.140 [GENIO]  INFO 10413 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "dev"
+   2025-01-09 14:43:06.494 [GENIO]  INFO 10413 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2025-01-09 14:43:06.530 [GENIO]  INFO 10413 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+   2025-01-09 14:43:06.778 [GENIO]  INFO 10413 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+   2025-01-09 14:43:06.786 [GENIO]  INFO 10413 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:43:06.787 [GENIO]  INFO 10413 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+   2025-01-09 14:43:06.787 [GENIO]  INFO 10413 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+   2025-01-09 14:43:06.815 [GENIO]  INFO 10413 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+   2025-01-09 14:43:06.815 [GENIO]  INFO 10413 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 652 ms
+   2025-01-09 14:43:06.893 [GENIO]  INFO 10413 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+   2025-01-09 14:43:06.922 [GENIO]  INFO 10413 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+   2025-01-09 14:43:06.939 [GENIO]  INFO 10413 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+   2025-01-09 14:43:07.079 [GENIO]  INFO 10413 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+   2025-01-09 14:43:07.096 [GENIO]  INFO 10413 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+   2025-01-09 14:43:07.262 [GENIO]  INFO 10413 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7f77e065
+   2025-01-09 14:43:07.263 [GENIO]  INFO 10413 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+   2025-01-09 14:43:07.318 [GENIO]  INFO 10413 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+   	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+   	Database driver: undefined/unknown
+   	Database version: 9.0.1
+   	Autocommit mode: undefined/unknown
+   	Isolation level: undefined/unknown
+   	Minimum pool size: undefined/unknown
+   	Maximum pool size: undefined/unknown
+   2025-01-09 14:43:07.841 [GENIO]  INFO 10413 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+   2025-01-09 14:43:07.898 [GENIO]  INFO 10413 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+   2025-01-09 14:43:08.117 [GENIO]  WARN 10413 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+   2025-01-09 14:43:08.448 [GENIO]  INFO 10413 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+   2025-01-09 14:43:08.456 [GENIO]  INFO 10413 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+   2025-01-09 14:43:08.462 [GENIO]  INFO 10413 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.498 seconds (process running for 3.222)
+   2025-01-09 14:43:08.480 [GENIO]  INFO 10413 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+   2025-01-09 14:43:08.480 [GENIO]  WARN 10413 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+   2025-01-09 14:43:08.480 [GENIO] ERROR 10413 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+5-01-09 14:45:07.169 [GENIO]  INFO 10413 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:45:07.171 [GENIO]  INFO 10413 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:45:07.173 [GENIO]  INFO 10413 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:45:07.176 [GENIO]  INFO 10413 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:45:29.588 [GENIO]  INFO 10483 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:45:29.772 [GENIO]  INFO 10483 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:45:29.799 [GENIO]  INFO 10483 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10483 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:45:29.801 [GENIO]  INFO 10483 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:45:30.140 [GENIO]  INFO 10483 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:45:30.175 [GENIO]  INFO 10483 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:45:30.426 [GENIO]  INFO 10483 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:45:30.434 [GENIO]  INFO 10483 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:45:30.434 [GENIO]  INFO 10483 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:45:30.435 [GENIO]  INFO 10483 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:45:30.463 [GENIO]  INFO 10483 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:45:30.463 [GENIO]  INFO 10483 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 641 ms
+2025-01-09 14:45:30.536 [GENIO]  INFO 10483 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:45:30.566 [GENIO]  INFO 10483 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:45:30.583 [GENIO]  INFO 10483 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:45:30.724 [GENIO]  INFO 10483 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:45:30.741 [GENIO]  INFO 10483 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:45:30.904 [GENIO]  INFO 10483 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@520c3dcb
+2025-01-09 14:45:30.904 [GENIO]  INFO 10483 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:45:30.956 [GENIO]  INFO 10483 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:45:31.445 [GENIO]  INFO 10483 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:45:31.502 [GENIO]  INFO 10483 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:45:31.719 [GENIO]  WARN 10483 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:45:32.040 [GENIO]  INFO 10483 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:45:32.048 [GENIO]  INFO 10483 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:45:32.054 [GENIO]  INFO 10483 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.425 seconds (process running for 2.976)
+2025-01-09 14:45:32.072 [GENIO]  INFO 10483 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+2025-01-09 14:45:32.072 [GENIO]  WARN 10483 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+2025-01-09 14:45:32.072 [GENIO] ERROR 10483 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:53:16.075 [GENIO]  INFO 10483 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 14:53:16.081 [GENIO]  INFO 10483 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:53:16.084 [GENIO]  INFO 10483 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:53:16.085 [GENIO]  INFO 10483 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:53:16.089 [GENIO]  INFO 10483 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:53:57.774 [GENIO]  INFO 10717 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:53:57.995 [GENIO]  INFO 10717 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:53:58.022 [GENIO]  INFO 10717 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10717 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:53:58.024 [GENIO]  INFO 10717 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:53:58.353 [GENIO]  INFO 10717 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:53:58.392 [GENIO]  INFO 10717 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:53:58.636 [GENIO]  INFO 10717 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:53:58.649 [GENIO]  INFO 10717 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:53:58.650 [GENIO]  INFO 10717 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:53:58.650 [GENIO]  INFO 10717 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:53:58.680 [GENIO]  INFO 10717 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:53:58.680 [GENIO]  INFO 10717 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 636 ms
+2025-01-09 14:53:58.762 [GENIO]  INFO 10717 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:53:58.794 [GENIO]  INFO 10717 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:53:58.812 [GENIO]  INFO 10717 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:53:58.968 [GENIO]  INFO 10717 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:53:58.985 [GENIO]  INFO 10717 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:53:59.161 [GENIO]  INFO 10717 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2f166d61
+2025-01-09 14:53:59.162 [GENIO]  INFO 10717 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:53:59.218 [GENIO]  INFO 10717 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:53:59.707 [GENIO]  INFO 10717 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:53:59.767 [GENIO]  INFO 10717 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:53:59.987 [GENIO]  WARN 10717 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:54:00.317 [GENIO]  INFO 10717 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:54:00.325 [GENIO]  INFO 10717 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:54:00.331 [GENIO]  INFO 10717 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.502 seconds (process running for 3.117)
+2025-01-09 14:54:00.349 [GENIO]  INFO 10717 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+2025-01-09 14:54:00.349 [GENIO]  WARN 10717 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+2025-01-09 14:54:00.349 [GENIO] ERROR 10717 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:54:29.583 [GENIO]  INFO 10717 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 14:54:29.587 [GENIO]  INFO 10717 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:54:29.589 [GENIO]  INFO 10717 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:54:29.591 [GENIO]  INFO 10717 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:54:29.594 [GENIO]  INFO 10717 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:54:31.559 [GENIO]  INFO 10729 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:54:31.769 [GENIO]  INFO 10729 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:54:31.792 [GENIO]  INFO 10729 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10729 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:54:31.793 [GENIO]  INFO 10729 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:54:32.109 [GENIO]  INFO 10729 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:54:32.146 [GENIO]  INFO 10729 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:54:32.399 [GENIO]  INFO 10729 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:54:32.407 [GENIO]  INFO 10729 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:54:32.408 [GENIO]  INFO 10729 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:54:32.408 [GENIO]  INFO 10729 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:54:32.436 [GENIO]  INFO 10729 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:54:32.437 [GENIO]  INFO 10729 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 626 ms
+2025-01-09 14:54:32.512 [GENIO]  INFO 10729 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:54:32.542 [GENIO]  INFO 10729 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:54:32.558 [GENIO]  INFO 10729 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:54:32.700 [GENIO]  INFO 10729 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:54:32.716 [GENIO]  INFO 10729 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:54:32.879 [GENIO]  INFO 10729 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@24068086
+2025-01-09 14:54:32.880 [GENIO]  INFO 10729 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:54:32.933 [GENIO]  INFO 10729 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:54:33.435 [GENIO]  INFO 10729 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:54:33.488 [GENIO]  INFO 10729 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:54:33.711 [GENIO]  WARN 10729 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:54:34.027 [GENIO]  INFO 10729 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:54:34.037 [GENIO]  INFO 10729 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:54:34.043 [GENIO]  INFO 10729 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.443 seconds (process running for 2.943)
+2025-01-09 14:54:34.060 [GENIO]  INFO 10729 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+2025-01-09 14:54:34.060 [GENIO]  WARN 10729 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+2025-01-09 14:54:34.060 [GENIO] ERROR 10729 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:56:52.907 [GENIO]  INFO 10729 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 14:56:52.913 [GENIO]  INFO 10729 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:56:52.916 [GENIO]  INFO 10729 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:56:52.917 [GENIO]  INFO 10729 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:56:52.921 [GENIO]  INFO 10729 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:57:58.293 [GENIO]  INFO 10836 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:57:58.478 [GENIO]  INFO 10836 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:57:58.502 [GENIO]  INFO 10836 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10836 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:57:58.503 [GENIO]  INFO 10836 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:57:58.833 [GENIO]  INFO 10836 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:57:58.869 [GENIO]  INFO 10836 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:57:59.116 [GENIO]  INFO 10836 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:57:59.123 [GENIO]  INFO 10836 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:57:59.124 [GENIO]  INFO 10836 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:57:59.125 [GENIO]  INFO 10836 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:57:59.152 [GENIO]  INFO 10836 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:57:59.153 [GENIO]  INFO 10836 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 632 ms
+2025-01-09 14:57:59.230 [GENIO]  INFO 10836 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:57:59.265 [GENIO]  INFO 10836 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:57:59.284 [GENIO]  INFO 10836 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:57:59.437 [GENIO]  INFO 10836 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:57:59.455 [GENIO]  INFO 10836 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:57:59.628 [GENIO]  INFO 10836 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@520c3dcb
+2025-01-09 14:57:59.629 [GENIO]  INFO 10836 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:57:59.683 [GENIO]  INFO 10836 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:58:00.203 [GENIO]  INFO 10836 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:58:00.259 [GENIO]  INFO 10836 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:58:00.480 [GENIO]  WARN 10836 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:58:00.806 [GENIO]  INFO 10836 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:58:00.814 [GENIO]  INFO 10836 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:58:00.821 [GENIO]  INFO 10836 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.482 seconds (process running for 3.068)
+2025-01-09 14:58:00.837 [GENIO]  INFO 10836 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+2025-01-09 14:58:00.837 [GENIO]  WARN 10836 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+2025-01-09 14:58:00.838 [GENIO] ERROR 10836 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:58:19.070 [GENIO]  INFO 10836 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 14:58:19.075 [GENIO]  INFO 10836 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:58:19.077 [GENIO]  INFO 10836 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:58:19.079 [GENIO]  INFO 10836 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:58:19.082 [GENIO]  INFO 10836 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:58:21.200 [GENIO]  INFO 10850 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:58:21.383 [GENIO]  INFO 10850 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:58:21.406 [GENIO]  INFO 10850 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10850 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:58:21.407 [GENIO]  INFO 10850 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:58:21.721 [GENIO]  INFO 10850 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:58:21.758 [GENIO]  INFO 10850 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:58:22.005 [GENIO]  INFO 10850 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:58:22.018 [GENIO]  INFO 10850 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:58:22.018 [GENIO]  INFO 10850 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:58:22.019 [GENIO]  INFO 10850 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:58:22.046 [GENIO]  INFO 10850 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:58:22.047 [GENIO]  INFO 10850 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 621 ms
+2025-01-09 14:58:22.120 [GENIO]  INFO 10850 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:58:22.150 [GENIO]  INFO 10850 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:58:22.166 [GENIO]  INFO 10850 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:58:22.311 [GENIO]  INFO 10850 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:58:22.328 [GENIO]  INFO 10850 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:58:22.493 [GENIO]  INFO 10850 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@56f72909
+2025-01-09 14:58:22.494 [GENIO]  INFO 10850 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:58:22.547 [GENIO]  INFO 10850 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:58:23.047 [GENIO]  INFO 10850 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:58:23.100 [GENIO]  INFO 10850 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:58:23.322 [GENIO]  WARN 10850 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:58:23.637 [GENIO]  INFO 10850 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:58:23.645 [GENIO]  INFO 10850 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:58:23.651 [GENIO]  INFO 10850 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.407 seconds (process running for 2.946)
+2025-01-09 14:58:23.668 [GENIO]  INFO 10850 --- [main] c.g.GenioServiceApplication              : This is an INFO message
+2025-01-09 14:58:23.668 [GENIO]  WARN 10850 --- [main] c.g.GenioServiceApplication              : This is a WARN message
+2025-01-09 14:58:23.669 [GENIO] ERROR 10850 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:58:41.125 [GENIO]  INFO 10850 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 14:58:41.130 [GENIO]  INFO 10850 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 14:58:41.134 [GENIO]  INFO 10850 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:58:41.137 [GENIO]  INFO 10850 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 14:58:41.142 [GENIO]  INFO 10850 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 14:58:45.905 [GENIO]  INFO 10860 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 14:58:46.086 [GENIO]  INFO 10860 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 14:58:46.108 [GENIO]  INFO 10860 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10860 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 14:58:46.109 [GENIO]  INFO 10860 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "prod"
+2025-01-09 14:58:46.428 [GENIO]  INFO 10860 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 14:58:46.464 [GENIO]  INFO 10860 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+2025-01-09 14:58:46.717 [GENIO]  INFO 10860 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 14:58:46.725 [GENIO]  INFO 10860 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:58:46.726 [GENIO]  INFO 10860 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 14:58:46.726 [GENIO]  INFO 10860 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 14:58:46.753 [GENIO]  INFO 10860 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 14:58:46.753 [GENIO]  INFO 10860 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 626 ms
+2025-01-09 14:58:46.827 [GENIO]  INFO 10860 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 14:58:46.857 [GENIO]  INFO 10860 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 14:58:46.873 [GENIO]  INFO 10860 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 14:58:47.013 [GENIO]  INFO 10860 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 14:58:47.032 [GENIO]  INFO 10860 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 14:58:47.189 [GENIO]  INFO 10860 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@520c3dcb
+2025-01-09 14:58:47.190 [GENIO]  INFO 10860 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 14:58:47.242 [GENIO]  INFO 10860 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 14:58:47.737 [GENIO]  INFO 10860 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 14:58:47.789 [GENIO]  INFO 10860 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 14:58:48.011 [GENIO]  WARN 10860 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 14:58:48.335 [GENIO]  INFO 10860 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 14:58:48.343 [GENIO]  INFO 10860 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 14:58:48.350 [GENIO]  INFO 10860 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.403 seconds (process running for 2.988)
+2025-01-09 15:00:20.951 [GENIO]  INFO 10860 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 15:00:20.956 [GENIO]  INFO 10860 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 15:00:20.958 [GENIO]  INFO 10860 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 15:00:20.964 [GENIO]  INFO 10860 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 15:00:20.969 [GENIO]  INFO 10860 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-01-09 15:00:39.625 [GENIO]  INFO 10935 --- [main] c.g.GenioServiceApplication              : L'application démarre...
+2025-01-09 15:00:39.803 [GENIO]  INFO 10935 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-09 15:00:39.826 [GENIO]  INFO 10935 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 10935 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-09 15:00:39.827 [GENIO]  INFO 10935 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "-Dspring.profiles.active=prod"
+2025-01-09 15:00:40.138 [GENIO]  INFO 10935 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09 15:00:40.174 [GENIO]  INFO 10935 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+2025-01-09 15:00:40.423 [GENIO]  INFO 10935 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2025-01-09 15:00:40.430 [GENIO]  INFO 10935 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-09 15:00:40.431 [GENIO]  INFO 10935 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-01-09 15:00:40.431 [GENIO]  INFO 10935 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-09 15:00:40.459 [GENIO]  INFO 10935 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-01-09 15:00:40.459 [GENIO]  INFO 10935 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 614 ms
+2025-01-09 15:00:40.535 [GENIO]  INFO 10935 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09 15:00:40.566 [GENIO]  INFO 10935 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-09 15:00:40.582 [GENIO]  INFO 10935 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-09 15:00:40.722 [GENIO]  INFO 10935 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09 15:00:40.738 [GENIO]  INFO 10935 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-09 15:00:40.904 [GENIO]  INFO 10935 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@174e1b99
+2025-01-09 15:00:40.905 [GENIO]  INFO 10935 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-09 15:00:40.957 [GENIO]  INFO 10935 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-09 15:00:41.442 [GENIO]  INFO 10935 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09 15:00:41.502 [GENIO]  INFO 10935 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 15:00:41.716 [GENIO]  WARN 10935 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09 15:00:42.040 [GENIO]  INFO 10935 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2025-01-09 15:00:42.048 [GENIO]  INFO 10935 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
+2025-01-09 15:00:42.055 [GENIO]  INFO 10935 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 2.389 seconds (process running for 2.882)
+2025-01-09 15:01:24.877 [GENIO]  INFO 10935 --- [SpringApplicationShutdownHook] o.s.b.w.e.t.GracefulShutdown             : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-09 15:01:24.881 [GENIO]  INFO 10935 --- [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown             : Graceful shutdown complete
+2025-01-09 15:01:24.883 [GENIO]  INFO 10935 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09 15:01:24.884 [GENIO]  INFO 10935 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-09 15:01:24.887 [GENIO]  INFO 10935 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
