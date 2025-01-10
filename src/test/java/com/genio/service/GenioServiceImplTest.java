@@ -8,19 +8,23 @@ import com.genio.repository.*;
 import com.genio.service.impl.GenioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class GenioServiceImplTest {
 
     @InjectMocks
     private GenioServiceImpl genioService;
+
     @Mock
     private ModeleRepository modeleRepository;
     @Mock
@@ -43,7 +47,6 @@ class GenioServiceImplTest {
 
     @Test
     void generateConvention_modelNotFound_shouldThrowException() {
-
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(999L);
 
@@ -63,7 +66,7 @@ class GenioServiceImplTest {
         input.setModeleId(1L);
 
         Modele modele = new Modele();
-        when(modeleRepository.findById(1L)).thenReturn(java.util.Optional.of(modele));
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
 
         input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
         input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
@@ -71,29 +74,20 @@ class GenioServiceImplTest {
         input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
-        Etudiant etudiant = new Etudiant();
-        etudiant.setNom("John");
-        when(etudiantRepository.save(any(Etudiant.class))).thenReturn(etudiant);
-
-        MaitreDeStage maitreDeStage = new MaitreDeStage();
-        maitreDeStage.setNom("MaitreDeStageNom");
-        when(maitreDeStageRepository.save(any(MaitreDeStage.class))).thenReturn(maitreDeStage);
-
-        Tuteur tuteur = new Tuteur();
-        tuteur.setNom("TuteurNom");
-        when(tuteurRepository.save(any(Tuteur.class))).thenReturn(tuteur);
-
-        Convention convention = new Convention();
-        when(conventionRepository.save(any(Convention.class))).thenReturn(convention);
+        when(etudiantRepository.save(any(Etudiant.class))).thenReturn(new Etudiant());
+        when(maitreDeStageRepository.save(any(MaitreDeStage.class))).thenReturn(new MaitreDeStage());
+        when(tuteurRepository.save(any(Tuteur.class))).thenReturn(new Tuteur());
+        when(conventionRepository.save(any(Convention.class))).thenReturn(new Convention());
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertTrue(result.isSuccess());
         assertNotNull(result.getFichierBinaire());
+
         verify(modeleRepository, times(1)).findById(1L);
         verify(etudiantRepository, times(1)).save(any(Etudiant.class));
         verify(maitreDeStageRepository, times(1)).save(any(MaitreDeStage.class));
-        verify(maitreDeStageRepository, times(1)).save(any(MaitreDeStage.class));
+        verify(tuteurRepository, times(1)).save(any(Tuteur.class));
         verify(conventionRepository, times(1)).save(any(Convention.class));
     }
 
@@ -103,7 +97,7 @@ class GenioServiceImplTest {
         input.setModeleId(1L);
 
         Modele modele = new Modele();
-        when(modeleRepository.findById(1L)).thenReturn(java.util.Optional.of(modele));
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
 
         input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
         input.setMaitreDeStage(null);
@@ -112,7 +106,6 @@ class GenioServiceImplTest {
 
         assertFalse(result.isSuccess());
         assertTrue(result.getMessageErreur().contains("Le champ 'maitreDeStage' : Le champ 'maitreDeStage' est obligatoire."));
-
         assertTrue(result.getMessageErreur().contains("Le champ 'organisme' : Le nom de l'organisme est manquant."));
         assertTrue(result.getMessageErreur().contains("Le champ 'stage' : Le sujet du stage est manquant."));
         assertTrue(result.getMessageErreur().contains("Le champ 'tuteur' : Le nom de l'enseignant est manquant."));

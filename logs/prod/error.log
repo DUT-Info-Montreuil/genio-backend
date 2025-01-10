@@ -1,1 +1,1 @@
-2025-01-10 12:09:53.444 [PROD] [GENIO] ERROR 3694 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-10 15:08:57.138 [PROD] [GENIO] ERROR 5346 --- [main] c.g.s.i.GenioServiceImpl                 : Modèle introuvable : Erreur : modèle introuvable avec l'ID 999
