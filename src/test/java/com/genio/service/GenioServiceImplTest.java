@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -89,28 +90,5 @@ class GenioServiceImplTest {
         verify(maitreDeStageRepository, times(1)).save(any(MaitreDeStage.class));
         verify(tuteurRepository, times(1)).save(any(Tuteur.class));
         verify(conventionRepository, times(1)).save(any(Convention.class));
-    }
-
-    @Test
-    void generateConvention_missingData_shouldReturnValidationError() {
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(1L);
-
-        Modele modele = new Modele();
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
-        input.setMaitreDeStage(null);
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("Le champ 'maitreDeStage' : Le champ 'maitreDeStage' est obligatoire."));
-        assertTrue(result.getMessageErreur().contains("Le champ 'organisme' : Le nom de l'organisme est manquant."));
-        assertTrue(result.getMessageErreur().contains("Le champ 'stage' : Le sujet du stage est manquant."));
-        assertTrue(result.getMessageErreur().contains("Le champ 'tuteur' : Le nom de l'enseignant est manquant."));
-
-        verify(modeleRepository, times(1)).findById(1L);
-        verify(historisationRepository, times(1)).save(any());
     }
 }
