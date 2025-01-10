@@ -1,1 +1,1 @@
-2025-01-10 15:08:57.138 [PROD] [GENIO] ERROR 5346 --- [main] c.g.s.i.GenioServiceImpl                 : Modèle introuvable : Erreur : modèle introuvable avec l'ID 999
+2025-01-10 15:18:43.542 [PROD] [GENIO] ERROR 5640 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
