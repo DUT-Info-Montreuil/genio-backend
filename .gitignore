@@ -31,3 +31,23 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### macOS ###
+.DS_Store
+
+### Java/Maven ###
+*.class
+
+### Fichiers de log ###
+logs/
+logs/**/*.log
+*.log
+
+### Fichiers générés ###
+output/
+*.docx
+
+### Fichiers de configuration Spring Boot ###
+src/main/resources/application.properties
+src/main/resources/application-*.properties
+!src/main/resources/application-example.properties
