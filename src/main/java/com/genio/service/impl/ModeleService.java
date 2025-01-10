@@ -1,16 +1,15 @@
 package com.genio.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.sql.DataSource;
 
 @Service
 public class ModeleService {
@@ -24,7 +23,7 @@ public class ModeleService {
         this.dataSource = dataSource;
     }
 
-    public void insertModeleFromDirectory() throws SQLException, IOException {
+    public void insertModeleFromDirectory() throws IOException, SQLException {
         File dir = new File(directoryPath);
         File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));
 
@@ -35,20 +34,22 @@ public class ModeleService {
         }
     }
 
-    private void insertModele(File templateFile) throws SQLException, IOException {
+    private void insertModele(File templateFile) throws IOException, SQLException {
         byte[] fileBytes = Files.readAllBytes(templateFile.toPath());
-
         String modelName = templateFile.getName();
         String modelYear = modelName.substring(modelName.indexOf("_") + 1, modelName.indexOf("."));
-        String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, modelName);
-            preparedStatement.setString(2, modelYear);
-            preparedStatement.setBytes(3, fileBytes);
-
-            preparedStatement.executeUpdate();
+        if (dataSource != null) {
+            String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, modelName);
+                preparedStatement.setString(2, modelYear);
+                preparedStatement.setBytes(3, fileBytes);
+                preparedStatement.executeUpdate();
+            }
+        } else {
+            System.out.println("⚠️ La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
         }
     }
 }
