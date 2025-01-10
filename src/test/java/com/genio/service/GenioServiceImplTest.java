@@ -21,7 +21,6 @@ class GenioServiceImplTest {
 
     @InjectMocks
     private GenioServiceImpl genioService;
-
     @Mock
     private ModeleRepository modeleRepository;
     @Mock
@@ -34,7 +33,6 @@ class GenioServiceImplTest {
     private MaitreDeStageRepository maitreDeStageRepository;
     @Mock
     private ConventionRepository conventionRepository;
-
     @Mock
     private TuteurRepository tuteurRepository;
 
