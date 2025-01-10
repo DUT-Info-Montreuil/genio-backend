@@ -1,0 +1,6 @@
+2025-01-09 14:19:56.797 [GENIO] ERROR 9630 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:21:27.227 [GENIO] ERROR 9675 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:22:21.070 [GENIO] ERROR 9720 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:22:53.397 [GENIO] ERROR 9738 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:26:38.098 [GENIO] ERROR 9871 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
+2025-01-09 14:28:55.646 [GENIO] ERROR 9937 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
