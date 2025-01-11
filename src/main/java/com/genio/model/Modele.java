@@ -2,6 +2,7 @@ package com.genio.model;
 
 import jakarta.persistence.*;
 
+@Table(name = "modele")
 @Entity
 public class Modele {
     @Id

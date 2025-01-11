@@ -1,23 +1,18 @@
-2025-01-10 12:09:51.633 [PROD] [GENIO]  INFO 3694 --- [main] c.g.GenioServiceApplication              : L'application démarre...
-2025-01-10 12:09:51.755 [PROD] [GENIO]  INFO 3694 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
-2025-01-10 12:09:51.770 [PROD] [GENIO]  INFO 3694 --- [main] c.g.GenioServiceApplication              : Starting GenioServiceApplication using Java 17.0.13 with PID 3694 (/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
-2025-01-10 12:09:51.771 [PROD] [GENIO]  INFO 3694 --- [main] c.g.GenioServiceApplication              : The following 1 profile is active: "dev"
-2025-01-10 12:09:51.975 [PROD] [GENIO]  INFO 3694 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-01-10 12:09:51.997 [PROD] [GENIO]  INFO 3694 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 7 JPA repository interfaces.
-2025-01-10 12:09:52.147 [PROD] [GENIO]  INFO 3694 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
-2025-01-10 12:09:52.152 [PROD] [GENIO]  INFO 3694 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
-2025-01-10 12:09:52.152 [PROD] [GENIO]  INFO 3694 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
-2025-01-10 12:09:52.152 [PROD] [GENIO]  INFO 3694 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.34]
-2025-01-10 12:09:52.173 [PROD] [GENIO]  INFO 3694 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
-2025-01-10 12:09:52.173 [PROD] [GENIO]  INFO 3694 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 391 ms
-2025-01-10 12:09:52.232 [PROD] [GENIO]  INFO 3694 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-01-10 12:09:52.260 [PROD] [GENIO]  INFO 3694 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
-2025-01-10 12:09:52.273 [PROD] [GENIO]  INFO 3694 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
-2025-01-10 12:09:52.369 [PROD] [GENIO]  INFO 3694 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-01-10 12:09:52.380 [PROD] [GENIO]  INFO 3694 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
-2025-01-10 12:09:52.523 [PROD] [GENIO]  INFO 3694 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@160546b1
-2025-01-10 12:09:52.523 [PROD] [GENIO]  INFO 3694 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
-2025-01-10 12:09:52.568 [PROD] [GENIO]  INFO 3694 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
+2025-01-10 15:49:09.196 [PROD] [GENIO]  INFO 8437 --- [main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.genio.GenioServiceApplicationTests]: GenioServiceApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-10 15:49:09.262 [PROD] [GENIO]  INFO 8437 --- [main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.genio.GenioServiceApplication for test class com.genio.GenioServiceApplicationTests
+2025-01-10 15:49:09.448 [PROD] [GENIO]  INFO 8437 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-01-10 15:49:09.469 [PROD] [GENIO]  INFO 8437 --- [main] c.g.GenioServiceApplicationTests         : Starting GenioServiceApplicationTests using Java 17.0.13 with PID 8437 (started by ehadjadj in /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService)
+2025-01-10 15:49:09.471 [PROD] [GENIO]  INFO 8437 --- [main] c.g.GenioServiceApplicationTests         : The following 1 profile is active: "dev"
+2025-01-10 15:49:09.773 [PROD] [GENIO]  INFO 8437 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-10 15:49:09.807 [PROD] [GENIO]  INFO 8437 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 7 JPA repository interfaces.
+2025-01-10 15:49:10.017 [PROD] [GENIO]  INFO 8437 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-10 15:49:10.049 [PROD] [GENIO]  INFO 8437 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-10 15:49:10.068 [PROD] [GENIO]  INFO 8437 --- [main] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-01-10 15:49:10.226 [PROD] [GENIO]  INFO 8437 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-10 15:49:10.247 [PROD] [GENIO]  INFO 8437 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-01-10 15:49:10.420 [PROD] [GENIO]  INFO 8437 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@102abf66
+2025-01-10 15:49:10.421 [PROD] [GENIO]  INFO 8437 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-01-10 15:49:10.477 [PROD] [GENIO]  INFO 8437 --- [main] o.h.o.c.pooling                          : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 9.0.1
@@ -25,46 +20,38 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-01-10 12:09:52.927 [PROD] [GENIO]  INFO 3694 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-01-10 12:09:53.070 [PROD] [GENIO]  INFO 3694 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-01-10 12:09:53.215 [PROD] [GENIO]  WARN 3694 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-01-10 12:09:53.417 [PROD] [GENIO]  INFO 3694 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
-2025-01-10 12:09:53.423 [PROD] [GENIO]  INFO 3694 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path '/'
-2025-01-10 12:09:53.427 [PROD] [GENIO]  INFO 3694 --- [main] c.g.GenioServiceApplication              : Started GenioServiceApplication in 1.763 seconds (process running for 2.096)
-2025-01-10 12:09:53.444 [PROD] [GENIO]  INFO 3694 --- [main] c.g.GenioServiceApplication              : This is an INFO message
-2025-01-10 12:09:53.444 [PROD] [GENIO]  WARN 3694 --- [main] c.g.GenioServiceApplication              : This is a WARN message
-2025-01-10 12:09:53.444 [PROD] [GENIO] ERROR 3694 --- [main] c.g.GenioServiceApplication              : This is an ERROR message
-2025-01-10 12:10:23.196 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-01-10 12:10:23.196 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
-2025-01-10 12:10:23.197 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
-2025-01-10 12:10:23.266 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] c.g.c.GenioController                    : Requête reçue pour générer une convention avec format : docx
-2025-01-10 12:10:23.267 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 99
-2025-01-10 12:10:23.283 [PROD] [GENIO] DEBUG 3694 --- [http-nio-8080-exec-1] o.h.SQL                                  : 
-    select
-        m1_0.id,
-        m1_0.annee,
-        m1_0.fichier_binaire,
-        m1_0.nom 
-    from
-        modele m1_0 
-    where
-        m1_0.id=?
-2025-01-10 12:10:23.299 [PROD] [GENIO]  WARN 3694 --- [http-nio-8080-exec-1] c.g.s.i.GenioServiceImpl                 : Des erreurs de validation ont été détectées : {maitreDeStage.telephone=Le téléphone du tuteur doit être au format XX.XX.XX.XX.XX.}
-2025-01-10 12:10:23.299 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : ECHEC
-2025-01-10 12:10:23.313 [PROD] [GENIO] DEBUG 3694 --- [http-nio-8080-exec-1] o.h.SQL                                  : 
-    insert 
-    into
-        historisation
-        (convention_id, details, docx_binaire, flux_json_binaire, pdf_binaire, status, timestamp) 
-    values
-        (?, ?, ?, ?, ?, ?, ?)
-2025-01-10 12:10:23.326 [PROD] [GENIO]  INFO 3694 --- [http-nio-8080-exec-1] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
-2025-01-10 12:10:23.327 [PROD] [GENIO] DEBUG 3694 --- [http-nio-8080-exec-1] o.h.SQL                                  : 
-    insert 
-    into
-        error_details
-        (champs_manquants, historisation_id, message_erreur) 
-    values
-        (?, ?, ?)
-2025-01-10 12:10:23.331 [PROD] [GENIO]  WARN 3694 --- [http-nio-8080-exec-1] c.g.s.i.GenioServiceImpl                 : Des détails d'erreurs ont été enregistrés.
-2025-01-10 12:10:23.331 [PROD] [GENIO]  WARN 3694 --- [http-nio-8080-exec-1] c.g.c.GenioController                    : Erreur lors de la génération de la convention : Les erreurs suivantes ont été détectées : Le champ 'maitreDeStage.telephone' : Le téléphone du tuteur doit être au format XX.XX.XX.XX.XX.
+2025-01-10 15:49:11.022 [PROD] [GENIO]  INFO 8437 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-10 15:49:11.086 [PROD] [GENIO]  INFO 8437 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-10 15:49:11.364 [PROD] [GENIO]  WARN 8437 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-10 15:49:11.779 [PROD] [GENIO]  INFO 8437 --- [main] c.g.GenioServiceApplicationTests         : Started GenioServiceApplicationTests in 2.436 seconds (process running for 3.298)
+2025-01-10 15:49:12.535 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 999
+2025-01-10 15:49:12.539 [PROD] [GENIO] ERROR 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Modèle introuvable : Erreur : modèle introuvable avec l'ID 999
+2025-01-10 15:49:12.540 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : ECHEC
+2025-01-10 15:49:12.605 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-10 15:49:12.606 [PROD] [GENIO]  WARN 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Des détails d'erreurs ont été enregistrés.
+2025-01-10 15:49:12.636 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 1
+2025-01-10 15:49:12.640 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'étudiant : John
+2025-01-10 15:49:12.640 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Étudiant sauvegardé avec succès : null
+2025-01-10 15:49:12.641 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde du maitreDeStage : MaitreDeStageNom
+2025-01-10 15:49:12.641 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : MaitreDeStage sauvegardé avec succès : null
+2025-01-10 15:49:12.641 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de tuteur : TuteurNom
+2025-01-10 15:49:12.642 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Tuteur sauvegardé avec succès : null
+2025-01-10 15:49:12.642 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Génération du fichier binaire au format : DOCX
+2025-01-10 15:49:12.642 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération du fichier DOCX pour la convention.
+2025-01-10 15:49:12.645 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.DocxGenerator                    : Début de la génération du fichier DOCX...
+2025-01-10 15:49:12.645 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.DocxGenerator                    : Chemin du modèle : /Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/target/classes/templates/modeleConvention.docx
+2025-01-10 15:49:12.645 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.DocxGenerator                    : Chemin de sortie : output/conventionGenerée.docx
+2025-01-10 15:49:13.993 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.DocxGenerator                    : Fichier DOCX généré avec succès : output/conventionGenerée.docx
+2025-01-10 15:49:13.995 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Fichier DOCX généré avec succès : output/conventionGenerée.docx
+2025-01-10 15:49:13.996 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Enregistrement de l'historisation pour la convention générée avec succès.
+2025-01-10 15:49:13.996 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : SUCCES
+2025-01-10 15:49:14.005 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-10 15:49:14.005 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : La convention a été générée avec succès.
+2025-01-10 15:49:14.011 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la génération de convention pour le modèle ID : 1
+2025-01-10 15:49:14.011 [PROD] [GENIO]  WARN 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Des erreurs de validation ont été détectées : {organisme=Le nom de l'organisme est manquant., maitreDeStage=Le champ 'maitreDeStage' est obligatoire., stage=Le sujet du stage est manquant., tuteur=Le nom de l'enseignant est manquant.}
+2025-01-10 15:49:14.012 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Début de la sauvegarde de l'historisation avec le statut : ECHEC
+2025-01-10 15:49:14.013 [PROD] [GENIO]  INFO 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Historisation sauvegardée avec succès.
+2025-01-10 15:49:14.013 [PROD] [GENIO]  WARN 8437 --- [main] c.g.s.i.GenioServiceImpl                 : Des détails d'erreurs ont été enregistrés.
+2025-01-10 15:49:14.030 [PROD] [GENIO]  INFO 8437 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-10 15:49:14.032 [PROD] [GENIO]  INFO 8437 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-01-10 15:49:14.038 [PROD] [GENIO]  INFO 8437 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.

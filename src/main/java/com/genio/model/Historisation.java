@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.Timestamp;
 
+@Table(name = "historisation")
 @Entity
 public class Historisation {
     @Id

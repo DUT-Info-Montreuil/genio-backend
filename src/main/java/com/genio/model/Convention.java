@@ -2,6 +2,7 @@ package com.genio.model;
 
 import jakarta.persistence.*;
 
+@Table(name = "convention")
 @Entity
 public class Convention {
     @Id
