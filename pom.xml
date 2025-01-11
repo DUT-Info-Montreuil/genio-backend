@@ -17,7 +17,10 @@
     <description>GenioService</description>
     <properties>
         <java.version>17</java.version>
-        <encoding>UTF-8</encoding> <!-- Ajout de l'encodage -->
+        <encoding>UTF-8</encoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <mockito.inline.mockmaker>false</mockito.inline.mockmaker>
     </properties>
 
     <dependencies>
@@ -84,6 +87,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>1.11.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -92,6 +100,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>
+                        -XX:+EnableDynamicAgentLoading
+                    </jvmArguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
