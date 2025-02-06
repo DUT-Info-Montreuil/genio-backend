@@ -88,9 +88,13 @@ public class GenioServiceImpl implements GenioService {
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
         try {
+
+            logger.info("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
+
+            logger.info("Validation des données d'entrée...");
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
@@ -101,6 +105,7 @@ public class GenioServiceImpl implements GenioService {
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
+            logger.info("Sauvegarde des entités dans la base de données...");
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
@@ -137,6 +142,7 @@ public class GenioServiceImpl implements GenioService {
     @Override
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
 
+        logger.info("Début de la validation des données...");
         ValidationContext context = new ValidationContext();
         context.addStrategy(new EtudiantValidationStrategy());
         context.addStrategy(new MaitreDeStageValidationStrategy());
@@ -167,11 +173,14 @@ public class GenioServiceImpl implements GenioService {
         if (input.getTuteur() == null || input.getTuteur().getNom() == null) {
             erreurs.put("tuteur", "Le nom de l'enseignant est manquant.");
         }
+
+        logger.info("Validation terminée avec {} erreur(s).", erreurs.size());
         return erreurs;
     }
 
     @Override
     public boolean modeleExiste(Long modeleId) {
+        logger.info("Vérification de l'existence du modèle avec ID : {}", modeleId);
         boolean exists = modeleRepository.existsById(modeleId);
         logger.info("Le modèle {}.", exists ? "existe" : "n'existe pas");
         return exists;
@@ -276,7 +285,10 @@ public class GenioServiceImpl implements GenioService {
         String templatePath = ResourceUtils.getFile("classpath:templates/modeleConvention_2024.docx").getPath();
         String outputFilePath = "output/conventionGenerée.docx";
 
+        logger.info("Préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, anneeStage);
+
+        logger.info("Génération du fichier DOCX à partir du template : {}", templatePath);
         DocxGenerator.generateDocx(templatePath, replacements, outputFilePath);
 
         File generatedFile = new File(outputFilePath);
@@ -291,6 +303,7 @@ public class GenioServiceImpl implements GenioService {
 
     private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) {
 
+        logger.info("Début de la préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = new HashMap<>();
 
         replacements.put("PRENOM_ETUDIANT", safeString(etudiant.getPrenom()));
@@ -334,6 +347,7 @@ public class GenioServiceImpl implements GenioService {
             replacements.put("TUT_IUT", "Non défini");
             replacements.put("TUT_IUT_MEL", "Non défini");
         }
+        logger.info("Préparation des remplacements terminée.");
         return replacements;
     }
 
