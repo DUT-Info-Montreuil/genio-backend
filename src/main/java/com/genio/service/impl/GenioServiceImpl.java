@@ -61,13 +61,17 @@ public class GenioServiceImpl implements GenioService {
     private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
 
     @Override
+    @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
         try {
-            logger.debug("Vérification de l'existence du modèle...");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Vérification de l'existence du modèle...");
+            }
+
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
-            System.out.println("Modèle récupéré avec ID: " + modele.getId());
+            logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
             logger.debug("Validation des données d'entrée...");
             Map<String, String> erreurs = validerDonnees(input);
@@ -116,7 +120,9 @@ public class GenioServiceImpl implements GenioService {
 
     @Override
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
-        logger.debug("Début de la validation des données...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Début de la validation des données...");
+        }
 
         ValidationContext context = new ValidationContext();
         context.addStrategy(new EtudiantValidationStrategy());
@@ -162,7 +168,7 @@ public class GenioServiceImpl implements GenioService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.MANDATORY)
     public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
         logger.info("Début de la sauvegarde de l'historisation avec le statut : {}", status);
         try {
@@ -277,7 +283,10 @@ public class GenioServiceImpl implements GenioService {
     }
 
     private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) {
-        logger.debug("Début de la préparation des remplacements pour le fichier DOCX.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Début de la préparation des remplacements pour le fichier DOCX.");
+        }
+
         Map<String, String> replacements = new HashMap<>();
 
         replacements.put("PRENOM_ETUDIANT", safeString(etudiant.getPrenom()));
