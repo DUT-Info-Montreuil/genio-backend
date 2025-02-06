@@ -63,6 +63,8 @@ public class GenioServiceImpl implements GenioService {
 
     private final GenioServiceImpl self;
 
+    private static final String STATUS_ECHEC = "ECHEC";
+
     public GenioServiceImpl(EtudiantRepository etudiantRepository,
                             MaitreDeStageRepository maitreDeStageRepository,
                             ConventionRepository conventionRepository,
@@ -94,18 +96,23 @@ public class GenioServiceImpl implements GenioService {
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
-            logger.debug("Validation des données d'entrée...");
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validation des données d'entrée...");
+            }
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
                 String erreursLisibles = erreurs.entrySet().stream()
                         .map(entry -> "Le champ '" + entry.getKey() + "' : " + entry.getValue())
                         .collect(Collectors.joining(", "));
-                self.sauvegarderHistorisation(input, null, null, "ECHEC", erreurs);
+                self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, erreurs);
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
-            logger.debug("Sauvegarde des entités dans la base de données...");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Sauvegarde des entités dans la base de données...");
+            }
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
@@ -122,19 +129,19 @@ public class GenioServiceImpl implements GenioService {
             byte[] fichierBinaire = genererFichierDocx(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
-            sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
+            self.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
             logger.info("La convention a été générée avec succès.");
             return new ConventionBinaireRes(true, fichierBinaire, null);
 
         } catch (ModelNotFoundException e) {
             logger.error("Modèle introuvable : {}", e.getMessage());
-            sauvegarderHistorisation(input, null, null, "ECHEC", Map.of("modele", e.getMessage()));
+            self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage());
             e.printStackTrace();
-            sauvegarderHistorisation(input, null, null, "ECHEC", Map.of("technique", e.getMessage()));
+            self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
@@ -176,13 +183,17 @@ public class GenioServiceImpl implements GenioService {
             erreurs.put("tuteur", "Le nom de l'enseignant est manquant.");
         }
 
-        logger.debug("Validation terminée avec {} erreur(s).", erreurs.size());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validation terminée avec {} erreur(s).", erreurs.size());
+        }
         return erreurs;
     }
 
     @Override
     public boolean modeleExiste(Long modeleId) {
-        logger.debug("Vérification de l'existence du modèle avec ID : {}", modeleId);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Vérification de l'existence du modèle avec ID : {}", modeleId);
+        }
         boolean exists = modeleRepository.existsById(modeleId);
         logger.info("Le modèle {}.", exists ? "existe" : "n'existe pas");
         return exists;
@@ -287,10 +298,14 @@ public class GenioServiceImpl implements GenioService {
         String templatePath = ResourceUtils.getFile("classpath:templates/modeleConvention_2024.docx").getPath();
         String outputFilePath = "output/conventionGenerée.docx";
 
-        logger.debug("Préparation des remplacements pour le fichier DOCX.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Préparation des remplacements pour le fichier DOCX.");
+        }
         Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
-        logger.debug("Génération du fichier DOCX à partir du template : {}", templatePath);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Génération du fichier DOCX à partir du template : {}", templatePath);
+        }
         DocxGenerator.generateDocx(templatePath, replacements, outputFilePath);
 
         File generatedFile = new File(outputFilePath);
@@ -351,7 +366,9 @@ public class GenioServiceImpl implements GenioService {
             replacements.put("TUT_IUT", "Non défini");
             replacements.put("TUT_IUT_MEL", "Non défini");
         }
-        logger.debug("Préparation des remplacements terminée.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Préparation des remplacements terminée.");
+        }
         return replacements;
     }
 
