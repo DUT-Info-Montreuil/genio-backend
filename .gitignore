@@ -38,10 +38,12 @@ build/
 ### Java/Maven ###
 *.class
 
-### Fichiers de log ###
+# Ignorer les logs
 logs/
-logs/**/*.log
+logs/**
 *.log
+GenioService_temp/logs/
+GenioService_temp/logs/**
 
 ### Fichiers générés ###
 output/

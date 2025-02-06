@@ -2,7 +2,7 @@
 <Configuration>
     <Properties>
         <!-- Définition repertoire de log du serveur d'application -->
-        <Property name="LOGS_BASE_REP" value="/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService_temp/logs"/>
+        <Property name="LOGS_BASE_REP" value="logs"/>
         <!-- Définition des répertoires de logs spécifique à l'application -->
         <!-- TODO : modifier avec le nom de votre application. -->
         <Property name="LOGS_APP_REP" value="${LOGS_BASE_REP}/prod"/>
