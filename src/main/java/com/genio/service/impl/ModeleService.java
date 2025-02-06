@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ModeleService {
@@ -37,7 +39,20 @@ public class ModeleService {
     private void insertModele(File templateFile) throws IOException, SQLException {
         byte[] fileBytes = Files.readAllBytes(templateFile.toPath());
         String modelName = templateFile.getName();
-        String modelYear = modelName.substring(modelName.indexOf("_") + 1, modelName.indexOf("."));
+
+        System.out.println("Nom du fichier trouvé : " + modelName);
+
+        // Regex pour vérifier le format "_YYYY.docx"
+        Pattern pattern = Pattern.compile("_(\\d{4})\\.docx$");
+        Matcher matcher = pattern.matcher(modelName);
+
+        if (!matcher.find()) {
+            System.err.println("Erreur : Le fichier " + modelName + " ne respecte pas le format attendu (_YYYY.docx).");
+            return; // Arrête ici et ne fait pas l'insertion en base
+        }
+
+        String modelYear = matcher.group(1); // Extrait l'année (ex: "2024")
+        System.out.println("Année extraite : " + modelYear);
 
         if (dataSource != null) {
             String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
@@ -47,9 +62,10 @@ public class ModeleService {
                 preparedStatement.setString(2, modelYear);
                 preparedStatement.setBytes(3, fileBytes);
                 preparedStatement.executeUpdate();
+                System.out.println("Modèle inséré avec succès : " + modelName);
             }
         } else {
-            System.out.println("⚠️ La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
+            System.out.println("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
         }
     }
 }

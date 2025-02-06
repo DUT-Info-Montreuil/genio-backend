@@ -13,8 +13,8 @@ public class Historisation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "convention_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "convention_id", nullable = true)
     private Convention convention;
 
     private String status;
@@ -25,12 +25,15 @@ public class Historisation {
     private String details;
 
     @Lob
+    @Column(name = "docx_binaire", columnDefinition = "LONGBLOB")
     private byte[] docxBinaire;
 
     @Lob
+    @Column(name = "flux_json_binaire", columnDefinition = "LONGBLOB")
     private byte[] fluxJsonBinaire;
 
     @Lob
+    @Column(name = "pdf_binaire", columnDefinition = "LONGBLOB")
     private byte[] pdfBinaire;
 
     public void setStatus(String status) {
@@ -94,4 +97,5 @@ public class Historisation {
     public void setConvention(Convention convention) {
         this.convention = convention;
     }
+
 }

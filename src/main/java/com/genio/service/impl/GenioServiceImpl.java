@@ -2,6 +2,7 @@ package com.genio.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
+import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
 import com.genio.dto.MaitreDeStageDTO;
@@ -16,7 +17,6 @@ import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.output.ConventionBinaireRes;
 import com.genio.service.GenioService;
 import com.genio.service.validation.*;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.nio.file.Files;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class GenioServiceImpl implements GenioService {
             logger.debug("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
+            System.out.println("Modèle récupéré avec ID: " + modele.getId());
 
             logger.debug("Validation des données d'entrée...");
             Map<String, String> erreurs = validerDonnees(input);
@@ -104,6 +106,7 @@ public class GenioServiceImpl implements GenioService {
             return new ConventionBinaireRes(false, null, e.getMessage());
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage());
+            e.printStackTrace();
             sauvegarderHistorisation(input, null, null, "ECHEC", Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
@@ -183,7 +186,8 @@ public class GenioServiceImpl implements GenioService {
                 historisation.setDocxBinaire(fichierBinaire);
             }
 
-            historisationRepository.save(historisation);
+            logger.info("Sauvegarde de l'historisation...");
+            historisationRepository.save(historisation);  // Ajoute un try/catch ici si nécessaire
             logger.info("Historisation sauvegardée avec succès.");
 
             if (erreurs != null && !erreurs.isEmpty()) {
@@ -198,6 +202,7 @@ public class GenioServiceImpl implements GenioService {
                 errorDetails.setHistorisation(historisation);
                 errorDetailsRepository.save(errorDetails);
 
+                errorDetailsRepository.save(errorDetails);
                 logger.warn("Des détails d'erreurs ont été enregistrés.");
             }
         } catch (Exception e) {
@@ -237,10 +242,20 @@ public class GenioServiceImpl implements GenioService {
         return savedConvention;
     }
 
+    @Transactional(readOnly = true)
+    public List<Modele> getModelesByAnnee(String annee) {
+        List<Modele> modeles = modeleRepository.findByAnnee(annee);
+
+        if (modeles.isEmpty()) {
+            throw new ModelNotFoundException("Aucun modèle trouvé pour l'année : " + annee);
+        }
+
+        return modeles;
+    }
 
     private byte[] genererFichierDocx(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) throws Exception {
         logger.info("Début de la génération du fichier DOCX pour la convention.");
-        String templatePath = ResourceUtils.getFile("classpath:templates/modeleConvention.docx").getPath();
+        String templatePath = ResourceUtils.getFile("classpath:templates/modeleConvention_2024.docx").getPath();
         String outputFilePath = "output/conventionGenerée.docx";
 
         logger.debug("Préparation des remplacements pour le fichier DOCX.");

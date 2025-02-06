@@ -2,17 +2,21 @@ package com.genio.model;
 
 import jakarta.persistence.*;
 
-@Table(name = "modele")
 @Entity
+@Table(name = "modele")
 public class Modele {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+
     private String nom;
+    @Column(nullable = false)
     private String annee;
 
     @Lob
+    @Column(name = "fichier_binaire", columnDefinition = "LONGBLOB")
     private byte[] fichierBinaire;
 
     public String getNom() {
@@ -29,6 +33,14 @@ public class Modele {
 
     public void setAnnee(String annee) {
         this.annee = annee;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public byte[] getFichierBinaire() {
