@@ -3,6 +3,7 @@ package com.genio.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
@@ -60,6 +61,26 @@ public class GenioServiceImpl implements GenioService {
 
     private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
 
+    private final GenioServiceImpl self;
+
+    public GenioServiceImpl(EtudiantRepository etudiantRepository,
+                            MaitreDeStageRepository maitreDeStageRepository,
+                            ConventionRepository conventionRepository,
+                            ModeleRepository modeleRepository,
+                            HistorisationRepository historisationRepository,
+                            TuteurRepository tuteurRepository,
+                            ErrorDetailsRepository errorDetailsRepository,
+                            @Lazy GenioServiceImpl self) {
+        this.etudiantRepository = etudiantRepository;
+        this.maitreDeStageRepository = maitreDeStageRepository;
+        this.conventionRepository = conventionRepository;
+        this.modeleRepository = modeleRepository;
+        this.historisationRepository = historisationRepository;
+        this.tuteurRepository = tuteurRepository;
+        this.errorDetailsRepository = errorDetailsRepository;
+        this.self = self;
+    }
+
     @Override
     @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
@@ -80,7 +101,7 @@ public class GenioServiceImpl implements GenioService {
                 String erreursLisibles = erreurs.entrySet().stream()
                         .map(entry -> "Le champ '" + entry.getKey() + "' : " + entry.getValue())
                         .collect(Collectors.joining(", "));
-                sauvegarderHistorisation(input, null, null, "ECHEC", erreurs);
+                self.sauvegarderHistorisation(input, null, null, "ECHEC", erreurs);
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 

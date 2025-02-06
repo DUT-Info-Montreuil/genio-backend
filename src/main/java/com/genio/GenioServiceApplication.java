@@ -15,17 +15,21 @@ import java.net.URL;
 @SpringBootApplication
 public class GenioServiceApplication implements CommandLineRunner {
 
-    @Autowired
-    private ModeleService modeleService;
-    private static final Logger logger = LogManager.getLogger(GenioServiceApplication.class);
 
+    private ModeleService modeleService;
+
+    public GenioServiceApplication(ModeleService modeleService) {
+        this.modeleService = modeleService;
+    }
+
+    private static final Logger logger = LogManager.getLogger(GenioServiceApplication.class);
 
     public static void main(String[] args) {
         URL log4jConfigFile = GenioServiceApplication.class.getClassLoader().getResource("log4j2.xml");
         if (log4jConfigFile == null) {
-            System.out.println("Fichier log4j2.xml introuvable !");
+            logger.error("Fichier log4j2.xml introuvable !");
         } else {
-            System.out.println("log4j2.xml trouvé à : " + log4jConfigFile);
+            logger.info("log4j2.xml trouvé à : {}", log4jConfigFile);
             Configurator.initialize(null, log4jConfigFile.getPath());
         }
 
@@ -37,8 +41,6 @@ public class GenioServiceApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         modeleService.insertModeleFromDirectory();
     }
-
-
 
 
 }

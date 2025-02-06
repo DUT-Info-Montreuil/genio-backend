@@ -29,11 +29,13 @@ import java.util.List;
 public class GenioController {
 
     private static final Logger logger = LoggerFactory.getLogger(GenioController.class);
+    private final GenioService genioService;
+    private final GenioServiceImpl genioServiceImpl;
 
-    @Autowired
-    private GenioService genioService;
-    @Autowired
-    private GenioServiceImpl genioServiceImpl;
+    public GenioController(GenioService genioService, GenioServiceImpl genioServiceImpl) {
+        this.genioService = genioService;
+        this.genioServiceImpl = genioServiceImpl;
+    }
 
     @PostMapping("/generer")
     @Operation(summary = "Generate a convention", description = "This endpoint generates a convention based on the input data.")

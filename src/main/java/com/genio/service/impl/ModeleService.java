@@ -1,5 +1,7 @@
 package com.genio.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class ModeleService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ModeleService.class); // 🔥 Logger ajouté
 
     @Value("${modele.templates.directory}")
     private String directoryPath;
@@ -40,19 +44,19 @@ public class ModeleService {
         byte[] fileBytes = Files.readAllBytes(templateFile.toPath());
         String modelName = templateFile.getName();
 
-        System.out.println("Nom du fichier trouvé : " + modelName);
+        logger.info("Nom du fichier trouvé : {}", modelName);
 
         // Regex pour vérifier le format "_YYYY.docx"
         Pattern pattern = Pattern.compile("_(\\d{4})\\.docx$");
         Matcher matcher = pattern.matcher(modelName);
 
         if (!matcher.find()) {
-            System.err.println("Erreur : Le fichier " + modelName + " ne respecte pas le format attendu (_YYYY.docx).");
-            return; // Arrête ici et ne fait pas l'insertion en base
+            logger.error("Erreur : Le fichier {} ne respecte pas le format attendu (_YYYY.docx).", modelName);
+            return;
         }
 
-        String modelYear = matcher.group(1); // Extrait l'année (ex: "2024")
-        System.out.println("Année extraite : " + modelYear);
+        String modelYear = matcher.group(1);
+        logger.info("Année extraite : {}", modelYear);
 
         if (dataSource != null) {
             String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
@@ -62,10 +66,10 @@ public class ModeleService {
                 preparedStatement.setString(2, modelYear);
                 preparedStatement.setBytes(3, fileBytes);
                 preparedStatement.executeUpdate();
-                System.out.println("Modèle inséré avec succès : " + modelName);
+                logger.info("Modèle inséré avec succès : {}", modelName);
             }
         } else {
-            System.out.println("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
+            logger.warn("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
         }
     }
 }
