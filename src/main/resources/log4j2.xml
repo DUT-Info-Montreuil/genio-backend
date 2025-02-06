@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  (C) Copyright 2018 FranceAgriMer (http://www.franceagrimer.fr).
-  FranceAgriMer, Établissement National des Produits de l’Agriculture et de la Mer.
-  Tout ou partie du présent code ne peut être copié et/ou distribué sans
-  l'accord formel de FranceAgriMer.
-
-  Author : Laurent HADJADJ
-  Date : 23/04/2023
-  Version 1.0.0
-  Description : Fichier de configuration logj2
-  Environnement : INT/REC/PRD
-  Application : MET
--->
-
 <Configuration>
     <Properties>
         <!-- Définition repertoire de log du serveur d'application -->
-        <Property name="LOGS_BASE_REP" value="/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService/logs"/>
+        <Property name="LOGS_BASE_REP" value="/Users/ehadjadj/Desktop/iut 3 eme annee/sae-remplcament/GenioService_temp/logs"/>
         <!-- Définition des répertoires de logs spécifique à l'application -->
         <!-- TODO : modifier avec le nom de votre application. -->
         <Property name="LOGS_APP_REP" value="${LOGS_BASE_REP}/prod"/>
