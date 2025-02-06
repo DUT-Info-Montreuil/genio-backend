@@ -75,7 +75,7 @@
         <Logger name="com.genio" level="info"/>
 
 
-        <Root level="info">
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="application-file"/>
             <AppenderRef ref="error-file" level="error"/>
