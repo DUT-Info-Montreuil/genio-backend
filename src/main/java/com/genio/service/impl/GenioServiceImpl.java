@@ -83,6 +83,11 @@ public class GenioServiceImpl implements GenioService {
         this.self = self;
     }
 
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
+    }
+
     @Override
     @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
@@ -100,7 +105,7 @@ public class GenioServiceImpl implements GenioService {
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
-            logger.info("Validation des données d'entrée...");
+            // Validation des autres données
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
@@ -111,7 +116,7 @@ public class GenioServiceImpl implements GenioService {
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
-            logger.info("Sauvegarde des entités dans la base de données...");
+            // Sauvegarde des entités dans la base de données...
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
@@ -144,7 +149,6 @@ public class GenioServiceImpl implements GenioService {
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
-
     @Override
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
 
