@@ -89,6 +89,12 @@ public class GenioServiceImpl implements GenioService {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
         try {
 
+            // Vérification du format de fichier
+            if (!"DOCX".equals(formatFichierOutput) && !"PDF".equals(formatFichierOutput)) {
+                logger.error("Format de fichier non supporté : {}", formatFichierOutput);
+                return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
+            }
+
             logger.info("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
