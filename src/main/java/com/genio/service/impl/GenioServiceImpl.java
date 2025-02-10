@@ -83,11 +83,6 @@ public class GenioServiceImpl implements GenioService {
         this.self = self;
     }
 
-    public boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email != null && email.matches(emailRegex);
-    }
-
     @Override
     @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
