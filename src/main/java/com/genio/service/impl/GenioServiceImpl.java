@@ -90,7 +90,7 @@ public class GenioServiceImpl implements GenioService {
         try {
 
             // Vérification du format de fichier
-            if (!"DOCX".equals(formatFichierOutput) && !"PDF".equals(formatFichierOutput)) {
+            if (!"docx".equals(formatFichierOutput.toLowerCase()) && !"pdf".equals(formatFichierOutput.toLowerCase())) {
                 logger.error("Format de fichier non supporté : {}", formatFichierOutput);
                 return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
             }
