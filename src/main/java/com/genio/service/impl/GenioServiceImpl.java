@@ -88,8 +88,6 @@ public class GenioServiceImpl implements GenioService {
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
         try {
-
-            // Vérification du format de fichier
             if (!"docx".equals(formatFichierOutput.toLowerCase()) && !"pdf".equals(formatFichierOutput.toLowerCase())) {
                 logger.error("Format de fichier non supporté : {}", formatFichierOutput);
                 return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
@@ -100,7 +98,6 @@ public class GenioServiceImpl implements GenioService {
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
-            // Validation des autres données
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
@@ -111,7 +108,6 @@ public class GenioServiceImpl implements GenioService {
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
-            // Sauvegarde des entités dans la base de données...
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
@@ -219,7 +215,7 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Sauvegarde de l'historisation...");
-            historisationRepository.save(historisation);  // Ajoute un try/catch ici si nécessaire
+            historisationRepository.save(historisation);
             logger.info("Historisation sauvegardée avec succès.");
 
             if (erreurs != null && !erreurs.isEmpty()) {
