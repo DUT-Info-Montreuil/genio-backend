@@ -87,17 +87,21 @@ public class GenioServiceImpl implements GenioService {
     @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
+
         try {
-            if (!"docx".equals(formatFichierOutput.toLowerCase()) && !"pdf".equals(formatFichierOutput.toLowerCase())) {
+            // Validation du format de fichier
+            if (!"docx".equalsIgnoreCase(formatFichierOutput) && !"pdf".equalsIgnoreCase(formatFichierOutput)) {
                 logger.error("Format de fichier non supporté : {}", formatFichierOutput);
                 return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
             }
 
+            // Vérification de l'existence du modèle
             logger.info("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
+            // Validation des données d'entrée
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
@@ -108,21 +112,32 @@ public class GenioServiceImpl implements GenioService {
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
+            // Sauvegarde des entités liées
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
+            if (input.getTuteur() == null || input.getTuteur().getNom() == null || input.getTuteur().getPrenom() == null) {
+                throw new IllegalArgumentException("Le tuteur est manquant ou incomplet.");
+            }
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
+            if (tuteur.getId() == null) {
+                logger.error("Erreur : Le tuteur n'a pas été correctement sauvegardé ou son ID est null.");
+                throw new IllegalStateException("Erreur de persistance du tuteur.");
+            }
 
+            // Création et sauvegarde de la convention
             String anneeStage = input.getStage().getAnneeStage();
-
             Convention convention = new Convention();
             convention.setEtudiant(etudiant);
             convention.setMaitreDeStage(maitreDeStage);
+            convention.setTuteur(tuteur);
             convention.setModele(modele);
             conventionRepository.save(convention);
 
+            // Génération du fichier convention
             logger.info("Génération du fichier binaire au format : {}", formatFichierOutput);
             byte[] fichierBinaire = genererFichierDocx(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
+            // Sauvegarde de l'historisation de la convention générée
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
             self.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
@@ -134,8 +149,7 @@ public class GenioServiceImpl implements GenioService {
             self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
         } catch (Exception e) {
-            logger.error("Une erreur inattendue s'est produite : {}", e.getMessage());
-            e.printStackTrace();
+            logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
             self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
@@ -187,27 +201,16 @@ public class GenioServiceImpl implements GenioService {
         return exists;
     }
 
-    @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
         logger.info("Début de la sauvegarde de l'historisation avec le statut : {}", status);
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            byte[] fluxJsonBinaire = objectMapper.writeValueAsBytes(input);
-
-            String details;
-            if (erreurs != null && !erreurs.isEmpty()) {
-                details = "Des erreurs de validation ont été détectées.";
-            } else {
-                details = "Aucune erreur détectée.";
-            }
-
+            // Créer et initialiser l'objet Historisation avant d'y référencer
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
             historisation.setStatus(status);
-            historisation.setDetails(details);
-            historisation.setFluxJsonBinaire(fluxJsonBinaire);
-
+            historisation.setDetails(erreurs != null && !erreurs.isEmpty() ? "Des erreurs de validation ont été détectées." : "Aucune erreur détectée.");
+            historisation.setFluxJsonBinaire(new ObjectMapper().writeValueAsBytes(input));
             historisation.setTimestamp();
 
             if (fichierBinaire != null) {
@@ -215,12 +218,21 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Sauvegarde de l'historisation...");
-            historisationRepository.save(historisation);
+            historisationRepository.save(historisation);  // Sauvegarder l'historisation
+
             logger.info("Historisation sauvegardée avec succès.");
 
+            // Si des erreurs ont été détectées, sauvegarder les détails des erreurs dans la table error_details
             if (erreurs != null && !erreurs.isEmpty()) {
+                // Limiter la longueur du message d'erreur à 255 caractères
+                String messageErreur = erreurs.toString();
+                if (messageErreur.length() > 255) {
+                    messageErreur = messageErreur.substring(0, 255); // Limiter à 255 caractères
+                }
+
+                // Sauvegarder les détails des erreurs dans la table error_details
                 ErrorDetails errorDetails = new ErrorDetails();
-                errorDetails.setMessageErreur(erreurs.toString());
+                errorDetails.setMessageErreur(messageErreur);  // Utilisation du message limité
                 StringBuilder champsManquants = new StringBuilder();
                 erreurs.forEach((key, value) -> {
                     champsManquants.append(key).append(" ; ");
@@ -230,9 +242,9 @@ public class GenioServiceImpl implements GenioService {
                 errorDetails.setHistorisation(historisation);
                 errorDetailsRepository.save(errorDetails);
 
-                errorDetailsRepository.save(errorDetails);
                 logger.warn("Des détails d'erreurs ont été enregistrés.");
             }
+
         } catch (Exception e) {
             logger.error("Erreur lors de la sauvegarde de l'historisation : {}", e.getMessage());
         }
@@ -256,15 +268,18 @@ public class GenioServiceImpl implements GenioService {
 
     private Tuteur sauvegarderTuteur(TuteurDTO tuteurDTO) {
         logger.info("Début de la sauvegarde de tuteur : {}", tuteurDTO.getNom());
+        if (tuteurDTO == null || tuteurDTO.getNom() == null || tuteurDTO.getPrenom() == null) {
+            throw new IllegalArgumentException("Le tuteur est manquant ou incomplet.");
+        }
         Tuteur tuteur = TuteurFactory.createTuteur(tuteurDTO);
-        Tuteur savedTuteur = tuteurRepository.save(tuteur);
+        Tuteur savedTuteur = tuteurRepository.save(tuteur);  // Assurez-vous que le tuteur est sauvegardé
         logger.info("Tuteur sauvegardé avec succès : {}", savedTuteur.getNom());
         return savedTuteur;
     }
 
-    private Convention sauvegarderConvention(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Modele modele) {
+    private Convention sauvegarderConvention(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur,Modele modele) {
         logger.info("Début de la sauvegarde de la convention.");
-        Convention convention = ConventionFactory.createConvention(input, etudiant, maitreDeStage, modele);
+        Convention convention = ConventionFactory.createConvention(input, etudiant, maitreDeStage,tuteur, modele);
         Convention savedConvention = conventionRepository.save(convention);
         logger.info("Convention sauvegardée avec succès pour l'année : {}", input.getStage().getAnneeStage());
         return savedConvention;

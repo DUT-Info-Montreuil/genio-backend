@@ -18,6 +18,10 @@ public class Convention {
     private MaitreDeStage maitreDeStage;
 
     @ManyToOne
+    @JoinColumn(name = "tuteur_id", nullable = false)
+    private Tuteur tuteur;
+
+    @ManyToOne
     @JoinColumn(name = "modele_id", nullable = false)
     private Modele modele;
 
@@ -31,5 +35,9 @@ public class Convention {
 
     public void setModele(Modele modele) {
         this.modele = modele;
+    }
+
+    public void setTuteur(Tuteur tuteur) {
+        this.tuteur = tuteur;
     }
 }

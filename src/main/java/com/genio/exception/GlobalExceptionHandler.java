@@ -1,12 +1,10 @@
 package com.genio.exception;
 
-import com.genio.exception.business.EmptyDirectoryException;
-import com.genio.exception.business.EmptyFileException;
-import com.genio.exception.business.FileTooLargeException;
-import com.genio.exception.business.InvalidFileFormatException;
+import com.genio.exception.business.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,9 +44,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    // Optionnel : gestion des exceptions génériques
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur interne est survenue : " + ex.getMessage());
     }
+
+    @ExceptionHandler(TemplateAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleTemplateAlreadyExistsException(TemplateAlreadyExistsException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Un modèle avec ce nom existe déjà");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TemplateInUseException.class)
+    public ResponseEntity<Map<String, String>> handleTemplateInUseException(TemplateInUseException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Modèle en cours d'utilisation");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidFilterException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidFilterException(InvalidFilterException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }

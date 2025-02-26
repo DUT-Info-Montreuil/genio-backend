@@ -1,7 +1,12 @@
 package com.genio.service.impl;
 
+import com.genio.dto.output.ModeleDTO;
+import com.genio.exception.business.*;
+import com.genio.model.Modele;
+import com.genio.repository.ModeleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +17,11 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.genio.exception.business.InvalidFileFormatException;
-import com.genio.exception.business.DatabaseInsertionException;
-import com.genio.exception.business.EmptyDirectoryException;
-import com.genio.exception.business.EmptyFileException;
+import java.util.stream.Collectors;
 
 @Service
 public class ModeleService {
@@ -29,6 +32,9 @@ public class ModeleService {
     private String directoryPath;
 
     private final DataSource dataSource;
+
+    @Autowired
+    private ModeleRepository modeleRepository;
 
     public ModeleService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -60,7 +66,6 @@ public class ModeleService {
         logger.info("Taille du fichier : {} octets", templateFile.length());
         logger.info("Date de création du fichier : {}", new java.util.Date(templateFile.lastModified()));
 
-        // Validation du format du fichier
         Pattern pattern = Pattern.compile("_(\\d{4})\\.docx$");
         Matcher matcher = pattern.matcher(modelName);
 
@@ -72,7 +77,6 @@ public class ModeleService {
         String modelYear = matcher.group(1);
         logger.info("Année extraite : {}", modelYear);
 
-        // Insertion en base de données
         if (dataSource != null) {
             String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
             try (Connection connection = dataSource.getConnection();
@@ -90,4 +94,50 @@ public class ModeleService {
             logger.warn("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
         }
     }
+
+    public List<ModeleDTO> getAllTemplates() throws NoTemplatesAvailableException {
+        List<Modele> modeles = modeleRepository.findAll();
+
+        if (modeles.isEmpty()) {
+            throw new NoTemplatesAvailableException("Aucun modèle de convention disponible.");
+        }
+
+        return modeles.stream()
+                .map(modele -> new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx"))
+                .collect(Collectors.toList());
+    }
+
+
+    public ModeleDTO getTemplateById(Long id) throws TemplateNotFoundException {
+        Modele modele = modeleRepository.findById(id)
+                .orElseThrow(() -> new TemplateNotFoundException("Modèle introuvable avec l'ID : " + id));
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx");
+    }
+
+    public ModeleDTO createTemplate(ModeleDTO modeleDTO) {
+        Modele modele = new Modele();
+        modele.setNom(modeleDTO.getNom());
+        modele.setAnnee(modeleDTO.getAnnee());
+        modeleRepository.save(modele);
+
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx");
+    }
+    public ModeleDTO updateTemplate(Long id, ModeleDTO modeleDTO) throws NoTemplatesAvailableException {
+        Modele modele = modeleRepository.findById(id)
+                .orElseThrow(() -> new NoTemplatesAvailableException("Modèle introuvable avec l'ID : " + id));
+
+        modele.setNom(modeleDTO.getNom());
+        modele.setAnnee(modeleDTO.getAnnee());
+        modeleRepository.save(modele);
+
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx");
+    }
+
+    public void deleteTemplate(Long id) throws NoTemplatesAvailableException {
+        Modele modele = modeleRepository.findById(id)
+                .orElseThrow(() -> new NoTemplatesAvailableException("Modèle introuvable avec l'ID : " + id));
+
+        modeleRepository.delete(modele);
+    }
+
 }

@@ -15,6 +15,26 @@ public class ErrorDetails {
     @Column(name = "champsManquants", nullable = false)
     private String champsManquants;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMessageErreur() {
+        return messageErreur;
+    }
+
+    public String getChampsManquants() {
+        return champsManquants;
+    }
+
+    public Historisation getHistorisation() {
+        return historisation;
+    }
+
     @ManyToOne
     @JoinColumn(name = "historisation_id", nullable = false)
     private Historisation historisation;
