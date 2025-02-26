@@ -1,7 +1,6 @@
 package com.genio.controller;
 
 import com.genio.dto.output.ErreurDTO;
-import com.genio.exception.business.InvalidFilterException;
 import com.genio.exception.business.NoErrorFoundException;
 import com.genio.service.impl.ErreurService;
 import org.springframework.beans.factory.annotation.Autowired;

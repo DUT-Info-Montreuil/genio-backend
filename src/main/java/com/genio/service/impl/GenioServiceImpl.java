@@ -89,19 +89,17 @@ public class GenioServiceImpl implements GenioService {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
 
         try {
-            // Validation du format de fichier
+
             if (!"docx".equalsIgnoreCase(formatFichierOutput) && !"pdf".equalsIgnoreCase(formatFichierOutput)) {
                 logger.error("Format de fichier non supporté : {}", formatFichierOutput);
                 return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
             }
 
-            // Vérification de l'existence du modèle
             logger.info("Vérification de l'existence du modèle...");
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
-            // Validation des données d'entrée
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
                 logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
@@ -112,7 +110,6 @@ public class GenioServiceImpl implements GenioService {
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
-            // Sauvegarde des entités liées
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             if (input.getTuteur() == null || input.getTuteur().getNom() == null || input.getTuteur().getPrenom() == null) {
@@ -124,7 +121,6 @@ public class GenioServiceImpl implements GenioService {
                 throw new IllegalStateException("Erreur de persistance du tuteur.");
             }
 
-            // Création et sauvegarde de la convention
             String anneeStage = input.getStage().getAnneeStage();
             Convention convention = new Convention();
             convention.setEtudiant(etudiant);
@@ -133,11 +129,9 @@ public class GenioServiceImpl implements GenioService {
             convention.setModele(modele);
             conventionRepository.save(convention);
 
-            // Génération du fichier convention
             logger.info("Génération du fichier binaire au format : {}", formatFichierOutput);
             byte[] fichierBinaire = genererFichierDocx(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
-            // Sauvegarde de l'historisation de la convention générée
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
             self.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
@@ -205,7 +199,6 @@ public class GenioServiceImpl implements GenioService {
     public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
         logger.info("Début de la sauvegarde de l'historisation avec le statut : {}", status);
         try {
-            // Créer et initialiser l'objet Historisation avant d'y référencer
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
             historisation.setStatus(status);
@@ -218,21 +211,18 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Sauvegarde de l'historisation...");
-            historisationRepository.save(historisation);  // Sauvegarder l'historisation
+            historisationRepository.save(historisation);
 
             logger.info("Historisation sauvegardée avec succès.");
 
-            // Si des erreurs ont été détectées, sauvegarder les détails des erreurs dans la table error_details
             if (erreurs != null && !erreurs.isEmpty()) {
-                // Limiter la longueur du message d'erreur à 255 caractères
                 String messageErreur = erreurs.toString();
                 if (messageErreur.length() > 255) {
-                    messageErreur = messageErreur.substring(0, 255); // Limiter à 255 caractères
+                    messageErreur = messageErreur.substring(0, 255);
                 }
 
-                // Sauvegarder les détails des erreurs dans la table error_details
                 ErrorDetails errorDetails = new ErrorDetails();
-                errorDetails.setMessageErreur(messageErreur);  // Utilisation du message limité
+                errorDetails.setMessageErreur(messageErreur);
                 StringBuilder champsManquants = new StringBuilder();
                 erreurs.forEach((key, value) -> {
                     champsManquants.append(key).append(" ; ");
@@ -272,7 +262,7 @@ public class GenioServiceImpl implements GenioService {
             throw new IllegalArgumentException("Le tuteur est manquant ou incomplet.");
         }
         Tuteur tuteur = TuteurFactory.createTuteur(tuteurDTO);
-        Tuteur savedTuteur = tuteurRepository.save(tuteur);  // Assurez-vous que le tuteur est sauvegardé
+        Tuteur savedTuteur = tuteurRepository.save(tuteur);
         logger.info("Tuteur sauvegardé avec succès : {}", savedTuteur.getNom());
         return savedTuteur;
     }
@@ -298,14 +288,14 @@ public class GenioServiceImpl implements GenioService {
 
     private byte[] genererFichierDocx(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) throws Exception {
         logger.info("Début de la génération du fichier DOCX pour la convention.");
-        String templatePath = ResourceUtils.getFile("classpath:templates/modeleConvention_2024.docx").getPath();
+        String conventionServicePath = ResourceUtils.getFile("classpath:conventionServices/modeleConvention_2024.docx").getPath();
         String outputFilePath = "output/conventionGenerée.docx";
 
         logger.info("Préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
-        logger.info("Génération du fichier DOCX à partir du template : {}", templatePath);
-        DocxGenerator.generateDocx(templatePath, replacements, outputFilePath);
+        logger.info("Génération du fichier DOCX à partir du conventionService : {}", conventionServicePath);
+        DocxGenerator.generateDocx(conventionServicePath, replacements, outputFilePath);
 
         File generatedFile = new File(outputFilePath);
         if (!generatedFile.exists()) {

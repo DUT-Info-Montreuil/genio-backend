@@ -50,7 +50,7 @@ output/
 *.docx
 
 # Exclure le modèle de convention
-!src/main/resources/templates/modeleConvention_2024.docx
+!src/main/resources/conventionServices/modeleConvention_2024.docx
 
 ### Fichiers de configuration Spring Boot ###
 src/main/resources/application.properties

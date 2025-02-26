@@ -11,7 +11,7 @@ public class DocxGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(DocxGenerator.class);
 
-    public static String generateDocx(String templatePath, Map<String, String> replacements, String outputPath) throws Exception {
+    public static String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath) throws Exception {
         File outputFile = new File(outputPath);
         File outputDir = outputFile.getParentFile();
         if (outputDir != null && !outputDir.exists()) {
@@ -19,10 +19,10 @@ public class DocxGenerator {
         }
 
         logger.info("Début de la génération du fichier DOCX...");
-        logger.info("Chemin du modèle : {}", templatePath);
+        logger.info("Chemin du modèle : {}", conventionServicePath);
         logger.info("Chemin de sortie : {}", outputPath);
 
-        try (InputStream fis = new FileInputStream(templatePath);
+        try (InputStream fis = new FileInputStream(conventionServicePath);
              XWPFDocument document = new XWPFDocument(fis)) {
 
             for (XWPFParagraph paragraph : document.getParagraphs()) {
