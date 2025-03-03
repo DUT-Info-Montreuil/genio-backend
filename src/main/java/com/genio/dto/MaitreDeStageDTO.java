@@ -54,4 +54,15 @@ public class MaitreDeStageDTO {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public String toString() {
+        return "MaitreDeStageDTO{" +
+                "nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", fonction='" + fonction + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

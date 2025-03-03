@@ -70,4 +70,16 @@ public class ConventionServiceDTO {
     public void setModeleId(Long modeleId) {
         this.modeleId = modeleId;
     }
+
+    @Override
+    public String toString() {
+        return "ConventionServiceDTO{" +
+                "etudiant=" + etudiant +
+                ", maitreDeStage=" + maitreDeStage +
+                ", organisme=" + organisme +
+                ", stage=" + stage +
+                ", tuteur=" + tuteur +
+                ", modeleId=" + modeleId +
+                '}';
+    }
 }

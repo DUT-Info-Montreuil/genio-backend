@@ -1,7 +1,5 @@
 package com.genio.service;
 
-import com.genio.dto.output.ModeleDTO;
-import com.genio.service.impl.ErreurService;
 import com.genio.service.impl.ModeleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

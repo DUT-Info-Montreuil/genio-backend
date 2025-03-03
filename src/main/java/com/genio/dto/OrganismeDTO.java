@@ -78,4 +78,18 @@ public class OrganismeDTO {
     public String getLieuDuStage() {
         return lieuDuStage;
     }
+
+    @Override
+    public String toString() {
+        return "OrganismeDTO{" +
+                "nom='" + nom + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", nomRepresentant='" + nomRepresentant + '\'' +
+                ", qualiteRepresentant='" + qualiteRepresentant + '\'' +
+                ", nomDuService='" + nomDuService + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                ", lieuDuStage='" + lieuDuStage + '\'' +
+                '}';
+    }
 }

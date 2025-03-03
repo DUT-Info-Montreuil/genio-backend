@@ -107,4 +107,18 @@ public class EtudiantDTO {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public String toString() {
+        return "EtudiantDTO{" +
+                "nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", sexe='" + sexe + '\'' +
+                ", dateNaissance='" + dateNaissance + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                ", cpam='" + cpam + '\'' +
+                '}';
+    }
 }

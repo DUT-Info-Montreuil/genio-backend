@@ -55,4 +55,16 @@ public class ConventionWsDTO {
     public Long getModeleId() {
         return modeleId;
     }
+
+    @Override
+    public String toString() {
+        return "ConventionWsDTO{" +
+                "etudiant=" + etudiant +
+                ", maitreDeStage=" + maitreDeStage +
+                ", organisme=" + organisme +
+                ", stage=" + stage +
+                ", tuteur=" + tuteur +
+                ", modeleId=" + modeleId +
+                '}';
+    }
 }

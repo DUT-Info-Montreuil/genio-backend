@@ -1,9 +1,6 @@
 package com.genio.controller;
-import com.genio.dto.output.ErreurDTO;
 import com.genio.dto.output.ModeleDTO;
 import com.genio.dto.output.ModeleDTOForList;
-import com.genio.dto.output.ModelConventionResponseDTO;
-import com.genio.dto.output.ModelConventionErrorResponseDTO;
 import com.genio.exception.business.*;
 import com.genio.service.impl.ModeleService;
 import org.slf4j.Logger;
@@ -32,7 +29,7 @@ public class ModeleController {
             List<ModeleDTOForList> conventionServices = modeleService.getAllConventionServices();
             return ResponseEntity.ok(conventionServices);
         } catch (NoConventionServicesAvailableException e) {
-            return ResponseEntity.status(204).body(new ErreurDTO("Aucun modèle de convention disponible"));
+            return ResponseEntity.status(204).body(Collections.singletonMap("error", "Aucun modèle de convention disponible"));
         }
     }
 
@@ -42,7 +39,7 @@ public class ModeleController {
             ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
             return ResponseEntity.ok(modeleDTO);
         } catch (ConventionServiceNotFoundException e) {
-            return ResponseEntity.status(404).body(new ErreurDTO("Modèle introuvable"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Modèle introuvable"));
         }
     }
 
@@ -51,35 +48,20 @@ public class ModeleController {
                                                    @RequestParam("file") MultipartFile file) {
         try {
             ModeleDTO createdModel = modeleService.createModelConvention(nom, file);
-            return ResponseEntity.status(201).body(new ModelConventionResponseDTO("ModelConvention ajouté avec succès", createdModel.getId()));
+            return ResponseEntity.status(201).body(Collections.singletonMap("message", "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
-            return ResponseEntity.status(400).body(new ModelConventionErrorResponseDTO("Un modèle avec ce nom existe déjà"));
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", "Un modèle avec ce nom existe déjà"));
         } catch (InvalidFormatException e) {
-            return ResponseEntity.status(400).body(new ModelConventionErrorResponseDTO("Format non supporté, uniquement .docx accepté"));
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", "Format non supporté, uniquement .docx accepté"));
         } catch (MissingVariableException e) {
             logger.error("Erreur : {}", e.getMessage());
-            return ResponseEntity.status(400).body(new ModelConventionErrorResponseDTO(e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
         } catch (DatabaseInsertionException e) {
-            return ResponseEntity.status(500).body(new ModelConventionErrorResponseDTO("Erreur lors de l'enregistrement du modèle"));
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur lors de l'enregistrement du modèle"));
         } catch (IOException e) {
-            return ResponseEntity.status(500).body(new ModelConventionErrorResponseDTO("Erreur lors de la lecture du fichier DOCX"));
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur lors de la lecture du fichier DOCX"));
         }
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception ex) {
-        logger.error("Une erreur interne est survenue : {}", ex.getMessage());
-
-        String message;
-
-        if (ex.getMessage().contains("Query did not return a unique result")) {
-            message = "Plusieurs modèles ont été trouvés avec ce nom. Veuillez vérifier la base de données.";
-        } else {
-            message = "Une erreur inattendue est survenue. Veuillez réessayer plus tard.";
-        }
-
-        return ResponseEntity.status(500).body(new ModelConventionErrorResponseDTO(message));
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateModelConvention(@PathVariable Integer id, @RequestBody ModeleDTO modeleDTO) {
@@ -88,11 +70,7 @@ public class ModeleController {
             return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention mis à jour avec succès !"));
         } catch (ModelConventionNotFoundException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
-        } catch (ValidationException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
-        } catch (UnauthorizedModificationException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
-        } catch (IntegrityCheckFailedException e) {
+        } catch (ValidationException | UnauthorizedModificationException | IntegrityCheckFailedException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur interne du serveur"));
@@ -104,9 +82,7 @@ public class ModeleController {
         try {
             modeleService.deleteModelConvention(id);
             return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention supprimé avec succès !"));
-        } catch (ModelConventionNotFoundException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
-        } catch (ModelConventionInUseException e) {
+        } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
         } catch (DeletionFailedException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));

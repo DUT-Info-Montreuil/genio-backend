@@ -36,4 +36,13 @@ public class TuteurDTO {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public String toString() {
+        return "TuteurDTO{" +
+                "nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

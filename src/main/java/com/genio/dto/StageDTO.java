@@ -84,4 +84,19 @@ public class StageDTO {
     public String getRemunerationHoraire() {
         return remunerationHoraire;
     }
+
+    @Override
+    public String toString() {
+        return "StageDTO{" +
+                "sujetDuStage='" + sujetDuStage + '\'' +
+                ", dateDebutStage='" + dateDebutStage + '\'' +
+                ", dateFinStage='" + dateFinStage + '\'' +
+                ", duree='" + duree + '\'' +
+                ", joursTot=" + joursTot +
+                ", heuresTot=" + heuresTot +
+                ", remunerationHoraire='" + remunerationHoraire + '\'' +
+                ", SaeStageProfessionnel='" + SaeStageProfessionnel + '\'' +
+                ", anneeStage='" + anneeStage + '\'' +
+                '}';
+    }
 }
