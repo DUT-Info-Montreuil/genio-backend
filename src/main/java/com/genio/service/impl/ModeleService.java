@@ -27,6 +27,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import com.genio.exception.business.InvalidFormatException;
 import org.springframework.web.multipart.MultipartFile;
+import com.genio.exception.business.ModelConventionNotFoundException;
+import com.genio.exception.business.UnauthorizedModificationException;
+import com.genio.exception.business.IntegrityCheckFailedException;
+
 
 @Service
 public class ModeleService {
@@ -305,25 +309,74 @@ public class ModeleService {
 
         logger.info("Fichier enregistré avec succès sous : {}", filePath);
     }
-    /**
 
+    public void updateModelConvention(Integer id, ModeleDTO modeleDTO)
+            throws ModelConventionNotFoundException, ValidationException, UnauthorizedModificationException, IntegrityCheckFailedException {
 
-    public ModeleDTO updateConventionService(Long id, ModeleDTO modeleDTO) throws NoConventionServicesAvailableException {
-        Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> new NoConventionServicesAvailableException("Modèle introuvable avec l'ID : " + id));
+        Modele modele = modeleRepository.findById(id.longValue())
+                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
+
+        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches("^modeleConvention_\\d{4}\\.docx$")) {
+            throw new ValidationException("Le nom du modèle est invalide ou ne respecte pas le format 'modeleConvention_YYYY.docx'.");
+        }
+        if (modeleDTO.getAnnee() == null || !modeleDTO.getAnnee().matches("^\\d{4}$")) {
+            throw new ValidationException("L'année fournie est invalide.");
+        }
+
+        if (!modele.getAnnee().equals(modeleDTO.getAnnee())) {
+            throw new UnauthorizedModificationException("La modification de l'année d'un modèle existant n'est pas autorisée.");
+        }
+
+        if (modeleRepository.findFirstByNom(modeleDTO.getNom()).isPresent() && !modele.getNom().equals(modeleDTO.getNom())) {
+            throw new IntegrityCheckFailedException("Un modèle avec ce nom existe déjà.");
+        }
 
         modele.setNom(modeleDTO.getNom());
         modele.setAnnee(modeleDTO.getAnnee());
         modeleRepository.save(modele);
 
-        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx");
+        logger.info("Modèle mis à jour avec succès : {}", modeleDTO.getNom());
     }
 
-    public void deleteConventionService(Long id) throws NoConventionServicesAvailableException {
+    private boolean checkIfModelIsInUse(Long modeleId) {
+        String sql = "SELECT COUNT(*) FROM convention WHERE modele_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, modeleId);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Erreur lors de la vérification de l'utilisation du modèle {} : {}", modeleId, e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isModelInUse(Long id) throws ModelConventionNotFoundException {
         Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> new NoConventionServicesAvailableException("Modèle introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
 
-        modeleRepository.delete(modele);
-    }**/
+        return checkIfModelIsInUse(modele.getId());
+    }
 
+    public void deleteModelConvention(Long id)
+            throws ModelConventionNotFoundException, ModelConventionInUseException, DeletionFailedException {
+
+        Modele modele = modeleRepository.findById(id)
+                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
+
+        if (isModelInUse(modele.getId())) {
+            throw new ModelConventionInUseException("Le modèle est toujours utilisé et ne peut pas être supprimé.");
+        }
+
+        try {
+            modeleRepository.delete(modele);
+            logger.info("Modèle supprimé avec succès : {}", modele.getNom());
+        } catch (Exception e) {
+            logger.error("Erreur lors de la suppression du modèle {} : {}", modele.getNom(), e.getMessage());
+            throw new DeletionFailedException("Échec de la suppression du modèle en raison d'une erreur technique.");
+        }
+    }
 }

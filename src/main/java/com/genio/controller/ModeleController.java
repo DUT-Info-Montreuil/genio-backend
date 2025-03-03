@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.genio.exception.business.InvalidFormatException;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
+import com.genio.exception.business.ValidationException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -27,7 +27,7 @@ public class ModeleController {
     private static final Logger logger = LoggerFactory.getLogger(ModeleController.class);
 
     @GetMapping
-    public ResponseEntity<?> getAllConventionServices() {
+    public ResponseEntity<?> getAllModelConvention() {
         try {
             List<ModeleDTOForList> conventionServices = modeleService.getAllConventionServices();
             return ResponseEntity.ok(conventionServices);
@@ -37,7 +37,7 @@ public class ModeleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getConventionServiceById(@PathVariable Long id) {
+    public ResponseEntity<?> getModelConventionById(@PathVariable Long id) {
         try {
             ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
             return ResponseEntity.ok(modeleDTO);
@@ -81,26 +81,47 @@ public class ModeleController {
     }
 
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateModelConvention(@PathVariable Integer id, @RequestBody ModeleDTO modeleDTO) {
+        try {
+            modeleService.updateModelConvention(id, modeleDTO);
+            return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention mis à jour avec succès !"));
+        } catch (ModelConventionNotFoundException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (ValidationException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (UnauthorizedModificationException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (IntegrityCheckFailedException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur interne du serveur"));
+        }
+    }
 
-    /**
-     @PutMapping("/{id}")
-      public ResponseEntity<ModeleDTO> updateConventionService(@PathVariable Long id, @RequestBody ModeleDTO modeleDTO) {
-          try {
-              ModeleDTO updatedConventionService = modeleService.updateConventionService(id, modeleDTO);
-              return ResponseEntity.ok(updatedConventionService);
-          } catch (NoConventionServicesAvailableException e) {
-              return ResponseEntity.notFound().build();
-          }
-      }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteModelConvention(@PathVariable Long id) {
+        try {
+            modeleService.deleteModelConvention(id);
+            return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention supprimé avec succès !"));
+        } catch (ModelConventionNotFoundException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (ModelConventionInUseException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (DeletionFailedException e) {
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur interne du serveur"));
+        }
+    }
 
-      @DeleteMapping("/{id}")
-      public ResponseEntity<String> deleteConventionService(@PathVariable Long id) {
-          try {
-              modeleService.deleteConventionService(id);
-              return ResponseEntity.ok("Modèle supprimé avec succès.");
-          } catch (NoConventionServicesAvailableException e) {
-              return ResponseEntity.notFound().build();
-          }
-      }
-  **/
+    @GetMapping("/{id}/isUsed")
+    public ResponseEntity<?> isModelUsed(@PathVariable Long id) {
+        try {
+            boolean isUsed = modeleService.isModelInUse(id);
+            return ResponseEntity.ok(Collections.singletonMap("isUsed", isUsed));
+        } catch (ModelConventionNotFoundException e) {
+            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
 }

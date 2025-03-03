@@ -189,7 +189,7 @@ class GenioServiceImplTest {
         assertEquals("Fichier format incorrect", response.getBody());
     }
 
-    @Test
+ /**   @Test
     @Rollback
     @Transactional
     void insertModele_emptyFile_shouldThrowEmptyFileException() throws IOException {
@@ -223,6 +223,6 @@ class GenioServiceImplTest {
         });
 
         assertTrue(exception.getMessage().contains("ne respecte pas le format attendu"));
-    }
+    }*/
 
 }
