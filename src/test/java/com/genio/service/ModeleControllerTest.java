@@ -25,8 +25,7 @@ public class ModeleControllerTest {
     @MockBean
     private ModeleService modeleService;
 
-    @MockBean
-    private ErreurService erreurService;
+
 
 
     @Test
