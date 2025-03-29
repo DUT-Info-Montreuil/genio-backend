@@ -2,7 +2,6 @@ package com.genio;
 
 import com.genio.service.impl.ModeleService;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import java.net.URL;
 
 @SpringBootApplication
-public class GenioServiceApplication implements CommandLineRunner {
+public class GenioServiceApplication {
 
 
     private ModeleService modeleService;
@@ -34,11 +33,5 @@ public class GenioServiceApplication implements CommandLineRunner {
         logger.info("Application démarrée avec Log4J2 !");
         SpringApplication.run(GenioServiceApplication.class, args);
     }
-
-    @Override
-    public void run(String... args) throws Exception {
-        modeleService.insertModeleFromDirectory();
-    }
-
 
 }

@@ -1,5 +1,4 @@
 package com.genio.controller;
-import com.genio.dto.output.ModeleDTOForList;
 import com.genio.exception.business.*;
 import com.genio.service.impl.ModeleService;
 import org.slf4j.Logger;
@@ -13,6 +12,8 @@ import com.genio.exception.business.ValidationException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import com.genio.dto.output.ModeleDTO;
+import com.genio.dto.output.ModeleDTOForList;
 
 //dez
 
@@ -37,7 +38,7 @@ public class ModeleController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getModelConventionById(@PathVariable Long id) {
         try {
-            ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
+            com.genio.dto.output.ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
             return ResponseEntity.ok(modeleDTO);
         } catch (ConventionServiceNotFoundException e) {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Modèle introuvable"));
@@ -48,7 +49,7 @@ public class ModeleController {
     public ResponseEntity<?> createModelConvention(@RequestParam("nom") String nom,
                                                    @RequestParam("file") MultipartFile file) {
         try {
-            ModeleDTO createdModel = modeleService.createModelConvention(nom, file);
+            com.genio.dto.output.ModeleDTO createdModel = modeleService.createModelConvention(nom, file);
             return ResponseEntity.status(201).body(Collections.singletonMap("message", "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", "Un modèle avec ce nom existe déjà"));
