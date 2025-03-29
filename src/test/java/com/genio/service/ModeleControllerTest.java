@@ -1,5 +1,6 @@
 package com.genio.service;
 
+import com.genio.controller.ModeleController;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.model.Modele;
 import com.genio.repository.ModeleRepository;
