@@ -89,16 +89,33 @@ public class GenioServiceImpl implements GenioService {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
 
         try {
-
             if (!"docx".equalsIgnoreCase(formatFichierOutput) && !"pdf".equalsIgnoreCase(formatFichierOutput)) {
-                logger.error("Format de fichier non supporté : {}", formatFichierOutput);
-                return new ConventionBinaireRes(false, null, "Erreur : format de fichier non supporté.");
+                String message = "Erreur : format de fichier non supporté.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
             }
 
-            logger.info("Vérification de l'existence du modèle...");
+            if (input.getModeleId() == null) {
+                String message = "Erreur : identifiant de modèle manquant.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
+            }
+
             Modele modele = modeleRepository.findById(input.getModeleId())
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
+
+            if (modele.getFichierBinaire() == null && (modele.getNom() == null || modele.getNom().isBlank())) {
+                String message = "Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
+            }
+
+            if (modele.getNom() != null && !modele.getNom().endsWith(".docx")) {
+                String message = "Erreur : le nom du modèle doit se terminer par .docx.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
+            }
 
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
@@ -113,15 +130,17 @@ public class GenioServiceImpl implements GenioService {
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
             if (input.getTuteur() == null || input.getTuteur().getNom() == null || input.getTuteur().getPrenom() == null) {
-                throw new IllegalArgumentException("Le tuteur est manquant ou incomplet.");
+                String message = "Le tuteur est manquant ou incomplet.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
             }
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
             if (tuteur.getId() == null) {
-                logger.error("Erreur : Le tuteur n'a pas été correctement sauvegardé ou son ID est null.");
-                throw new IllegalStateException("Erreur de persistance du tuteur.");
+                String message = "Erreur de persistance du tuteur.";
+                logger.error(message);
+                return new ConventionBinaireRes(false, null, message);
             }
 
-            String anneeStage = input.getStage().getAnneeStage();
             Convention convention = new Convention();
             convention.setEtudiant(etudiant);
             convention.setMaitreDeStage(maitreDeStage);
@@ -129,8 +148,19 @@ public class GenioServiceImpl implements GenioService {
             convention.setModele(modele);
             conventionRepository.save(convention);
 
-            logger.info("Génération du fichier binaire au format : {}", formatFichierOutput);
-            byte[] fichierBinaire = genererFichierDocx(input, etudiant, maitreDeStage, tuteur, anneeStage);
+            Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, input.getStage().getAnneeStage());
+
+            byte[] fichierBinaire;
+            if (modele.getFichierBinaire() != null) {
+                logger.info("Utilisation du modèle en BDD (fichier BLOB)");
+                fichierBinaire = DocxGenerator.generateDocxFromTemplate(modele.getFichierBinaire(), replacements);
+            } else {
+                logger.info("Utilisation du modèle depuis les resources : {}", modele.getNom());
+                String path = ResourceUtils.getFile("classpath:conventionServices/" + modele.getNom()).getPath();
+                String outputFilePath = "output/conventionGenerée.docx";
+                DocxGenerator.generateDocx(path, replacements, outputFilePath);
+                fichierBinaire = Files.readAllBytes(new File(outputFilePath).toPath());
+            }
 
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
             self.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
@@ -142,12 +172,15 @@ public class GenioServiceImpl implements GenioService {
             logger.error("Modèle introuvable : {}", e.getMessage());
             self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
+
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
             self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
+
+
     @Override
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
 
@@ -337,7 +370,7 @@ public class GenioServiceImpl implements GenioService {
         replacements.put("NOM_DU_SERVICE", safeString(input.getOrganisme().getNomDuService()));
 
         replacements.put("SUJET_DU_STAGE", safeString(input.getStage().getSujetDuStage()));
-        replacements.put("DATE_DÉBUT_STAGE", safeString(input.getStage().getDateDebutStage()));
+        replacements.put("DATE_DEBUT_STAGE", safeString(input.getStage().getDateDebutStage()));
         replacements.put("DATE_FIN_STAGE", safeString(input.getStage().getDateFinStage()));
         replacements.put("STA_DUREE", safeString(input.getStage().getDuree()));
         replacements.put("_STA_JOURS_TOT", String.valueOf(input.getStage().getJoursTot()));

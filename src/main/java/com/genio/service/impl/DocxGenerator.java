@@ -52,6 +52,30 @@ public class DocxGenerator {
         }
     }
 
+    public static byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws IOException {
+        try (InputStream is = new ByteArrayInputStream(templateBytes);
+             XWPFDocument document = new XWPFDocument(is);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            for (XWPFParagraph paragraph : document.getParagraphs()) {
+                replacePlaceholdersInParagraph(paragraph, replacements);
+            }
+
+            for (XWPFTable table : document.getTables()) {
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                            replacePlaceholdersInParagraph(paragraph, replacements);
+                        }
+                    }
+                }
+            }
+
+            document.write(out);
+            return out.toByteArray();
+        }
+    }
+
     private static void replacePlaceholdersInParagraph(XWPFParagraph paragraph, Map<String, String> replacements) {
         StringBuilder paragraphText = new StringBuilder();
 

@@ -111,7 +111,10 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess(), "La convention devrait échouer en raison de l'adresse manquante !");
-        assertTrue(result.getMessageErreur().contains("Le champ 'etudiant.adresse' : L'adresse de l'étudiant est manquante."), "Le message d'erreur ne correspond pas à l'attendu");
+        assertNotNull(result.getMessageErreur());
+        assertTrue(result.getMessageErreur().startsWith("Les erreurs suivantes ont été détectées"), "Le message d'erreur doit commencer par l'intro attendue");
+        assertTrue(result.getMessageErreur().contains("etudiant.adresse"), "Le message d'erreur doit mentionner le champ adresse");
+        assertTrue(result.getMessageErreur().contains("L'adresse de l'étudiant est manquante"), "Le message d'erreur doit décrire l'erreur exacte");
     }
 
     @Test
