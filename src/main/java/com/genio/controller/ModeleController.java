@@ -1,5 +1,4 @@
 package com.genio.controller;
-import com.genio.dto.output.ModeleDTO;
 import com.genio.dto.output.ModeleDTOForList;
 import com.genio.exception.business.*;
 import com.genio.service.impl.ModeleService;
