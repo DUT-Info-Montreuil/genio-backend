@@ -1,8 +1,6 @@
 package com.genio.service;
 
-import com.genio.controller.ModeleController;
-import com.genio.dto.output.ModeleDTOForList;
-import com.genio.exception.business.*;
+import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.model.Modele;
 import com.genio.repository.ModeleRepository;
 import com.genio.service.impl.ModeleService;

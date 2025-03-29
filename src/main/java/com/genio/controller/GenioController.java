@@ -2,7 +2,7 @@ package com.genio.controller;
 
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.input.ConventionWsDTO;
-import com.genio.dto.output.ConventionBinaireRes;
+import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.business.ModelNotFoundException;
 import com.genio.mapper.ConventionMapper;
 import com.genio.model.Modele;

@@ -1,7 +1,7 @@
 package com.genio.service;
 
 import com.genio.dto.input.ConventionServiceDTO;
-import com.genio.dto.output.ConventionBinaireRes;
+import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.business.GenerationConventionException;
 import com.genio.exception.business.InvalidDataException;
 import com.genio.exception.business.ModelNotFoundException;

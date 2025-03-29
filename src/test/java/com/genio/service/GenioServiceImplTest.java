@@ -2,12 +2,8 @@ package com.genio.service;
 
 import com.genio.dto.*;
 import com.genio.dto.input.ConventionServiceDTO;
-import com.genio.dto.input.ConventionWsDTO;
-import com.genio.dto.output.ConventionBinaireRes;
+import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.GlobalExceptionHandler;
-import com.genio.exception.business.DatabaseInsertionException;
-import com.genio.exception.business.EmptyDirectoryException;
-import com.genio.exception.business.EmptyFileException;
 import com.genio.exception.business.InvalidFileFormatException;
 import com.genio.model.Modele;
 import com.genio.repository.ModeleRepository;
@@ -24,11 +20,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 

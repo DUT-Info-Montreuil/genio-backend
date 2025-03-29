@@ -1,10 +1,8 @@
 package com.genio.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.sql.Timestamp;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
@@ -17,7 +15,7 @@ import com.genio.factory.MaitreDeStageFactory;
 import com.genio.model.*;
 import com.genio.repository.*;
 import com.genio.dto.input.ConventionServiceDTO;
-import com.genio.dto.output.ConventionBinaireRes;
+import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.service.GenioService;
 import com.genio.service.validation.*;
 import org.slf4j.Logger;
