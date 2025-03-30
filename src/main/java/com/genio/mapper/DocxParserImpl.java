@@ -11,8 +11,8 @@ import java.util.regex.*;
 
 @Component
 public class DocxParserImpl implements DocxParser {
-    private String normalize(String var) {
-        return Normalizer.normalize(var, Normalizer.Form.NFD)
+    private String normalize(String variable) {
+        return Normalizer.normalize(variable, Normalizer.Form.NFD)
                 .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
     }
 
@@ -24,7 +24,8 @@ public class DocxParserImpl implements DocxParser {
             for (XWPFParagraph p : doc.getParagraphs()) {
                 Matcher matcher = pattern.matcher(p.getText());
                 while (matcher.find()) {
-                    vars.add(normalize(matcher.group(1)));
+                    String rawVariable = matcher.group(1);
+                    vars.add(normalize(rawVariable));
                 }
             }
         }

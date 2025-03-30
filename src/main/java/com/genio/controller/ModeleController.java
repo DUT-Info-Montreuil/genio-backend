@@ -3,7 +3,6 @@ import com.genio.exception.business.*;
 import com.genio.service.impl.ModeleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.genio.exception.business.InvalidFormatException;
@@ -16,14 +15,16 @@ import java.util.List;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.dto.outputmodeles.ModeleDTO;
 
-//dez
 
 @RestController
 @RequestMapping("/conventionServices")
 public class ModeleController {
 
-    @Autowired
-    private ModeleService modeleService;
+    private final ModeleService modeleService;
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_MESSAGE = "message";
+
+
     private static final Logger logger = LoggerFactory.getLogger(ModeleController.class);
 
     @GetMapping
@@ -32,7 +33,7 @@ public class ModeleController {
             List<ModeleDTOForList> conventionServices = modeleService.getAllConventionServices();
             return ResponseEntity.ok(conventionServices);
         } catch (NoConventionServicesAvailableException e) {
-            return ResponseEntity.status(204).body(Collections.singletonMap("error", "Aucun modèle de convention disponible"));
+            return ResponseEntity.status(204).body(Collections.singletonMap(KEY_ERROR, "Aucun modèle de convention disponible"));
         }
     }
 
@@ -42,7 +43,7 @@ public class ModeleController {
             ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
             return ResponseEntity.ok(modeleDTO);
         } catch (ConventionServiceNotFoundException e) {
-            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Modèle introuvable"));
+            return ResponseEntity.status(404).body(Collections.singletonMap(KEY_ERROR, "Modèle introuvable"));
         }
     }
 
@@ -50,19 +51,19 @@ public class ModeleController {
     public ResponseEntity<?> createModelConvention(@RequestParam("nom") String nom,
                                                    @RequestParam("file") MultipartFile file) {
         try {
-            ModeleDTO createdModel = modeleService.createModelConvention(nom, file);
-            return ResponseEntity.status(201).body(Collections.singletonMap("message", "ModelConvention ajouté avec succès"));
+            modeleService.createModelConvention(nom, file); // <- appel direct
+            return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE, "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", "Un modèle avec ce nom existe déjà"));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Un modèle avec ce nom existe déjà"));
         } catch (InvalidFileFormatException | InvalidFormatException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", "Format non supporté, uniquement .docx accepté"));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Format non supporté, uniquement .docx accepté"));
         } catch (MissingVariableException e) {
             logger.error("Erreur : {}", e.getMessage());
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (DatabaseInsertionException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur lors de l'enregistrement du modèle"));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de l'enregistrement du modèle"));
         } catch (IOException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur lors de la lecture du fichier DOCX"));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de la lecture du fichier DOCX"));
         }
     }
 
@@ -70,13 +71,13 @@ public class ModeleController {
     public ResponseEntity<?> updateModelConvention(@PathVariable Integer id, @RequestBody ModeleDTO modeleDTO) {
         try {
             modeleService.updateModelConvention(id, modeleDTO);
-            return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention mis à jour avec succès !"));
+            return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention mis à jour avec succès !"));
         } catch (ModelConventionNotFoundException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (ValidationException | UnauthorizedModificationException | IntegrityCheckFailedException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur interne du serveur"));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
 
@@ -84,13 +85,13 @@ public class ModeleController {
     public ResponseEntity<?> deleteModelConvention(@PathVariable Long id) {
         try {
             modeleService.deleteModelConvention(id);
-            return ResponseEntity.ok(Collections.singletonMap("message", "ModelConvention supprimé avec succès !"));
+            return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));
         } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (DeletionFailedException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Erreur interne du serveur"));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
 
@@ -100,7 +101,11 @@ public class ModeleController {
             boolean isUsed = modeleService.isModelInUse(id);
             return ResponseEntity.ok(Collections.singletonMap("isUsed", isUsed));
         } catch (ModelConventionNotFoundException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         }
+    }
+
+    public ModeleController(ModeleService modeleService) {
+        this.modeleService = modeleService;
     }
 }

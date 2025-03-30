@@ -1,5 +1,6 @@
 package com.genio.service.impl;
 
+import com.genio.exception.business.UnreplacedPlaceholderException;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,7 @@ public class DocxGenerator {
         }
 
         if (updatedText.contains("${")) {
-            throw new RuntimeException("Certains placeholders n'ont pas été remplacés : " + updatedText);
+            throw new UnreplacedPlaceholderException("Certains placeholders n'ont pas été remplacés : " + updatedText);
         }
 
         if (!paragraph.getRuns().isEmpty()) {

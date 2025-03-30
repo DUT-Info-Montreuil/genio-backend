@@ -1,6 +1,4 @@
 package com.genio;
-
-import com.genio.service.impl.ModeleService;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,13 +9,6 @@ import java.net.URL;
 
 @SpringBootApplication
 public class GenioServiceApplication {
-
-
-    private ModeleService modeleService;
-
-    public GenioServiceApplication(ModeleService modeleService) {
-        this.modeleService = modeleService;
-    }
 
     private static final Logger logger = LogManager.getLogger(GenioServiceApplication.class);
 
@@ -33,5 +24,4 @@ public class GenioServiceApplication {
         logger.info("Application démarrée avec Log4J2 !");
         SpringApplication.run(GenioServiceApplication.class, args);
     }
-
 }

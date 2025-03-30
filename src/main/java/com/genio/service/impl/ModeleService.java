@@ -6,10 +6,8 @@ import com.genio.mapper.DocxParser;
 import com.genio.model.Modele;
 import com.genio.repository.ConventionRepository;
 import com.genio.repository.ModeleRepository;
-import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
@@ -44,20 +42,28 @@ public class ModeleService {
     @Value("${modele.conventionServices.directory}")
     private String directoryPath;
 
-    @Autowired
+    private static final String MODEL_NOT_FOUND = "Modèle introuvable avec l'ID : ";
+
+
     private ConventionRepository conventionRepository;
 
     private final DataSource dataSource;
 
-    @Autowired
     private DocxParser docxParser;
 
-    @Autowired
     private ModeleRepository modeleRepository;
 
-    public ModeleService(DataSource dataSource) {
+    public ModeleService(DataSource dataSource,
+                         ConventionRepository conventionRepository,
+                         ModeleRepository modeleRepository,
+                         DocxParser docxParser) {
         this.dataSource = dataSource;
+        this.conventionRepository = conventionRepository;
+        this.modeleRepository = modeleRepository;
+        this.docxParser = docxParser;
     }
+
+    private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
 
     public void insertModeleFromDirectory() throws IOException, SQLException {
         File dir = new File(directoryPath);
@@ -70,7 +76,7 @@ public class ModeleService {
 
         for (File file : files) {
             String modelName = file.getName();
-            if (!modelName.matches("^modeleConvention_\\d{4}\\.docx$")) {
+            if (!modelName.matches(FILENAME_REGEX )) {
                 logger.error("Erreur : Le fichier {} ne respecte pas le format attendu 'modeleConvention_YYYY.docx'.", modelName);
                 throw new InvalidFileFormatException("Format invalide : le fichier doit être nommé sous la forme 'modeleConvention_YYYY.docx'.");
             }
@@ -170,7 +176,7 @@ public class ModeleService {
                         generateDescription(modele),
                         "docx"
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private String generateDescription(Modele modele) {
@@ -181,7 +187,7 @@ public class ModeleService {
 
     public ModeleDTO getConventionServiceById(Long id) throws ConventionServiceNotFoundException {
         Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> new ConventionServiceNotFoundException("Modèle introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ConventionServiceNotFoundException(MODEL_NOT_FOUND));
 
         return new ModeleDTO(
                 modele.getId(),
@@ -194,7 +200,7 @@ public class ModeleService {
 
     private boolean areVariablesWellFormatted(List<String> variables) {
         for (String var : variables) {
-            if (!var.matches("^[a-zA-Z0-9_]+$")) {
+            if (!var.matches("^\\w+$")) {
                 return false;
             }
         }
@@ -214,7 +220,7 @@ public class ModeleService {
     private List<String> findMalformedVariables(List<String> foundVariables) {
         List<String> malformed = new ArrayList<>();
         for (String var : foundVariables) {
-            if (!var.matches("^[a-zA-Z0-9_]+$")) {
+            if (!var.matches("^\\w+$")) {
                 malformed.add(var);
             }
         }
@@ -225,7 +231,7 @@ public class ModeleService {
             throws ModelConventionAlreadyExistsException, InvalidFormatException, DatabaseInsertionException, IOException, MissingVariableException {
 
         String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null || !originalFilename.matches("^modeleConvention_\\d{4}\\.docx$")) {
+        if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX )) {
             logger.error("Erreur : Le fichier '{}' ne respecte pas le format attendu 'modeleConvention_YYYY.docx'.", originalFilename);
             throw new InvalidFileFormatException("Format invalide : le fichier doit être nommé sous la forme 'modeleConvention_YYYY.docx'.");
         }
@@ -297,9 +303,9 @@ public class ModeleService {
             throws ModelConventionNotFoundException, ValidationException, UnauthorizedModificationException, IntegrityCheckFailedException {
 
         Modele modele = modeleRepository.findById(id.longValue())
-                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
-        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches("^modeleConvention_\\d{4}\\.docx$")) {
+        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches(FILENAME_REGEX )) {
             throw new ValidationException("Le nom du modèle est invalide ou ne respecte pas le format 'modeleConvention_YYYY.docx'.");
         }
         if (modeleDTO.getAnnee() == null || !modeleDTO.getAnnee().matches("^\\d{4}$")) {
@@ -327,7 +333,7 @@ public class ModeleService {
 
     public boolean isModelInUse(Long id) throws ModelConventionNotFoundException {
         Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
         return checkIfModelIsInUse(modele.getId());
     }
@@ -336,7 +342,7 @@ public class ModeleService {
             throws ModelConventionNotFoundException, ModelConventionInUseException, DeletionFailedException {
 
         Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
         if (isModelInUse(modele.getId())) {
             throw new ModelConventionInUseException("Le modèle est toujours utilisé et ne peut pas être supprimé.");

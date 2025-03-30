@@ -301,13 +301,6 @@ public class GenioServiceImpl implements GenioService {
         return savedTuteur;
     }
 
-    private Convention sauvegarderConvention(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur,Modele modele) {
-        logger.info("Début de la sauvegarde de la convention.");
-        Convention convention = ConventionFactory.createConvention(input, etudiant, maitreDeStage,tuteur, modele);
-        Convention savedConvention = conventionRepository.save(convention);
-        logger.info("Convention sauvegardée avec succès pour l'année : {}", input.getStage().getAnneeStage());
-        return savedConvention;
-    }
 
     @Transactional(readOnly = true)
     public List<Modele> getModelesByAnnee(String annee) {
@@ -320,26 +313,6 @@ public class GenioServiceImpl implements GenioService {
         return modeles;
     }
 
-    private byte[] genererFichierDocx(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) throws Exception {
-        logger.info("Début de la génération du fichier DOCX pour la convention.");
-        String conventionServicePath = ResourceUtils.getFile("classpath:conventionServices/modeleConvention_2024.docx").getPath();
-        String outputFilePath = "output/conventionGenerée.docx";
-
-        logger.info("Préparation des remplacements pour le fichier DOCX.");
-        Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, anneeStage);
-
-        logger.info("Génération du fichier DOCX à partir du conventionService : {}", conventionServicePath);
-        docxGenerator.generateDocx(conventionServicePath, replacements, outputFilePath);
-
-        File generatedFile = new File(outputFilePath);
-        if (!generatedFile.exists()) {
-            logger.error("Erreur : Le fichier généré est introuvable.");
-            throw new RuntimeException("Erreur : Le fichier généré est introuvable.");
-        }
-
-        logger.info("Fichier DOCX généré avec succès : {}", outputFilePath);
-        return Files.readAllBytes(generatedFile.toPath());
-    }
 
     private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) {
 

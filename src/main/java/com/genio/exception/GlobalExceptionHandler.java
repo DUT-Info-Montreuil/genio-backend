@@ -13,6 +13,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String KEY_ERROR = "error";
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -50,21 +52,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConventionServiceAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleConventionServiceAlreadyExistsException(ConventionServiceAlreadyExistsException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Un modèle avec ce nom existe déjà");
+        response.put(KEY_ERROR, "Un modèle avec ce nom existe déjà");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConventionServiceInUseException.class)
     public ResponseEntity<Map<String, String>> handleConventionServiceInUseException(ConventionServiceInUseException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Modèle en cours d'utilisation");
+        response.put(KEY_ERROR, "Modèle en cours d'utilisation");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidFilterException.class)
     public ResponseEntity<Map<String, String>> handleInvalidFilterException(InvalidFilterException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", ex.getMessage());
+        response.put(KEY_ERROR, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
