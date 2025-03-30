@@ -2,7 +2,9 @@ package com.genio.service.impl;
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.exception.business.*;
+import com.genio.mapper.DocxParser;
 import com.genio.model.Modele;
+import com.genio.repository.ConventionRepository;
 import com.genio.repository.ModeleRepository;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
@@ -42,7 +44,13 @@ public class ModeleService {
     @Value("${modele.conventionServices.directory}")
     private String directoryPath;
 
+    @Autowired
+    private ConventionRepository conventionRepository;
+
     private final DataSource dataSource;
+
+    @Autowired
+    private DocxParser docxParser;
 
     @Autowired
     private ModeleRepository modeleRepository;
@@ -123,31 +131,6 @@ public class ModeleService {
             "TEL_ENCADRANT", "MEL_ENCADRANT", "NOM_CPAM", "Stage_Professionnel", "STA_REMU_HOR"
     );
 
-    private List<String> extractVariablesFromDocx(MultipartFile file) throws IOException {
-        List<String> foundVariables = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
-
-        try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {
-
-            for (XWPFParagraph paragraph : document.getParagraphs()) {
-                foundVariables.addAll(extractVariablesFromText(paragraph.getText()));
-            }
-
-            for (XWPFTable table : document.getTables()) {
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            foundVariables.addAll(extractVariablesFromText(paragraph.getText()));
-                        }
-                    }
-                }
-            }
-        }
-        for (String var : foundVariables) {
-            logger.debug("Variable brute extraite : [{}]", var);
-        }
-        return foundVariables;
-    }
 
 
     private String normalizeVariable(String variable) {
@@ -255,7 +238,7 @@ public class ModeleService {
         Matcher matcher = pattern.matcher(originalFilename);
         String modelYear = matcher.find() ? matcher.group(1) : "2025";
 
-        List<String> foundVariables = extractVariablesFromDocx(file);
+        List<String> foundVariables = docxParser.extractVariables(file);
         List<String> missingVariables = findMissingVariables(foundVariables);
         List<String> malformedVariables = findMalformedVariables(foundVariables);
 
@@ -339,19 +322,7 @@ public class ModeleService {
     }
 
     private boolean checkIfModelIsInUse(Long modeleId) {
-        String sql = "SELECT COUNT(*) FROM convention WHERE modele_id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, modeleId);
-            try (var resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException e) {
-            logger.error("Erreur lors de la vérification de l'utilisation du modèle {} : {}", modeleId, e.getMessage());
-        }
-        return false;
+        return conventionRepository.countByModele_Id(modeleId) > 0;
     }
 
     public boolean isModelInUse(Long id) throws ModelConventionNotFoundException {

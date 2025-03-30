@@ -3,24 +3,22 @@ package com.genio.service.impl;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Map;
 
+@Component
 public class DocxGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(DocxGenerator.class);
 
-    public static String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath) throws Exception {
+    public String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath) throws Exception {
         File outputFile = new File(outputPath);
         File outputDir = outputFile.getParentFile();
         if (outputDir != null && !outputDir.exists()) {
             outputDir.mkdirs();
         }
-
-        logger.info("Début de la génération du fichier DOCX...");
-        logger.info("Chemin du modèle : {}", conventionServicePath);
-        logger.info("Chemin de sortie : {}", outputPath);
 
         try (InputStream fis = new FileInputStream(conventionServicePath);
              XWPFDocument document = new XWPFDocument(fis)) {
@@ -45,14 +43,10 @@ public class DocxGenerator {
 
             logger.info("Fichier DOCX généré avec succès : {}", outputPath);
             return outputPath;
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la génération du fichier DOCX : {}", e.getMessage(), e);
-            throw e;
         }
     }
 
-    public static byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws IOException {
+    public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws IOException {
         try (InputStream is = new ByteArrayInputStream(templateBytes);
              XWPFDocument document = new XWPFDocument(is);
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -76,7 +70,7 @@ public class DocxGenerator {
         }
     }
 
-    private static void replacePlaceholdersInParagraph(XWPFParagraph paragraph, Map<String, String> replacements) {
+    private void replacePlaceholdersInParagraph(XWPFParagraph paragraph, Map<String, String> replacements) {
         StringBuilder paragraphText = new StringBuilder();
 
         for (XWPFRun run : paragraph.getRuns()) {
@@ -93,7 +87,6 @@ public class DocxGenerator {
         }
 
         if (updatedText.contains("${")) {
-            logger.warn("Placeholders non remplacés détectés : {}", updatedText);
             throw new RuntimeException("Certains placeholders n'ont pas été remplacés : " + updatedText);
         }
 

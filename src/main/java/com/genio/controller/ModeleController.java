@@ -54,7 +54,7 @@ public class ModeleController {
             return ResponseEntity.status(201).body(Collections.singletonMap("message", "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", "Un modèle avec ce nom existe déjà"));
-        } catch (InvalidFormatException e) {
+        } catch (InvalidFileFormatException | InvalidFormatException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap("error", "Format non supporté, uniquement .docx accepté"));
         } catch (MissingVariableException e) {
             logger.error("Erreur : {}", e.getMessage());

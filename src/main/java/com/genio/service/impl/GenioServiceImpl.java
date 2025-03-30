@@ -61,6 +61,8 @@ public class GenioServiceImpl implements GenioService {
 
     private final GenioServiceImpl self;
 
+    private final DocxGenerator docxGenerator;
+
     private static final String STATUS_ECHEC = "ECHEC";
 
     public GenioServiceImpl(EtudiantRepository etudiantRepository,
@@ -70,6 +72,7 @@ public class GenioServiceImpl implements GenioService {
                             HistorisationRepository historisationRepository,
                             TuteurRepository tuteurRepository,
                             ErrorDetailsRepository errorDetailsRepository,
+                            DocxGenerator docxGenerator,
                             @Lazy GenioServiceImpl self) {
         this.etudiantRepository = etudiantRepository;
         this.maitreDeStageRepository = maitreDeStageRepository;
@@ -78,6 +81,7 @@ public class GenioServiceImpl implements GenioService {
         this.historisationRepository = historisationRepository;
         this.tuteurRepository = tuteurRepository;
         this.errorDetailsRepository = errorDetailsRepository;
+        this.docxGenerator = docxGenerator; // 👈 ET LÀ
         this.self = self;
     }
 
@@ -151,12 +155,11 @@ public class GenioServiceImpl implements GenioService {
             byte[] fichierBinaire;
             if (modele.getFichierBinaire() != null) {
                 logger.info("Utilisation du modèle en BDD (fichier BLOB)");
-                fichierBinaire = DocxGenerator.generateDocxFromTemplate(modele.getFichierBinaire(), replacements);
+                fichierBinaire = docxGenerator.generateDocxFromTemplate(modele.getFichierBinaire(), replacements);
             } else {
                 logger.info("Utilisation du modèle depuis les resources : {}", modele.getNom());
                 String path = ResourceUtils.getFile("classpath:conventionServices/" + modele.getNom()).getPath();
-                String outputFilePath = "output/conventionGenerée.docx";
-                DocxGenerator.generateDocx(path, replacements, outputFilePath);
+                String outputFilePath = docxGenerator.generateDocx(path, replacements, "output/conventionGenerée.docx");
                 fichierBinaire = Files.readAllBytes(new File(outputFilePath).toPath());
             }
 
@@ -326,7 +329,7 @@ public class GenioServiceImpl implements GenioService {
         Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, anneeStage);
 
         logger.info("Génération du fichier DOCX à partir du conventionService : {}", conventionServicePath);
-        DocxGenerator.generateDocx(conventionServicePath, replacements, outputFilePath);
+        docxGenerator.generateDocx(conventionServicePath, replacements, outputFilePath);
 
         File generatedFile = new File(outputFilePath);
         if (!generatedFile.exists()) {
