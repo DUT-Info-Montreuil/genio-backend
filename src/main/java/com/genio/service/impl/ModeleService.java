@@ -197,7 +197,7 @@ public class ModeleService {
     }
 
     public ModeleDTO createModelConvention(String nom,  MultipartFile file)
-            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException {
+            throws ModelConventionAlreadyExistsException, InvalidFormatException, DatabaseInsertionException, IOException, MissingVariableException {
 
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX )) {
