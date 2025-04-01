@@ -29,22 +29,24 @@ public class ModeleController {
     private static final Logger logger = LoggerFactory.getLogger(ModeleController.class);
 
     @GetMapping
-    public ResponseEntity<?> getAllModelConvention() {
+    public ResponseEntity<Object> getAllModelConvention() {
         try {
             List<ModeleDTOForList> conventionServices = modeleService.getAllConventionServices();
             return ResponseEntity.ok(conventionServices);
         } catch (NoConventionServicesAvailableException e) {
-            return ResponseEntity.status(204).body(Collections.singletonMap(KEY_ERROR, "Aucun modèle de convention disponible"));
+            Map<String, String> error = Map.of(KEY_ERROR, "Aucun modèle de convention disponible");
+            return ResponseEntity.status(204).body(error);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getModelConventionById(@PathVariable Long id) {
+    public ResponseEntity<Object> getModelConventionById(@PathVariable Long id) {
         try {
             ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
-            return ResponseEntity.ok(modeleDTO);
+            return ResponseEntity.ok().body(modeleDTO);
         } catch (ConventionServiceNotFoundException e) {
-            return ResponseEntity.status(404).body(Collections.singletonMap(KEY_ERROR, "Modèle introuvable"));
+            Map<String, String> error = Map.of("error", "Modèle introuvable");
+            return ResponseEntity.status(404).body(error);
         }
     }
 
@@ -97,12 +99,12 @@ public class ModeleController {
     }
 
     @GetMapping("/{id}/isUsed")
-    public ResponseEntity<?> isModelUsed(@PathVariable Long id) {
+    public ResponseEntity<Object> isModelUsed(@PathVariable Long id) {
         try {
             boolean isUsed = modeleService.isModelInUse(id);
-            return ResponseEntity.ok(Collections.singletonMap("isUsed", isUsed));
+            return ResponseEntity.ok(Map.of("isUsed", isUsed));
         } catch (ModelConventionNotFoundException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
+            return ResponseEntity.status(400).body(Map.of(KEY_ERROR, e.getMessage()));
         }
     }
 

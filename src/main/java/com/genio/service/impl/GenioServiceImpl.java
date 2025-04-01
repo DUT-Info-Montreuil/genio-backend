@@ -308,9 +308,6 @@ public class GenioServiceImpl implements GenioService {
 
     private Tuteur sauvegarderTuteur(TuteurDTO tuteurDTO) {
         logger.info("Début de la sauvegarde de tuteur : {}", tuteurDTO.getNom());
-        if (tuteurDTO == null || tuteurDTO.getNom() == null || tuteurDTO.getPrenom() == null) {
-            throw new IllegalArgumentException("Le tuteur est manquant ou incomplet.");
-        }
         Tuteur tuteur = TuteurFactory.createTuteur(tuteurDTO);
         Tuteur savedTuteur = tuteurRepository.save(tuteur);
         logger.info("Tuteur sauvegardé avec succès : {}", savedTuteur.getNom());

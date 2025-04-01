@@ -20,7 +20,6 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,7 +83,7 @@ public class ModeleService {
         }
     }
 
-    public void insertModele(File conventionServiceFile, String anneeUtilisateur) throws IOException, SQLException {
+    public void insertModele(File conventionServiceFile, String anneeUtilisateur) throws IOException {
         if (conventionServiceFile.length() == 0) {
             throw new EmptyFileException("Le fichier " + conventionServiceFile.getName() + " est vide.");
         }
@@ -138,28 +137,7 @@ public class ModeleService {
 
 
 
-    private String normalizeVariable(String variable) {
-        return Normalizer.normalize(variable, Normalizer.Form.NFD)
-                .replaceAll("[\u0300-\u036F]", "");
-    }
 
-    private List<String> extractVariablesFromText(String text) {
-        List<String> variables = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            String variable = normalizeVariable(matcher.group(1).trim());
-            logger.debug("Variable trouvée après normalisation : {}", variable);
-            variables.add(variable);
-        }
-        return variables;
-    }
-
-
-
-    private boolean areAllVariablesPresent(List<String> foundVariables) {
-        return foundVariables.containsAll(EXPECTED_VARIABLES);
-    }
 
     public List<ModeleDTOForList> getAllConventionServices() throws NoConventionServicesAvailableException {
         List<Modele> modeles = modeleRepository.findAll();
@@ -197,14 +175,6 @@ public class ModeleService {
         );
     }
 
-    private boolean areVariablesWellFormatted(List<String> variables) {
-        for (String var : variables) {
-            if (!var.matches("^\\w+$")) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private List<String> findMissingVariables(List<String> foundVariables) {
         List<String> missing = new ArrayList<>();
@@ -218,9 +188,9 @@ public class ModeleService {
 
     private List<String> findMalformedVariables(List<String> foundVariables) {
         List<String> malformed = new ArrayList<>();
-        for (String var : foundVariables) {
-            if (!var.matches("^\\w+$")) {
-                malformed.add(var);
+        for (String variable: foundVariables) {
+            if (!variable.matches("^\\w+$")) {
+                malformed.add(variable);
             }
         }
         return malformed;

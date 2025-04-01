@@ -53,7 +53,7 @@ public class DocxGenerator {
         }
     }
 
-    public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws IOException {
+    public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws DocxGenerationException {
         try (InputStream is = new ByteArrayInputStream(templateBytes);
              XWPFDocument document = new XWPFDocument(is);
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -74,6 +74,10 @@ public class DocxGenerator {
 
             document.write(out);
             return out.toByteArray();
+
+        } catch (IOException e) {
+            logger.error("Erreur lors de la génération du DOCX à partir du template BLOB : {}", e.getMessage(), e);
+            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template", e);
         }
     }
 
