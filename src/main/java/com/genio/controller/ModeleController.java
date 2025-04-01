@@ -11,6 +11,7 @@ import com.genio.exception.business.ValidationException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.dto.outputmodeles.ModeleDTO;
@@ -48,10 +49,10 @@ public class ModeleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createModelConvention(@RequestParam("nom") String nom,
-                                                   @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> createModelConvention(@RequestParam("nom") String nom,
+                                                                     @RequestParam("file") MultipartFile file) {
         try {
-            modeleService.createModelConvention(nom, file); // <- appel direct
+            modeleService.createModelConvention(nom, file);
             return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE, "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Un modèle avec ce nom existe déjà"));
@@ -68,7 +69,7 @@ public class ModeleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateModelConvention(@PathVariable Integer id, @RequestBody ModeleDTO modeleDTO) {
+    public ResponseEntity<Map<String, String>> updateModelConvention(@PathVariable Integer id, @RequestBody ModeleDTO modeleDTO) {
         try {
             modeleService.updateModelConvention(id, modeleDTO);
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention mis à jour avec succès !"));
@@ -82,7 +83,7 @@ public class ModeleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteModelConvention(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteModelConvention(@PathVariable Long id) {
         try {
             modeleService.deleteModelConvention(id);
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));

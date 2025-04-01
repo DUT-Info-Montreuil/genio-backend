@@ -8,7 +8,6 @@ import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
 import com.genio.dto.MaitreDeStageDTO;
 import com.genio.exception.business.ModelNotFoundException;
-import com.genio.factory.ConventionFactory;
 import com.genio.factory.TuteurFactory;
 import com.genio.factory.EtudiantFactory;
 import com.genio.factory.MaitreDeStageFactory;
@@ -85,13 +84,38 @@ public class GenioServiceImpl implements GenioService {
         this.self = self;
     }
 
+    private boolean isFormatValide(String format) {
+        return "docx".equalsIgnoreCase(format) || "pdf".equalsIgnoreCase(format);
+    }
+
+    private ConventionBinaireRes verifierModele(Modele modele) {
+        if (modele.getFichierBinaire() == null && (modele.getNom() == null || modele.getNom().isBlank())) {
+            String message = "Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.";
+            logger.error(message);
+            return new ConventionBinaireRes(false, null, message);
+        }
+
+        if (modele.getNom() != null && !modele.getNom().endsWith(".docx")) {
+            String message = "Erreur : le nom du modèle doit se terminer par .docx.";
+            logger.error(message);
+            return new ConventionBinaireRes(false, null, message);
+        }
+
+        return null;
+    }
+
+    private boolean isTuteurIncomplet(TuteurDTO tuteur) {
+        return tuteur == null || tuteur.getNom() == null || tuteur.getPrenom() == null;
+    }
+
+
     @Override
     @Transactional
     public ConventionBinaireRes generateConvention(ConventionServiceDTO input, String formatFichierOutput) {
         logger.info("Début de la génération de convention pour le modèle ID : {}", input.getModeleId());
 
         try {
-            if (!"docx".equalsIgnoreCase(formatFichierOutput) && !"pdf".equalsIgnoreCase(formatFichierOutput)) {
+            if (!isFormatValide(formatFichierOutput)) {
                 String message = "Erreur : format de fichier non supporté.";
                 logger.error(message);
                 return new ConventionBinaireRes(false, null, message);
@@ -107,17 +131,8 @@ public class GenioServiceImpl implements GenioService {
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
-            if (modele.getFichierBinaire() == null && (modele.getNom() == null || modele.getNom().isBlank())) {
-                String message = "Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.";
-                logger.error(message);
-                return new ConventionBinaireRes(false, null, message);
-            }
-
-            if (modele.getNom() != null && !modele.getNom().endsWith(".docx")) {
-                String message = "Erreur : le nom du modèle doit se terminer par .docx.";
-                logger.error(message);
-                return new ConventionBinaireRes(false, null, message);
-            }
+            ConventionBinaireRes erreurModele = verifierModele(modele);
+            if (erreurModele != null) return erreurModele;
 
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
@@ -131,11 +146,12 @@ public class GenioServiceImpl implements GenioService {
 
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
             MaitreDeStage maitreDeStage = sauvegarderMaitreDeStage(input.getMaitreDeStage());
-            if (input.getTuteur() == null || input.getTuteur().getNom() == null || input.getTuteur().getPrenom() == null) {
+            if (isTuteurIncomplet(input.getTuteur())) {
                 String message = "Le tuteur est manquant ou incomplet.";
                 logger.error(message);
                 return new ConventionBinaireRes(false, null, message);
             }
+
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
             if (tuteur.getId() == null) {
                 String message = "Erreur de persistance du tuteur.";
@@ -159,7 +175,7 @@ public class GenioServiceImpl implements GenioService {
             } else {
                 logger.info("Utilisation du modèle depuis les resources : {}", modele.getNom());
                 String path = ResourceUtils.getFile("classpath:conventionServices/" + modele.getNom()).getPath();
-                String outputFilePath = docxGenerator.generateDocx(path, replacements, "output/conventionGenerée.docx");
+                String outputFilePath = docxGenerator.generateDocx(path, replacements, "output/convention_" + System.currentTimeMillis() + ".docx");
                 fichierBinaire = Files.readAllBytes(new File(outputFilePath).toPath());
             }
 

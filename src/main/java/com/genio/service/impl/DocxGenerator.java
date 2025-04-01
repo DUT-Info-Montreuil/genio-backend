@@ -1,5 +1,6 @@
 package com.genio.service.impl;
 
+import com.genio.exception.business.DocxGenerationException;
 import com.genio.exception.business.UnreplacedPlaceholderException;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
@@ -14,7 +15,8 @@ public class DocxGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(DocxGenerator.class);
 
-    public String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath) throws Exception {
+    public String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath)
+            throws DocxGenerationException {
         File outputFile = new File(outputPath);
         File outputDir = outputFile.getParentFile();
         if (outputDir != null && !outputDir.exists()) {
@@ -44,6 +46,10 @@ public class DocxGenerator {
 
             logger.info("Fichier DOCX généré avec succès : {}", outputPath);
             return outputPath;
+
+        } catch (IOException e) {
+            logger.error("Erreur lors de la génération du DOCX : {}", e.getMessage(), e);
+            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX", e);
         }
     }
 
