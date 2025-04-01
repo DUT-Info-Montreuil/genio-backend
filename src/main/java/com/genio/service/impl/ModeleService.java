@@ -63,7 +63,7 @@ public class ModeleService {
 
     private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
 
-    public void insertModeleFromDirectory() throws IOException, SQLException {
+    public void insertModeleFromDirectory() throws IOException {
         File dir = new File(directoryPath);
         File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));
 
@@ -197,7 +197,7 @@ public class ModeleService {
     }
 
     public ModeleDTO createModelConvention(String nom,  MultipartFile file)
-            throws ModelConventionAlreadyExistsException, InvalidFormatException, DatabaseInsertionException, IOException, MissingVariableException {
+            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException {
 
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX )) {

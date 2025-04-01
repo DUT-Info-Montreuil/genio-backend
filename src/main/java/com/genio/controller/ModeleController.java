@@ -45,7 +45,7 @@ public class ModeleController {
             ModeleDTO modeleDTO = modeleService.getConventionServiceById(id);
             return ResponseEntity.ok().body(modeleDTO);
         } catch (ConventionServiceNotFoundException e) {
-            Map<String, String> error = Map.of("error", "Modèle introuvable");
+            Map<String, String> error = Map.of(KEY_ERROR, "Modèle introuvable");
             return ResponseEntity.status(404).body(error);
         }
     }
@@ -63,10 +63,8 @@ public class ModeleController {
         } catch (MissingVariableException e) {
             logger.error("Erreur : {}", e.getMessage());
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (DatabaseInsertionException e) {
+        } catch (DatabaseInsertionException | IOException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de l'enregistrement du modèle"));
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de la lecture du fichier DOCX"));
         }
     }
 
