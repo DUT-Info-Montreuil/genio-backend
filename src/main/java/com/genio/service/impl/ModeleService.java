@@ -34,6 +34,7 @@ public class ModeleService {
     private static final String MODEL_NOT_FOUND = "Modèle introuvable avec l'ID : ";
     private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
 
+
     private final ConventionRepository conventionRepository;
     private final DataSource dataSource;
     private final DocxParser docxParser;
@@ -96,7 +97,7 @@ public class ModeleService {
         }
     }
 
-    private static final List<String> EXPECTED_VARIABLES = Arrays.asList(
+    public static final List<String> EXPECTED_VARIABLES = Arrays.asList(
             "annee", "NOM_ORGANISME", "ADR_ORGANISME", "NOM_REPRESENTANT_ORG",
             "QUAL_REPRESENTANT_ORG", "NOM_DU_SERVICE", "TEL_ORGANISME", "MEL_ORGANISME",
             "LIEU_DU_STAGE", "NOM_ETUDIANT1", "PRENOM_ETUDIANT", "SEXE_ETUDIANT",
