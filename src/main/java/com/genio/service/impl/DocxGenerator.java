@@ -48,7 +48,7 @@ public class DocxGenerator {
             document.write(out);
             return out.toByteArray();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template binaire", e);
         }
     }

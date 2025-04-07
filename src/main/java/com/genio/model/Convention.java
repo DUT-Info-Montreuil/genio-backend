@@ -40,4 +40,28 @@ public class Convention {
     public void setTuteur(Tuteur tuteur) {
         this.tuteur = tuteur;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Etudiant getEtudiant() {
+        return etudiant;
+    }
+
+    public MaitreDeStage getMaitreDeStage() {
+        return maitreDeStage;
+    }
+
+    public Tuteur getTuteur() {
+        return tuteur;
+    }
+
+    public Modele getModele() {
+        return modele;
+    }
 }

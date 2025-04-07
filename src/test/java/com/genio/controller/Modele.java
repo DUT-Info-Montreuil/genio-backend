@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.controller;
 
 import com.genio.controller.ModeleController;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
