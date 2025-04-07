@@ -43,8 +43,6 @@ class ModeleServiceTest {
     @InjectMocks
     private ModeleService modeleService;
 
-
-
     @BeforeEach
     void setup() {
         ReflectionTestUtils.setField(modeleService, "directoryPath", "src/test/resources/modeles");
@@ -56,7 +54,7 @@ class ModeleServiceTest {
                 "file", "modeleConvention_2025.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "content".getBytes());
 
         when(modeleRepository.findFirstByNom(any())).thenReturn(Optional.empty());
-        when(docxParser.extractVariables(any())).thenReturn(ModeleService.EXPECTED_VARIABLES);
+        when(docxParser.extractVariables(any())).thenReturn(ModeleService.getExpectedVariables());
 
         ModeleDTO result = modeleService.createModelConvention(file);
 

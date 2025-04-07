@@ -97,7 +97,7 @@ public class ModeleService {
         }
     }
 
-    public static final List<String> EXPECTED_VARIABLES = Arrays.asList(
+    private static final List<String> EXPECTED_VARIABLES = List.of(
             "annee", "NOM_ORGANISME", "ADR_ORGANISME", "NOM_REPRESENTANT_ORG",
             "QUAL_REPRESENTANT_ORG", "NOM_DU_SERVICE", "TEL_ORGANISME", "MEL_ORGANISME",
             "LIEU_DU_STAGE", "NOM_ETUDIANT1", "PRENOM_ETUDIANT", "SEXE_ETUDIANT",
@@ -107,6 +107,11 @@ public class ModeleService {
             "PRENOM_ENCADRANT", "NOM_ENCADRANT", "FONCTION_ENCADRANT",
             "TEL_ENCADRANT", "MEL_ENCADRANT", "NOM_CPAM", "Stage_Professionnel", "STA_REMU_HOR"
     );
+
+
+    public static List<String> getExpectedVariables() {
+        return Collections.unmodifiableList(EXPECTED_VARIABLES);
+    }
 
     public List<ModeleDTOForList> getAllConventionServices() throws NoConventionServicesAvailableException {
         List<Modele> modeles = modeleRepository.findAll();
