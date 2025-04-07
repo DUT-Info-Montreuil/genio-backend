@@ -58,18 +58,7 @@ class GenioServiceImplTest {
         modeleRepository.saveAndFlush(modele);
     }
 
-    @Test
-    @Rollback
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    void generateConvention_modelNotFound_shouldThrowException() {
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(999L);
 
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertEquals("Erreur : modèle introuvable avec l'ID 999", result.getMessageErreur());
-    }
 
     @Test
     @Rollback
@@ -281,18 +270,6 @@ class GenioServiceImplTest {
         assertEquals("Erreur inattendue : contacter l’administrateur.", result.getMessageErreur());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_modelNotFoundException_shouldReturnError() {
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(999L);
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertEquals("Erreur : modèle introuvable avec l'ID 999", result.getMessageErreur());
-    }
 
     @Test
     @Rollback
@@ -335,17 +312,18 @@ class GenioServiceImplTest {
         assertTrue(result.getMessageErreur().contains("Le sujet du stage est manquant"));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(longs = {999L, 1000L, 12345L})
     @Rollback
     @Transactional
-    void generateConvention_shouldThrowModelNotFoundException_whenModelDoesNotExist() {
+    void generateConvention_modelNotFound_shouldReturnError(long modeleId) {
         ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(1000L);
+        input.setModeleId(modeleId);
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
-        assertEquals("Erreur : modèle introuvable avec l'ID 1000", result.getMessageErreur());
+        assertEquals("Erreur : modèle introuvable avec l'ID " + modeleId, result.getMessageErreur());
     }
 
 
