@@ -13,6 +13,9 @@ import com.genio.service.impl.ModeleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -118,13 +121,18 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
+        assertFalse(result.isSuccess());
         assertTrue(result.getMessageErreur().contains("adresse"));
     }
 
-    @Test
+
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {"TXT", "XML", "CSV"})
     @Rollback
     @Transactional
-    void generateConvention_invalidFileFormat_shouldReturnError() {
+    void generateConvention_invalidFileFormat_shouldReturnError(String format) {
         Modele modele = new Modele();
         modele.setNom("Modele Test");
         modele.setAnnee("2025");
@@ -138,42 +146,19 @@ class GenioServiceImplTest {
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
-        ConventionBinaireRes result = genioService.generateConvention(input, "TXT");
+        ConventionBinaireRes result = genioService.generateConvention(input, format);
 
         assertFalse(result.isSuccess());
         assertEquals("Erreur : format de fichier non supporté.", result.getMessageErreur());
     }
 
-    @Test
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {"invalid-phone", "12345", "9876543210"})
     @Rollback
     @Transactional
-    void generateConvention_modelWithDifferentYears_shouldReturnSuccess() throws Exception {
-        Modele modele = new Modele();
-        modele.setNom("Modele 2025.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("mock-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
-
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
-        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
-        input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
-        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
-
-        when(docxGenerator.generateDocxFromTemplate(any(), any())).thenReturn("mocked-bytes".getBytes());
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertTrue(result.isSuccess());
-        assertNotNull(result.getFichierBinaire());
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_invalidPhone_shouldReturnValidationError() {
+    void generateConvention_invalidPhone_shouldReturnValidationError(String phone) {
         Modele modele = new Modele();
         modele.setNom("modeleValide.docx");
         modele.setAnnee("2025");
@@ -182,7 +167,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "invalid-phone", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", phone, "johndoe@example.com", "CPAM123"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -385,5 +370,36 @@ class GenioServiceImplTest {
 
         assertFalse(result.isSuccess());
         assertEquals("Erreur : modèle introuvable avec l'ID 1000", result.getMessageErreur());
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "2025, mocked-bytes",
+            "2024, mocked-bytes"
+    })
+    @Rollback
+    @Transactional
+    void generateConvention_modelWithDifferentYears_shouldReturnSuccess(String annee, String fichierRetourne) throws Exception {
+        Modele modele = new Modele();
+        modele.setNom("Modele " + annee + ".docx");
+        modele.setAnnee(annee);
+        modele.setFichierBinaire(fichierRetourne.getBytes());
+        modele = modeleRepository.saveAndFlush(modele);
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
+        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
+        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
+
+        when(docxGenerator.generateDocxFromTemplate(any(), any())).thenReturn(fichierRetourne.getBytes());
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertTrue(result.isSuccess());
+        assertNotNull(result.getFichierBinaire());
     }
 }
