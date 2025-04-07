@@ -80,7 +80,7 @@ public class GenioServiceImpl implements GenioService {
         this.historisationRepository = historisationRepository;
         this.tuteurRepository = tuteurRepository;
         this.errorDetailsRepository = errorDetailsRepository;
-        this.docxGenerator = docxGenerator; // 👈 ET LÀ
+        this.docxGenerator = docxGenerator;
         this.self = self;
     }
 
@@ -132,15 +132,15 @@ public class GenioServiceImpl implements GenioService {
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
             ConventionBinaireRes erreurModele = verifierModele(modele);
-            if (erreurModele != null) return erreurModele;
+            if (erreurModele != null) {
+                return erreurModele;
+            }
 
             Map<String, String> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
-                logger.warn("Des erreurs de validation ont été détectées : {}", erreurs);
                 String erreursLisibles = erreurs.entrySet().stream()
                         .map(entry -> "Le champ '" + entry.getKey() + "' : " + entry.getValue())
                         .collect(Collectors.joining(", "));
-                self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, erreurs);
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
             }
 
@@ -173,7 +173,7 @@ public class GenioServiceImpl implements GenioService {
                 logger.info("Utilisation du modèle en BDD (fichier BLOB)");
                 fichierBinaire = docxGenerator.generateDocxFromTemplate(modele.getFichierBinaire(), replacements);
             } else {
-                logger.info("Utilisation du modèle depuis les resources : {}", modele.getNom());
+                logger.info("Utilisation du modèle depuis les ressources : {}", modele.getNom());
                 String path = ResourceUtils.getFile("classpath:conventionServices/" + modele.getNom()).getPath();
                 String outputFilePath = docxGenerator.generateDocx(path, replacements, "output/convention_" + System.currentTimeMillis() + ".docx");
                 fichierBinaire = Files.readAllBytes(new File(outputFilePath).toPath());
