@@ -57,7 +57,7 @@ public class ModeleController {
             return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE, "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Un modèle avec ce nom existe déjà"));
-        } catch (InvalidFileFormatException | InvalidFormatException e) {
+        } catch (InvalidFileFormatException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Format non supporté, uniquement .docx accepté"));
         } catch (MissingVariableException e) {
             logger.error("Erreur : {}", e.getMessage());
@@ -89,8 +89,6 @@ public class ModeleController {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (DeletionFailedException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
 

@@ -3,8 +3,6 @@ package com.genio.service.impl;
 import com.genio.exception.business.DocxGenerationException;
 import com.genio.exception.business.UnreplacedPlaceholderException;
 import org.apache.poi.xwpf.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -12,8 +10,6 @@ import java.util.Map;
 
 @Component
 public class DocxGenerator {
-
-    private static final Logger logger = LoggerFactory.getLogger(DocxGenerator.class);
 
     public String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath)
             throws DocxGenerationException {
@@ -32,17 +28,13 @@ public class DocxGenerator {
                 document.write(fos);
             }
 
-            logger.info("Fichier DOCX généré avec succès : {}", outputPath);
             return outputPath;
 
         } catch (FileNotFoundException e) {
-            String msg = "Fichier source non trouvé : " + conventionServicePath;
-            logger.error(msg, e);
-            throw new DocxGenerationException(msg, e);
+            throw new DocxGenerationException("Fichier source non trouvé : " + conventionServicePath, e);
         } catch (IOException e) {
-            String msg = "Erreur d'E/S lors de la génération du fichier DOCX depuis : " + conventionServicePath + " vers " + outputPath;
-            logger.error(msg, e);
-            throw new DocxGenerationException(msg, e);
+            throw new DocxGenerationException("Erreur d'E/S lors de la génération du fichier DOCX depuis : "
+                    + conventionServicePath + " vers " + outputPath, e);
         }
     }
 
@@ -57,9 +49,7 @@ public class DocxGenerator {
             return out.toByteArray();
 
         } catch (IOException e) {
-            String msg = "Erreur lors de la génération du fichier DOCX à partir du template binaire";
-            logger.error(msg, e);
-            throw new DocxGenerationException(msg, e);
+            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template binaire", e);
         }
     }
 

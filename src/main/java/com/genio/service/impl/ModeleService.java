@@ -1,4 +1,5 @@
 package com.genio.service.impl;
+
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.exception.business.*;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
@@ -23,16 +26,9 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.springframework.web.multipart.MultipartFile;
-import com.genio.exception.business.ModelConventionNotFoundException;
-import com.genio.exception.business.UnauthorizedModificationException;
-import com.genio.exception.business.IntegrityCheckFailedException;
-
 
 @Service
 public class ModeleService {
-
-
 
     private static final Logger logger = LoggerFactory.getLogger(ModeleService.class);
 
@@ -40,15 +36,12 @@ public class ModeleService {
     private String directoryPath;
 
     private static final String MODEL_NOT_FOUND = "Modèle introuvable avec l'ID : ";
+    private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
 
-
-    private ConventionRepository conventionRepository;
-
+    private final ConventionRepository conventionRepository;
     private final DataSource dataSource;
-
-    private DocxParser docxParser;
-
-    private ModeleRepository modeleRepository;
+    private final DocxParser docxParser;
+    private final ModeleRepository modeleRepository;
 
     public ModeleService(DataSource dataSource,
                          ConventionRepository conventionRepository,
@@ -60,24 +53,19 @@ public class ModeleService {
         this.docxParser = docxParser;
     }
 
-    private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
-
     public void insertModeleFromDirectory() throws IOException {
         File dir = new File(directoryPath);
         File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));
 
         if (files == null || files.length == 0) {
-            logger.warn("Aucun fichier .docx trouvé dans le répertoire.");
             throw new EmptyDirectoryException("Le répertoire ne contient aucun fichier .docx.");
         }
 
         for (File file : files) {
             String modelName = file.getName();
-            if (!modelName.matches(FILENAME_REGEX )) {
-                logger.error("Erreur : Le fichier {} ne respecte pas le format attendu 'modeleConvention_YYYY.docx'.", modelName);
+            if (!modelName.matches(FILENAME_REGEX)) {
                 throw new InvalidFileFormatException("Format invalide : le fichier doit être nommé sous la forme 'modeleConvention_YYYY.docx'.");
             }
-
             insertModele(file, "2025");
         }
     }
@@ -90,20 +78,13 @@ public class ModeleService {
         byte[] fileBytes = Files.readAllBytes(conventionServiceFile.toPath());
         String modelName = conventionServiceFile.getName();
 
-        logger.info("Nom du fichier : {}", modelName);
-        logger.info("Taille : {} octets", conventionServiceFile.length());
-        logger.info("Date de création : {}", new java.util.Date(conventionServiceFile.lastModified()));
-
         Pattern pattern = Pattern.compile("_(\\d{4})\\.docx$");
         Matcher matcher = pattern.matcher(modelName);
         String modelYear = matcher.find() ? matcher.group(1) : anneeUtilisateur;
 
         if (modelYear == null || modelYear.isEmpty()) {
-            logger.error("Erreur : Impossible de déterminer l'année.");
             throw new InvalidFileFormatException("Le fichier " + modelName + " doit contenir une année (_YYYY.docx) ou l'année doit être précisée.");
         }
-
-        logger.info("Année utilisée : {}", modelYear);
 
         if (dataSource != null) {
             String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
@@ -113,14 +94,9 @@ public class ModeleService {
                 preparedStatement.setString(2, modelYear);
                 preparedStatement.setBytes(3, fileBytes);
                 preparedStatement.executeUpdate();
-                logger.info("Modèle inséré avec succès : {}", modelName);
             } catch (SQLException e) {
-                String errorMsg = "Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear;
-                logger.error("{} : {}", errorMsg, e.getMessage(), e);
-                throw new DatabaseInsertionException(errorMsg, e);
+                throw new DatabaseInsertionException("Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear, e);
             }
-        } else {
-            logger.warn("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");
         }
     }
 
@@ -135,10 +111,6 @@ public class ModeleService {
             "TEL_ENCADRANT", "MEL_ENCADRANT", "NOM_CPAM", "Stage_Professionnel", "STA_REMU_HOR"
     );
 
-
-
-
-
     public List<ModeleDTOForList> getAllConventionServices() throws NoConventionServicesAvailableException {
         List<Modele> modeles = modeleRepository.findAll();
 
@@ -151,8 +123,7 @@ public class ModeleService {
                         modele.getId(),
                         modele.getNom(),
                         generateDescription(modele),
-                        "docx"
-                ))
+                        "docx"))
                 .toList();
     }
 
@@ -160,21 +131,12 @@ public class ModeleService {
         return "Modèle " + modele.getNom() + " de l'année " + modele.getAnnee();
     }
 
-
-
     public ModeleDTO getConventionServiceById(Long id) throws ConventionServiceNotFoundException {
         Modele modele = modeleRepository.findById(id)
                 .orElseThrow(() -> new ConventionServiceNotFoundException(MODEL_NOT_FOUND));
 
-        return new ModeleDTO(
-                modele.getId(),
-                modele.getNom(),
-                modele.getAnnee(),
-                "docx",
-                "Non spécifiée"
-        );
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée");
     }
-
 
     private List<String> findMissingVariables(List<String> foundVariables) {
         List<String> missing = new ArrayList<>();
@@ -188,7 +150,7 @@ public class ModeleService {
 
     private List<String> findMalformedVariables(List<String> foundVariables) {
         List<String> malformed = new ArrayList<>();
-        for (String variable: foundVariables) {
+        for (String variable : foundVariables) {
             if (!variable.matches("^\\w+$")) {
                 malformed.add(variable);
             }
@@ -197,11 +159,10 @@ public class ModeleService {
     }
 
     public ModeleDTO createModelConvention(MultipartFile file)
-            throws ModelConventionAlreadyExistsException, InvalidFormatException, DatabaseInsertionException, IOException, MissingVariableException {
+            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException {
 
         String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX )) {
-            logger.error("Erreur : Le fichier '{}' ne respecte pas le format attendu 'modeleConvention_YYYY.docx'.", originalFilename);
+        if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX)) {
             throw new InvalidFileFormatException("Format invalide : le fichier doit être nommé sous la forme 'modeleConvention_YYYY.docx'.");
         }
 
@@ -218,9 +179,7 @@ public class ModeleService {
         List<String> malformedVariables = findMalformedVariables(foundVariables);
 
         if (!missingVariables.isEmpty() || !malformedVariables.isEmpty()) {
-            String errorMessage = generateDetailedErrorMessage(missingVariables, malformedVariables);
-            logger.error("Erreur de validation : {}", errorMessage);
-            throw new MissingVariableException(errorMessage);
+            throw new MissingVariableException(generateDetailedErrorMessage(missingVariables, malformedVariables));
         }
 
         byte[] fileBytes = file.getBytes();
@@ -232,9 +191,8 @@ public class ModeleService {
 
         saveFileToDirectory(file, originalFilename);
 
-        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx",  "Non spécifiée");
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée");
     }
-
 
     private String generateDetailedErrorMessage(List<String> missingVariables, List<String> malformedVariables) {
         StringBuilder message = new StringBuilder("Problèmes détectés dans le fichier : ");
@@ -243,10 +201,9 @@ public class ModeleService {
             message.append("-Variables manquantes : ").append(String.join(", ", missingVariables));
         }
         if (!malformedVariables.isEmpty()) {
-            message.append("Variables mal formatées : ").append(String.join(", ", malformedVariables));
+            message.append(" Variables mal formatées : ").append(String.join(", ", malformedVariables));
         }
 
-        logger.debug("Message d'erreur détaillé : {}", message);
         return message.toString();
     }
 
@@ -259,13 +216,10 @@ public class ModeleService {
         Path filePath = directory.resolve(originalFilename);
 
         if (Files.exists(filePath)) {
-            logger.warn("Un fichier '{}' existe déjà dans le répertoire. Il ne sera pas écrasé.", originalFilename);
             return;
         }
 
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        logger.info("Fichier enregistré avec succès sous : {}", filePath);
     }
 
     public void updateModelConvention(Integer id, ModeleDTO modeleDTO)
@@ -274,7 +228,7 @@ public class ModeleService {
         Modele modele = modeleRepository.findById(id.longValue())
                 .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
-        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches(FILENAME_REGEX )) {
+        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches(FILENAME_REGEX)) {
             throw new ValidationException("Le nom du modèle est invalide ou ne respecte pas le format 'modeleConvention_YYYY.docx'.");
         }
         if (modeleDTO.getAnnee() == null || !modeleDTO.getAnnee().matches("^\\d{4}$")) {
@@ -292,8 +246,6 @@ public class ModeleService {
         modele.setNom(modeleDTO.getNom());
         modele.setAnnee(modeleDTO.getAnnee());
         modeleRepository.save(modele);
-
-        logger.info("Modèle mis à jour avec succès : {}", modeleDTO.getNom());
     }
 
     private boolean checkIfModelIsInUse(Long modeleId) {
@@ -319,9 +271,7 @@ public class ModeleService {
 
         try {
             modeleRepository.delete(modele);
-            logger.info("Modèle supprimé avec succès : {}", modele.getNom());
         } catch (Exception e) {
-            logger.error("Erreur lors de la suppression du modèle {} : {}", modele.getNom(), e.getMessage());
             throw new DeletionFailedException("Échec de la suppression du modèle en raison d'une erreur technique.");
         }
     }
