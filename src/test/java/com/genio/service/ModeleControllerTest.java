@@ -99,7 +99,7 @@ class ModeleControllerTest {
                 "TEL_ENCADRANT", "MEL_ENCADRANT", "NOM_CPAM", "Stage_Professionnel", "STA_REMU_HOR"
         ));
 
-        ResponseEntity<?> response = modeleController.createModelConvention("modeleConvention_2025.docx", file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file);
 
         assertEquals(201, response.getStatusCodeValue());
         assertTrue(response.getBody().toString().contains("ModelConvention ajouté avec succès"));
@@ -116,7 +116,7 @@ class ModeleControllerTest {
         modele.setAnnee("2025");
         modeleRepository.save(modele);
 
-        ResponseEntity<?> response = modeleController.createModelConvention("Convention Stage 2025", file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file);
 
         assertEquals(400, response.getStatusCodeValue());
         assertTrue(response.getBody().toString().contains("Un modèle avec ce nom existe déjà"));
@@ -128,7 +128,7 @@ class ModeleControllerTest {
         byte[] fileContent = "Test content".getBytes();
         MultipartFile file = new MockMultipartFile("file", "modeleConvention.txt", "text/plain", fileContent);
 
-        ResponseEntity<?> response = modeleController.createModelConvention("Convention Stage 2025", file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file);
 
         assertEquals(400, response.getStatusCodeValue());
         assertTrue(response.getBody().toString().contains("Format non supporté, uniquement .docx accepté"));

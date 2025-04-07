@@ -51,10 +51,9 @@ public class ModeleController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createModelConvention(@RequestParam("nom") String nom,
-                                                                     @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> createModelConvention(@RequestParam("file") MultipartFile file) {
         try {
-            modeleService.createModelConvention(nom, file);
+            modeleService.createModelConvention(file);
             return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE, "ModelConvention ajouté avec succès"));
         } catch (ModelConventionAlreadyExistsException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Un modèle avec ce nom existe déjà"));
@@ -81,7 +80,6 @@ public class ModeleController {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteModelConvention(@PathVariable Long id) {
         try {
@@ -89,8 +87,10 @@ public class ModeleController {
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));
         } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (Exception e) {
+        } catch (DeletionFailedException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
 

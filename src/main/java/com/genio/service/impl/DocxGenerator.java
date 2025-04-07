@@ -26,19 +26,7 @@ public class DocxGenerator {
         try (InputStream fis = new FileInputStream(conventionServicePath);
              XWPFDocument document = new XWPFDocument(fis)) {
 
-            for (XWPFParagraph paragraph : document.getParagraphs()) {
-                replacePlaceholdersInParagraph(paragraph, replacements);
-            }
-
-            for (XWPFTable table : document.getTables()) {
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            replacePlaceholdersInParagraph(paragraph, replacements);
-                        }
-                    }
-                }
-            }
+            processDocument(document, replacements);
 
             try (FileOutputStream fos = new FileOutputStream(outputPath)) {
                 document.write(fos);
@@ -47,38 +35,47 @@ public class DocxGenerator {
             logger.info("Fichier DOCX généré avec succès : {}", outputPath);
             return outputPath;
 
+        } catch (FileNotFoundException e) {
+            String msg = "Fichier source non trouvé : " + conventionServicePath;
+            logger.error(msg, e);
+            throw new DocxGenerationException(msg, e);
         } catch (IOException e) {
-            String errorMsg = "Erreur lors de la génération du DOCX depuis le fichier : " + conventionServicePath + " vers " + outputPath;
-            logger.error("{} - Détails : {}", errorMsg, e.getMessage(), e);
-            throw new DocxGenerationException(errorMsg, e);
+            String msg = "Erreur d'E/S lors de la génération du fichier DOCX depuis : " + conventionServicePath + " vers " + outputPath;
+            logger.error(msg, e);
+            throw new DocxGenerationException(msg, e);
         }
     }
 
-    public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements) throws DocxGenerationException {
+    public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements)
+            throws DocxGenerationException {
         try (InputStream is = new ByteArrayInputStream(templateBytes);
              XWPFDocument document = new XWPFDocument(is);
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            for (XWPFParagraph paragraph : document.getParagraphs()) {
-                replacePlaceholdersInParagraph(paragraph, replacements);
-            }
-
-            for (XWPFTable table : document.getTables()) {
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            replacePlaceholdersInParagraph(paragraph, replacements);
-                        }
-                    }
-                }
-            }
-
+            processDocument(document, replacements);
             document.write(out);
             return out.toByteArray();
 
         } catch (IOException e) {
-            logger.error("Erreur lors de la génération du DOCX à partir du template BLOB : {}", e.getMessage(), e);
-            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template binaire", e);
+            String msg = "Erreur lors de la génération du fichier DOCX à partir du template binaire";
+            logger.error(msg, e);
+            throw new DocxGenerationException(msg, e);
+        }
+    }
+
+    private void processDocument(XWPFDocument document, Map<String, String> replacements) {
+        for (XWPFParagraph paragraph : document.getParagraphs()) {
+            replacePlaceholdersInParagraph(paragraph, replacements);
+        }
+
+        for (XWPFTable table : document.getTables()) {
+            for (XWPFTableRow row : table.getRows()) {
+                for (XWPFTableCell cell : row.getTableCells()) {
+                    for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                        replacePlaceholdersInParagraph(paragraph, replacements);
+                    }
+                }
+            }
         }
     }
 
@@ -99,7 +96,8 @@ public class DocxGenerator {
         }
 
         if (updatedText.contains("${")) {
-            throw new UnreplacedPlaceholderException("Certains placeholders n'ont pas été remplacés : " + updatedText);
+            String missing = updatedText.substring(updatedText.indexOf("${"));
+            throw new UnreplacedPlaceholderException("Certains placeholders n'ont pas été remplacés : " + missing);
         }
 
         if (!paragraph.getRuns().isEmpty()) {

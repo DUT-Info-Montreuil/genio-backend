@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.genio.exception.business.InvalidFormatException;
 import org.springframework.web.multipart.MultipartFile;
 import com.genio.exception.business.ModelConventionNotFoundException;
 import com.genio.exception.business.UnauthorizedModificationException;
@@ -197,7 +196,7 @@ public class ModeleService {
         return malformed;
     }
 
-    public ModeleDTO createModelConvention(String nom,  MultipartFile file)
+    public ModeleDTO createModelConvention(MultipartFile file)
             throws ModelConventionAlreadyExistsException, InvalidFormatException, DatabaseInsertionException, IOException, MissingVariableException {
 
         String originalFilename = file.getOriginalFilename();
