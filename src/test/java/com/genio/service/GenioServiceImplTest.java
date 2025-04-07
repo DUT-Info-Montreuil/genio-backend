@@ -378,7 +378,7 @@ class GenioServiceImplTest {
             "2025, mocked-bytes",
             "2024, mocked-bytes"
     })
-    @Rollback
+    @Rollback //
     @Transactional
     void generateConvention_modelWithDifferentYears_shouldReturnSuccess(String annee, String fichierRetourne) throws Exception {
         Modele modele = new Modele();
