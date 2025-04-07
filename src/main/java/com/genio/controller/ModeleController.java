@@ -71,9 +71,7 @@ public class ModeleController {
         try {
             modeleService.updateModelConvention(id, modeleDTO);
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention mis à jour avec succès !"));
-        } catch (ModelConventionNotFoundException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (ValidationException | UnauthorizedModificationException | IntegrityCheckFailedException e) {
+        } catch (ModelConventionNotFoundException | ValidationException | UnauthorizedModificationException | IntegrityCheckFailedException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
