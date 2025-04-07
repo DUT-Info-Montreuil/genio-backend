@@ -48,8 +48,9 @@ public class DocxGenerator {
             return outputPath;
 
         } catch (IOException e) {
-            logger.error("Erreur lors de la génération du DOCX : {}", e.getMessage(), e);
-            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX depuis le fichier : " + conventionServicePath, e);
+            String errorMsg = "Erreur lors de la génération du DOCX depuis le fichier : " + conventionServicePath + " vers " + outputPath;
+            logger.error("{} - Détails : {}", errorMsg, e.getMessage(), e);
+            throw new DocxGenerationException(errorMsg, e);
         }
     }
 

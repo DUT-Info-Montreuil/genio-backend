@@ -116,8 +116,9 @@ public class ModeleService {
                 preparedStatement.executeUpdate();
                 logger.info("Modèle inséré avec succès : {}", modelName);
             } catch (SQLException e) {
-                logger.error("Erreur SQL lors de l'insertion du modèle {}. Détails : {}", modelName, e.getMessage());
-                throw new DatabaseInsertionException("Erreur lors de l'insertion du modèle " + modelName + " dans la base de données.", e);
+                String errorMsg = "Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear;
+                logger.error("{} : {}", errorMsg, e.getMessage(), e);
+                throw new DatabaseInsertionException(errorMsg, e);
             }
         } else {
             logger.warn("La base de données n'est pas configurée. Aucun modèle n'a été inséré.");

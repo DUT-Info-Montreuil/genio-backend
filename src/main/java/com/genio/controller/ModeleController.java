@@ -89,10 +89,8 @@ public class ModeleController {
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));
         } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (DeletionFailedException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
+            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         }
     }
 
