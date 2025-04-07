@@ -98,41 +98,17 @@ class GenioServiceImplTest {
         assertNotNull(result.getFichierBinaire());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_missingRequiredFields_shouldReturnValidationError() {
-        Modele modele = new Modele();
-        modele.setNom("modele-test-valide.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("template-factice".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
-
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO(
-                "John", "Doe", "H", "2000-01-01",
-                null,
-                "01.23.45.67.89",
-                "johndoe@example.com",
-                "CPAM123"
-        ));
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("adresse"));
-    }
-
-
 
 
     @ParameterizedTest
-    @ValueSource(strings = {"TXT", "XML", "CSV"})
+    @CsvSource({
+            "TXT, Erreur : format de fichier non supporté.",
+            "XML, Erreur : format de fichier non supporté.",
+            "CSV, Erreur : format de fichier non supporté."
+    })
     @Rollback
     @Transactional
-    void generateConvention_invalidFileFormat_shouldReturnError(String format) {
+    void generateConvention_invalidFileFormat_shouldReturnError(String format, String expectedMessage) {
         Modele modele = new Modele();
         modele.setNom("Modele Test");
         modele.setAnnee("2025");
@@ -149,7 +125,7 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, format);
 
         assertFalse(result.isSuccess());
-        assertEquals("Erreur : format de fichier non supporté.", result.getMessageErreur());
+        assertEquals(expectedMessage, result.getMessageErreur());
     }
 
 
@@ -401,5 +377,33 @@ class GenioServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertNotNull(result.getFichierBinaire());
+    }
+
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_missingRequiredFields_shouldReturnValidationError() {
+        Modele modele = new Modele();
+        modele.setNom("modele-test-valide.docx");
+        modele.setAnnee("2025");
+        modele.setFichierBinaire("template-factice".getBytes());
+        modele = modeleRepository.saveAndFlush(modele);
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(new EtudiantDTO(
+                "John", "Doe", "H", "2000-01-01",
+                null, // Par exemple, "adresse" est manquante ici
+                "01.23.45.67.89",
+                "johndoe@example.com",
+                "CPAM123"
+        ));
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        // Vérification des erreurs de validation
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessageErreur().contains("adresse")); // S'assurer que l'erreur contient le champ manquant
     }
 }
