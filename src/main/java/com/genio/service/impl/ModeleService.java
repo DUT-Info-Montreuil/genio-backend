@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 @Service
 public class ModeleService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ModeleService.class);
-
     @Value("${modele.conventionServices.directory}")
     private String directoryPath;
 

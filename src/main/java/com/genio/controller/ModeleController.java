@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.genio.exception.business.InvalidFormatException;
 import org.springframework.web.multipart.MultipartFile;
 import com.genio.exception.business.ValidationException;
 import java.io.IOException;
