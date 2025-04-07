@@ -79,15 +79,14 @@ public class ModeleController {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteModelConvention(@PathVariable Long id) {
         try {
             modeleService.deleteModelConvention(id);
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));
-        } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
+        } catch (ModelConventionNotFoundException | ModelConventionInUseException | DeletionFailedException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
-        } catch (DeletionFailedException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         }
     }
 
