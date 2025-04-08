@@ -1,6 +1,7 @@
 package com.genio.service;
 
 import com.genio.dto.outputmodeles.ModeleDTO;
+import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.exception.business.*;
 import com.genio.mapper.DocxParser;
 import com.genio.model.Modele;
@@ -127,5 +128,139 @@ class ModeleServiceTest {
         when(modeleRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(ModelConventionNotFoundException.class, () -> modeleService.deleteModelConvention(999L));
+    }
+
+
+    @Test
+    void testGetConventionServiceById_Success() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        ModeleDTO result = modeleService.getConventionServiceById(1L);
+
+        assertNotNull(result);
+        assertEquals("modeleConvention_2025.docx", result.getNom());
+        assertEquals("2025", result.getAnnee());
+    }
+
+    @Test
+    void testGetConventionServiceById_NotFound() {
+        when(modeleRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(ConventionServiceNotFoundException.class, () ->
+                modeleService.getConventionServiceById(999L));
+    }
+
+    @Test
+    void testGetAllConventionServices_Success() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        when(modeleRepository.findAll()).thenReturn(List.of(modele));
+
+        List<ModeleDTOForList> result = modeleService.getAllConventionServices();
+
+        assertEquals(1, result.size());
+        assertEquals("modeleConvention_2025.docx", result.get(0).getNom());
+    }
+
+    @Test
+    void testGetAllConventionServices_Empty() {
+        when(modeleRepository.findAll()).thenReturn(List.of());
+
+        assertThrows(NoConventionServicesAvailableException.class, () ->
+                modeleService.getAllConventionServices());
+    }
+
+    @Test
+    void testIsModelInUse_True() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(conventionRepository.countByModele_Id(1L)).thenReturn(2L);
+
+        boolean result = modeleService.isModelInUse(1L);
+        assertTrue(result);
+    }
+
+    @Test
+    void testUpdateModelConvention_Success() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2025", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByNom(dto.getNom())).thenReturn(Optional.empty());
+
+        modeleService.updateModelConvention(1, dto);
+
+        verify(modeleRepository).save(any());
+    }
+
+
+    @Test
+    void testUpdateModelConvention_InvalidName() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "", "2025", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
+    }
+
+    @Test
+    void testUpdateModelConvention_InvalidYear() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "20AB", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
+    }
+
+    @Test
+    void testUpdateModelConvention_YearChanged() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2026", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(UnauthorizedModificationException.class, () -> modeleService.updateModelConvention(1, dto));
+    }
+
+    @Test
+    void testUpdateModelConvention_NameConflict() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2027.docx", "2025", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByNom("modeleConvention_2027.docx")).thenReturn(Optional.of(new Modele()));
+
+        assertThrows(IntegrityCheckFailedException.class, () -> modeleService.updateModelConvention(1, dto));
     }
 }

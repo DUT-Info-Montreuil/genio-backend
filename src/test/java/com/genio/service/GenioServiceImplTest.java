@@ -5,8 +5,11 @@ import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.GlobalExceptionHandler;
 import com.genio.exception.business.InvalidFileFormatException;
+import com.genio.exception.business.ModelNotFoundException;
 import com.genio.model.Modele;
+import com.genio.model.Tuteur;
 import com.genio.repository.ModeleRepository;
+import com.genio.repository.TuteurRepository;
 import com.genio.service.impl.DocxGenerator;
 import com.genio.service.impl.GenioServiceImpl;
 import com.genio.service.impl.ModeleService;
@@ -23,8 +26,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -33,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class GenioServiceImplTest {
+
 
     @Autowired
     private GenioServiceImpl genioService;
@@ -49,6 +54,10 @@ class GenioServiceImplTest {
     @MockBean
     private DocxGenerator docxGenerator;
 
+
+    @Autowired
+    private TuteurRepository tuteurRepository;
+
     @BeforeEach
     void setup() {
         modeleRepository.deleteAll();
@@ -57,7 +66,6 @@ class GenioServiceImplTest {
         modele.setAnnee("2025");
         modeleRepository.saveAndFlush(modele);
     }
-
 
 
     @Test
@@ -79,13 +87,21 @@ class GenioServiceImplTest {
         input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
         input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
+
+
+        Tuteur tuteur = new Tuteur();
+        tuteur.setNom("TuteurNom");
+        tuteur.setPrenom("TuteurPrenom");
+        tuteur.setEmail("tuteur@example.com");
+        tuteur = tuteurRepository.saveAndFlush(tuteur);
+        input.setTuteur(new TuteurDTO(tuteur.getNom(), tuteur.getPrenom(), tuteur.getEmail()));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertTrue(result.isSuccess());
         assertNotNull(result.getFichierBinaire());
     }
+
 
 
 
@@ -372,7 +388,7 @@ class GenioServiceImplTest {
         input.setModeleId(modele.getId());
         input.setEtudiant(new EtudiantDTO(
                 "John", "Doe", "H", "2000-01-01",
-                null, // Par exemple, "adresse" est manquante ici
+                null,
                 "01.23.45.67.89",
                 "johndoe@example.com",
                 "CPAM123"
@@ -380,8 +396,81 @@ class GenioServiceImplTest {
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
-        // Vérification des erreurs de validation
         assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("adresse")); // S'assurer que l'erreur contient le champ manquant
+        assertTrue(result.getMessageErreur().contains("adresse"));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_modelNomNullEtPasDeFichier_shouldReturnError() {
+        // Étape 1 : on sauvegarde un modèle "valide"
+        Modele modele = new Modele();
+        modele.setNom("placeholder.docx");
+        modele.setFichierBinaire("dummy".getBytes());
+        modele.setAnnee("2025");
+        modele = modeleRepository.saveAndFlush(modele);
+
+        // Étape 2 : on simule un modèle sans nom ni fichier (mais sans re-save)
+        modele.setNom(null);
+        modele.setFichierBinaire(null);
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "0123456789", "john@example.com", "CPAM"));
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertEquals("Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.", result.getMessageErreur());
+    }
+
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_tuteurNonPersiste_shouldReturnError() {
+        Modele modele = new Modele();
+        modele.setNom("valid.docx");
+        modele.setAnnee("2025");
+        modele.setFichierBinaire("template".getBytes());
+        modele = modeleRepository.saveAndFlush(modele);
+
+        TuteurDTO tuteurDTO = new TuteurDTO(null, "Prenom", "email@example.com");
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123"));
+        input.setTuteur(tuteurDTO);
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(new OrganismeDTO("Org", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
+        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessageErreur().contains("Le nom de l'enseignant doit être une chaîne alphabétique"));
+        assertTrue(result.getMessageErreur().contains("Le nom de l'enseignant est manquant"));
+    }
+
+
+
+    @Test
+    void getModelesByAnnee_success() {
+        Modele modele = new Modele();
+        modele.setNom("modele.docx");
+        modele.setAnnee("2026");
+        modeleRepository.saveAndFlush(modele);
+
+        List<Modele> modeles = genioService.getModelesByAnnee("2026");
+
+        assertFalse(modeles.isEmpty());
+        assertEquals("2026", modeles.get(0).getAnnee());
+    }
+
+    @Test
+    void getModelesByAnnee_modelNotFound_shouldThrowException() {
+        assertThrows(ModelNotFoundException.class, () -> genioService.getModelesByAnnee("1900"));
     }
 }
