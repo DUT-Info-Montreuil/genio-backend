@@ -35,36 +35,23 @@ import java.util.stream.Collectors;
 @Service
 public class GenioServiceImpl implements GenioService {
 
-    @Autowired
-    private EtudiantRepository etudiantRepository;
-
-    @Autowired
-    private MaitreDeStageRepository maitreDeStageRepository;
-
-    @Autowired
-    private ConventionRepository conventionRepository;
-
-    @Autowired
-    private ModeleRepository modeleRepository;
-
-    @Autowired
-    private HistorisationRepository historisationRepository;
-
-    @Autowired
-    private TuteurRepository tuteurRepository;
-
-    @Autowired
-    private ErrorDetailsRepository errorDetailsRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
-
     @Lazy
     @Autowired
     private GenioServiceImpl self;
 
-    private final DocxGenerator docxGenerator;
+    private final ModeleRepository modeleRepository;
+    private final HistorisationRepository historisationRepository;
+    private final TuteurRepository tuteurRepository;
+    private final ErrorDetailsRepository errorDetailsRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
+
+    private final DocxGenerator docxGenerator;
     private static final String STATUS_ECHEC = "ECHEC";
+
+    private final EtudiantRepository etudiantRepository;
+    private final MaitreDeStageRepository maitreDeStageRepository;
+    private final ConventionRepository conventionRepository;
 
     public GenioServiceImpl(EtudiantRepository etudiantRepository,
                             MaitreDeStageRepository maitreDeStageRepository,
@@ -180,19 +167,19 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
-            self.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
+            sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
             logger.info("La convention a été générée avec succès.");
             return new ConventionBinaireRes(true, fichierBinaire, null);
 
         } catch (ModelNotFoundException e) {
             logger.error("Modèle introuvable : {}", e.getMessage());
-            self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
+            sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
 
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
-            self.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
+            sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
