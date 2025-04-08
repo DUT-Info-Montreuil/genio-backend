@@ -1,8 +1,6 @@
 package com.genio.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
@@ -35,9 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class GenioServiceImpl implements GenioService {
 
-    @Lazy
-    @Autowired
-    private GenioServiceImpl self;
 
     private final ModeleRepository modeleRepository;
     private final HistorisationRepository historisationRepository;
