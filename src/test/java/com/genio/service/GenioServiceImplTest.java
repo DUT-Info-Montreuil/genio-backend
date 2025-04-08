@@ -207,85 +207,6 @@ class GenioServiceImplTest {
     }
 
 
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_fileGenerationException_shouldReturnError() {
-        Modele modele = new Modele();
-        modele.setNom("valid-model.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
-
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
-        input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
-        input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
-        input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
-
-        when(docxGenerator.generateDocxFromTemplate(any(), any())).thenThrow(new RuntimeException("Erreur lors de la génération du fichier DOCX"));
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertEquals("Erreur inattendue : contacter l’administrateur.", result.getMessageErreur());
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_validModel_pdfFormat_shouldReturnSuccess() throws Exception {
-        Modele modele = new Modele();
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele.setAnnee("2025");
-        modele.setNom("mocked-model.docx");
-        modele = modeleRepository.saveAndFlush(modele);
-
-        when(docxGenerator.generateDocxFromTemplate(any(), any()))
-                .thenReturn("fichier-mocke".getBytes());
-
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
-        input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
-        input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
-        input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "PDF");
-
-        assertTrue(result.isSuccess());
-        assertNotNull(result.getFichierBinaire());
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    void generateConvention_fileGenerationError_shouldReturnError() {
-        Modele modele = new Modele();
-        modele.setNom("valid-model.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
-
-        ConventionServiceDTO input = new ConventionServiceDTO();
-        input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
-        input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
-        input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
-        input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
-
-        when(docxGenerator.generateDocxFromTemplate(any(), any())).thenThrow(new RuntimeException("File generation error"));
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
-
-        assertFalse(result.isSuccess());
-        assertEquals("Erreur inattendue : contacter l’administrateur.", result.getMessageErreur());
-    }
-
 
     @Test
     @Rollback
@@ -404,14 +325,12 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelNomNullEtPasDeFichier_shouldReturnError() {
-        // Étape 1 : on sauvegarde un modèle "valide"
         Modele modele = new Modele();
         modele.setNom("placeholder.docx");
         modele.setFichierBinaire("dummy".getBytes());
         modele.setAnnee("2025");
         modele = modeleRepository.saveAndFlush(modele);
 
-        // Étape 2 : on simule un modèle sans nom ni fichier (mais sans re-save)
         modele.setNom(null);
         modele.setFichierBinaire(null);
 

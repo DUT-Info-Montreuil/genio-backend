@@ -58,7 +58,9 @@ public class GenioServiceImpl implements GenioService {
 
     private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
 
-    private final GenioServiceImpl self;
+    @Lazy
+    @Autowired
+    private GenioServiceImpl self;
 
     private final DocxGenerator docxGenerator;
 
@@ -71,8 +73,7 @@ public class GenioServiceImpl implements GenioService {
                             HistorisationRepository historisationRepository,
                             TuteurRepository tuteurRepository,
                             ErrorDetailsRepository errorDetailsRepository,
-                            DocxGenerator docxGenerator,
-                            @Lazy GenioServiceImpl self) {
+                            DocxGenerator docxGenerator) {
         this.etudiantRepository = etudiantRepository;
         this.maitreDeStageRepository = maitreDeStageRepository;
         this.conventionRepository = conventionRepository;
@@ -81,7 +82,6 @@ public class GenioServiceImpl implements GenioService {
         this.tuteurRepository = tuteurRepository;
         this.errorDetailsRepository = errorDetailsRepository;
         this.docxGenerator = docxGenerator;
-        this.self = self;
     }
 
     private boolean isFormatValide(String format) {

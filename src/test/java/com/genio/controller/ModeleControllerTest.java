@@ -1,5 +1,6 @@
 package com.genio.controller;
 
+import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.mapper.DocxParser;
 import com.genio.model.*;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -218,5 +220,66 @@ class ModeleControllerTest {
 
         assertEquals(400, response.getStatusCodeValue());
         assertTrue(response.getBody().toString().contains("Le modèle est toujours utilisé"));
+    }
+
+    @Test
+    @Rollback
+    void testGetModelConventionById_Success() {
+        Modele modele = new Modele();
+        modele.setNom("Test");
+        modele.setAnnee("2025");
+        modele = modeleRepository.save(modele);
+
+        ResponseEntity<?> response = modeleController.getModelConventionById(modele.getId());
+
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+
+    @Test
+    @Rollback
+    void testIsModelUsed_False() {
+        Modele modele = new Modele();
+        modele.setNom("Unused");
+        modele.setAnnee("2025");
+        modele = modeleRepository.save(modele);
+
+        ResponseEntity<?> response = modeleController.isModelUsed(modele.getId());
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().toString().contains("false"));
+    }
+
+    @Test
+    @Rollback
+    void testIsModelUsed_ModelNotFound() {
+        ResponseEntity<?> response = modeleController.isModelUsed(999L);
+        assertEquals(400, response.getStatusCodeValue());
+        assertTrue(response.getBody().toString().contains("Modèle"));
+    }
+
+    @Test
+    @Rollback
+    void testUpdateModelConvention_UnauthorizedModification() {
+        Modele modele = new Modele();
+        modele.setNom("modeleConvention_2023.docx");
+        modele.setAnnee("2023");
+        modele = modeleRepository.save(modele);
+
+        ModeleDTO dto = new ModeleDTO(
+                modele.getId(),
+                "modeleConvention_2025.docx",
+                "2025",
+                "docx",
+                null
+        );
+
+        ResponseEntity<Map<String, String>> response = modeleController.updateModelConvention(modele.getId().intValue(), dto);
+
+        assertEquals(400, response.getStatusCodeValue());
+
+        Map<String, String> body = response.getBody();
+        assertNotNull(body);
+        assertTrue(body.containsKey("error"));
+        assertEquals("La modification de l'année d'un modèle existant n'est pas autorisée.", body.get("error"));
     }
 }

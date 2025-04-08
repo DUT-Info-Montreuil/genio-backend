@@ -67,4 +67,32 @@ public class ConventionWsDTO {
                 ", modeleId=" + modeleId +
                 '}';
     }
+
+    public ConventionWsDTO() {
+
+    }
+
+    public void setEtudiant(EtudiantDTO etudiant) {
+        this.etudiant = etudiant;
+    }
+
+    public void setMaitreDeStage(MaitreDeStageDTO maitreDeStage) {
+        this.maitreDeStage = maitreDeStage;
+    }
+
+    public void setOrganisme(OrganismeDTO organisme) {
+        this.organisme = organisme;
+    }
+
+    public void setStage(StageDTO stage) {
+        this.stage = stage;
+    }
+
+    public void setTuteur(TuteurDTO tuteur) {
+        this.tuteur = tuteur;
+    }
+
+    public void setModeleId(Long modeleId) {
+        this.modeleId = modeleId;
+    }
 }

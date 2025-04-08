@@ -29,11 +29,9 @@ public class GenioController {
 
     private static final Logger logger = LoggerFactory.getLogger(GenioController.class);
     private final GenioService genioService;
-    private final GenioServiceImpl genioServiceImpl;
 
-    public GenioController(GenioService genioService, GenioServiceImpl genioServiceImpl) {
+    public GenioController(GenioService genioService) {
         this.genioService = genioService;
-        this.genioServiceImpl = genioServiceImpl;
     }
 
     @PostMapping("/generer")
@@ -65,7 +63,7 @@ public class GenioController {
     @GetMapping("/modele/annee/{annee}")
     public ResponseEntity<List<Modele>> getModelesParAnnee(@PathVariable String annee) {
         try {
-            List<Modele> modeles = genioServiceImpl.getModelesByAnnee(annee);
+            List<Modele> modeles = genioService.getModelesByAnnee(annee);
             return ResponseEntity.ok(modeles);
         } catch (ModelNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
