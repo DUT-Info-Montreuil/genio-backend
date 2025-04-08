@@ -153,7 +153,7 @@ public class GenioServiceImpl implements GenioService {
             }
 
             Tuteur tuteur = sauvegarderTuteur(input.getTuteur());
-            if (tuteur == null || tuteur.getId() == null) {
+            if (tuteur == null) {
                 String message = "Erreur de persistance du tuteur.";
                 logger.error(message);
                 return new ConventionBinaireRes(false, null, message);
