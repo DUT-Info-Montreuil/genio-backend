@@ -17,14 +17,12 @@ import com.genio.service.GenioService;
 import com.genio.service.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import com.genio.utils.ErrorMessages;
 
 import java.io.File;
 import java.nio.file.Files;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class GenioServiceImpl implements GenioService {
-
 
     private final ModeleRepository modeleRepository;
     private final HistorisationRepository historisationRepository;
@@ -89,7 +86,6 @@ public class GenioServiceImpl implements GenioService {
     private boolean isTuteurIncomplet(TuteurDTO tuteur) {
         return tuteur == null || tuteur.getNom() == null || tuteur.getPrenom() == null;
     }
-
 
     @Override
     @Transactional
@@ -179,7 +175,6 @@ public class GenioServiceImpl implements GenioService {
         }
     }
 
-
     @Override
     public Map<String, String> validerDonnees(ConventionServiceDTO input) {
 
@@ -205,11 +200,9 @@ public class GenioServiceImpl implements GenioService {
             erreurs.put("organisme", "Le nom de l'organisme est manquant.");
         }
 
-
         if (input.getStage() == null || input.getStage().getSujetDuStage() == null) {
             erreurs.put("stage", "Le sujet du stage est manquant.");
         }
-
 
         if (input.getTuteur() == null || input.getTuteur().getNom() == null) {
             erreurs.put("tuteur", "Le nom de l'enseignant est manquant.");
@@ -300,7 +293,6 @@ public class GenioServiceImpl implements GenioService {
         return savedTuteur;
     }
 
-
     @Transactional(readOnly = true)
     public List<Modele> getModelesByAnnee(String annee) {
         List<Modele> modeles = modeleRepository.findByAnnee(annee);
@@ -312,9 +304,7 @@ public class GenioServiceImpl implements GenioService {
         return modeles;
     }
 
-
     private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) {
-
         logger.info("Début de la préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = new HashMap<>();
 
