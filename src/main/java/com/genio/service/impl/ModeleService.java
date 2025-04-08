@@ -83,17 +83,21 @@ public class ModeleService {
             throw new InvalidFileFormatException("Le fichier " + modelName + " doit contenir une année (_YYYY.docx) ou l'année doit être précisée.");
         }
 
-        if (dataSource != null) {
-            String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
-            try (Connection connection = dataSource.getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setString(1, modelName);
-                preparedStatement.setString(2, modelYear);
-                preparedStatement.setBytes(3, fileBytes);
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new DatabaseInsertionException("Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear, e);
-            }
+        if (dataSource == null) {
+            throw new IllegalStateException("DataSource is not initialized");
+        }
+
+        // Déclarer la requête SQL ici
+        String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, modelName);
+            preparedStatement.setString(2, modelYear);
+            preparedStatement.setBytes(3, fileBytes);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseInsertionException("Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear, e);
         }
     }
 

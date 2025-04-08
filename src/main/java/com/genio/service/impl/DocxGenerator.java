@@ -53,7 +53,7 @@ public class DocxGenerator {
         }
     }
 
-    private void processDocument(XWPFDocument document, Map<String, String> replacements) {
+    public void processDocument(XWPFDocument document, Map<String, String> replacements) {
         for (XWPFParagraph paragraph : document.getParagraphs()) {
             replacePlaceholdersInParagraph(paragraph, replacements);
         }

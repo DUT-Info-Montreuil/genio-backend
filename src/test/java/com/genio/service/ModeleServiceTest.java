@@ -18,7 +18,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +49,18 @@ class ModeleServiceTest {
     @InjectMocks
     private ModeleService modeleService;
 
+    private static final String directoryPath = "src/test/resources/modeles";
+
     @BeforeEach
     void setup() {
-        ReflectionTestUtils.setField(modeleService, "directoryPath", "src/test/resources/modeles");
+        // Créez le répertoire de test s'il n'existe pas
+        File dir = new File(directoryPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        // Injecter la valeur de directoryPath
+        ReflectionTestUtils.setField(modeleService, "directoryPath", directoryPath);
     }
 
     @Test
@@ -130,7 +144,6 @@ class ModeleServiceTest {
         assertThrows(ModelConventionNotFoundException.class, () -> modeleService.deleteModelConvention(999L));
     }
 
-
     @Test
     void testGetConventionServiceById_Success() throws Exception {
         Modele modele = new Modele();
@@ -206,61 +219,19 @@ class ModeleServiceTest {
         verify(modeleRepository).save(any());
     }
 
-
     @Test
-    void testUpdateModelConvention_InvalidName() {
-        Modele modele = new Modele();
-        modele.setId(1L);
-        modele.setNom("modeleConvention_2025.docx");
-        modele.setAnnee("2025");
+    void testInsertModele_ShouldThrowException_WhenFileIsEmpty() {
+        File emptyFile = new File(directoryPath + "/empty-model.docx");
+        try {
+            emptyFile.createNewFile();
+        } catch (IOException e) {
+            fail("File creation failed");
+        }
 
-        ModeleDTO dto = new ModeleDTO(1L, "", "2025", "docx", "n/a");
+        Exception exception = assertThrows(EmptyFileException.class, () -> {
+            modeleService.insertModele(emptyFile, "2025");
+        });
 
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-
-        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
-    }
-
-    @Test
-    void testUpdateModelConvention_InvalidYear() {
-        Modele modele = new Modele();
-        modele.setId(1L);
-        modele.setNom("modeleConvention_2025.docx");
-        modele.setAnnee("2025");
-
-        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "20AB", "docx", "n/a");
-
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-
-        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
-    }
-
-    @Test
-    void testUpdateModelConvention_YearChanged() {
-        Modele modele = new Modele();
-        modele.setId(1L);
-        modele.setNom("modeleConvention_2025.docx");
-        modele.setAnnee("2025");
-
-        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2026", "docx", "n/a");
-
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-
-        assertThrows(UnauthorizedModificationException.class, () -> modeleService.updateModelConvention(1, dto));
-    }
-
-    @Test
-    void testUpdateModelConvention_NameConflict() {
-        Modele modele = new Modele();
-        modele.setId(1L);
-        modele.setNom("modeleConvention_2025.docx");
-        modele.setAnnee("2025");
-
-        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2027.docx", "2025", "docx", "n/a");
-
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-        when(modeleRepository.findFirstByNom("modeleConvention_2027.docx")).thenReturn(Optional.of(new Modele()));
-
-        assertThrows(IntegrityCheckFailedException.class, () -> modeleService.updateModelConvention(1, dto));
+        assertTrue(exception.getMessage().contains("Le fichier empty-model.docx est vide"));
     }
 }

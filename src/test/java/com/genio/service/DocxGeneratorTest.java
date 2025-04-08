@@ -1,7 +1,9 @@
 package com.genio.service;
 
+import com.genio.exception.business.UnreplacedPlaceholderException;
 import com.genio.service.impl.DocxGenerator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,5 +86,42 @@ class DocxGeneratorTest {
 
         templateFile.delete();
         outputFile.delete();
+    }
+
+    @Test
+    void testProcessDocument_ShouldReplacePlaceholdersInDocument() throws Exception {
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("NOM", "Elsa");
+
+        XWPFDocument doc = new XWPFDocument();
+        XWPFParagraph paragraph = doc.createParagraph();
+        paragraph.createRun().setText("Bonjour ${NOM}");
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        doc.write(out);
+        byte[] docBytes = out.toByteArray();
+
+        byte[] resultBytes = docxGenerator.generateDocxFromTemplate(docBytes, replacements);
+
+        XWPFDocument resultDoc = new XWPFDocument(new ByteArrayInputStream(resultBytes));
+        String resultText = resultDoc.getParagraphs().get(0).getText();
+        assertEquals("Bonjour Elsa", resultText);
+    }
+
+
+    @Test
+    void testReplacePlaceholdersInParagraph_ShouldThrowException_WhenPlaceholderNotReplaced() {
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("NOM", "Elsa");
+
+        XWPFDocument doc = new XWPFDocument();
+        XWPFParagraph paragraph = doc.createParagraph();
+        paragraph.createRun().setText("Bonjour ${NOM}, ${AGE}");
+
+        Exception exception = assertThrows(UnreplacedPlaceholderException.class, () -> {
+            docxGenerator.processDocument(doc, replacements);
+        });
+
+        assertTrue(exception.getMessage().contains("${AGE}"));
     }
 }
