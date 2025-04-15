@@ -11,8 +11,4 @@ class GenioServiceApplicationTests {
         GenioServiceApplication.main(new String[]{});
     }
 
-    @Test
-    void main_shouldRunApplication() {
-        GenioServiceApplication.main(new String[]{});
-    }
 }
