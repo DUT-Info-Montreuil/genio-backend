@@ -44,6 +44,7 @@ public class GenioServiceImpl implements GenioService {
     private final EtudiantRepository etudiantRepository;
     private final MaitreDeStageRepository maitreDeStageRepository;
     private final ConventionRepository conventionRepository;
+    private final GenioService proxySelf;
 
     public GenioServiceImpl(EtudiantRepository etudiantRepository,
                             MaitreDeStageRepository maitreDeStageRepository,
@@ -52,7 +53,8 @@ public class GenioServiceImpl implements GenioService {
                             HistorisationRepository historisationRepository,
                             TuteurRepository tuteurRepository,
                             ErrorDetailsRepository errorDetailsRepository,
-                            DocxGenerator docxGenerator) {
+                            DocxGenerator docxGenerator,
+                            GenioService proxySelf) {
         this.etudiantRepository = etudiantRepository;
         this.maitreDeStageRepository = maitreDeStageRepository;
         this.conventionRepository = conventionRepository;
@@ -61,6 +63,7 @@ public class GenioServiceImpl implements GenioService {
         this.tuteurRepository = tuteurRepository;
         this.errorDetailsRepository = errorDetailsRepository;
         this.docxGenerator = docxGenerator;
+        this.proxySelf = proxySelf;
     }
 
     private boolean isFormatValide(String format) {
@@ -158,19 +161,19 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
-            sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
+            proxySelf.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
             logger.info("La convention a été générée avec succès.");
             return new ConventionBinaireRes(true, fichierBinaire, null);
 
         } catch (ModelNotFoundException e) {
             logger.error("Modèle introuvable : {}", e.getMessage());
-            sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
+            proxySelf.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
 
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
-            sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
+            proxySelf.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
@@ -285,8 +288,8 @@ public class GenioServiceImpl implements GenioService {
         logger.info("Début de la sauvegarde de tuteur : {}", tuteurDTO.getNom());
         Tuteur tuteur = TuteurFactory.createTuteur(tuteurDTO);
         Tuteur savedTuteur = tuteurRepository.save(tuteur);
-        if (savedTuteur == null || savedTuteur.getId() == null) {
-            logger.error("Erreur lors de la sauvegarde du tuteur : l'objet retourné ou son ID est null.");
+        if (savedTuteur.getId() == null) {
+            logger.error("Erreur : l'ID du tuteur sauvegardé est null.");
             return null;
         }
         logger.info("Tuteur sauvegardé avec succès : {}", savedTuteur.getNom());
