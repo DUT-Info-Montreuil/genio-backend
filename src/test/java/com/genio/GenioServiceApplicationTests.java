@@ -7,7 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 class GenioServiceApplicationTests {
 
     @Test
-    void contextLoads() {
+    void testMainMethod() {
+        GenioServiceApplication.main(new String[]{});
     }
 
+    @Test
+    void main_shouldRunApplication() {
+        GenioServiceApplication.main(new String[]{});
+    }
 }

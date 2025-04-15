@@ -23,4 +23,21 @@ class TuteurFactoryTest {
     void testCreateTuteur_shouldThrowException_whenDTOIsNull() {
         assertThrows(IllegalArgumentException.class, () -> TuteurFactory.createTuteur(null));
     }
+    @Test
+    void testCreateTuteur_shouldThrowException_whenNomIsEmpty() {
+        TuteurDTO dto = new TuteurDTO("", "Luc", "luc.durand@example.com");
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> TuteurFactory.createTuteur(dto));
+        assertEquals("Le nom du tuteur est requis.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateTuteur_shouldThrowException_whenEmailIsInvalid() {
+        TuteurDTO dto = new TuteurDTO("Durand", "Luc", "email-invalide");
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> TuteurFactory.createTuteur(dto));
+        assertEquals("L'email du tuteur est invalide.", exception.getMessage());
+    }
+
+
 }

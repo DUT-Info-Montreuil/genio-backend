@@ -3,12 +3,12 @@ package com.genio.factory;
 import com.genio.dto.TuteurDTO;
 import com.genio.model.Tuteur;
 
-// Dans TuteurFactory.java
+
 
 public class TuteurFactory {
 
     public static Tuteur createTuteur(TuteurDTO tuteurDTO) {
-        // Validation des données du TuteurDTO
+
         if (tuteurDTO == null) {
             throw new IllegalArgumentException("Les données du tuteur sont nulles.");
         }
@@ -21,7 +21,7 @@ public class TuteurFactory {
             throw new IllegalArgumentException("L'email du tuteur est invalide.");
         }
 
-        // Création du tuteur à partir du DTO
+
         Tuteur tuteur = new Tuteur();
         tuteur.setNom(tuteurDTO.getNom());
         tuteur.setPrenom(tuteurDTO.getPrenom());

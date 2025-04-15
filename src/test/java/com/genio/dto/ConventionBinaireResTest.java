@@ -46,4 +46,20 @@ class ConventionBinaireResTest {
         assertNull(res.getFichierBinaire());
         assertEquals("Erreur test", res.getMessageErreur());
     }
+    @Test
+    void testToString_shouldIncludeSuccessAndError() {
+        ConventionBinaireRes res = new ConventionBinaireRes(false, null, "Erreur");
+        String result = res.toString();
+        assertTrue(result.contains("Erreur"));
+        assertTrue(result.contains("false"));
+    }
+
+    @Test
+    void testToString() {
+        byte[] fileData = new byte[]{1, 2, 3};
+        ConventionBinaireRes res = new ConventionBinaireRes(true, fileData, null);
+        String result = res.toString();
+
+        assertTrue(result.contains("success=true"));
+    }
 }
