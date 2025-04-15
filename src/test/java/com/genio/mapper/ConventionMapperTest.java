@@ -52,7 +52,6 @@ class ConventionMapperTest {
 
     @Test
     void testToServiceDTO_ShouldThrowException_WhenInputIsNull() {
-        // Assert + Act
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ConventionMapper.toServiceDTO(null));
 

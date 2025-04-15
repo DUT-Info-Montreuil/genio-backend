@@ -87,7 +87,6 @@ public class ModeleService {
             throw new IllegalStateException("DataSource is not initialized");
         }
 
-        // Déclarer la requête SQL ici
         String sql = "INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();

@@ -19,11 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,13 +49,11 @@ class ModeleServiceTest {
 
     @BeforeEach
     void setup() {
-        // Créez le répertoire de test s'il n'existe pas
         File dir = new File(directoryPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        // Injecter la valeur de directoryPath
         ReflectionTestUtils.setField(modeleService, "directoryPath", directoryPath);
     }
 
@@ -202,22 +196,6 @@ class ModeleServiceTest {
         assertTrue(result);
     }
 
-    @Test
-    void testUpdateModelConvention_Success() throws Exception {
-        Modele modele = new Modele();
-        modele.setId(1L);
-        modele.setNom("modeleConvention_2025.docx");
-        modele.setAnnee("2025");
-
-        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2025", "docx", "n/a");
-
-        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-        when(modeleRepository.findFirstByNom(dto.getNom())).thenReturn(Optional.empty());
-
-        modeleService.updateModelConvention(1, dto);
-
-        verify(modeleRepository).save(any());
-    }
 
     @Test
     void testInsertModele_ShouldThrowException_WhenFileIsEmpty() {
@@ -234,4 +212,24 @@ class ModeleServiceTest {
 
         assertTrue(exception.getMessage().contains("Le fichier empty-model.docx est vide"));
     }
+
+
+
+    @Test
+    void testUpdateModelConvention_Success() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("modeleConvention_2025.docx");
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2025", "docx", "n/a");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByNom(dto.getNom())).thenReturn(Optional.empty());
+
+        modeleService.updateModelConvention(1, dto);
+        verify(modeleRepository).save(any());
+    }
+
+
 }

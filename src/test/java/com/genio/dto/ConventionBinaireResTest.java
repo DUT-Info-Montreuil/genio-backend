@@ -13,7 +13,7 @@ class ConventionBinaireResTest {
 
         ConventionBinaireRes res = new ConventionBinaireRes(true, fileData, null);
 
-        assertTrue(res.isSuccess()); // <- ici
+        assertTrue(res.isSuccess());
         assertArrayEquals(fileData, res.getFichierBinaire());
         assertNull(res.getMessageErreur());
     }
@@ -22,7 +22,7 @@ class ConventionBinaireResTest {
     void testErrorCase() {
         ConventionBinaireRes res = new ConventionBinaireRes(false, null, "Erreur ici");
 
-        assertFalse(res.isSuccess()); // <- ici
+        assertFalse(res.isSuccess());
         assertNull(res.getFichierBinaire());
         assertEquals("Erreur ici", res.getMessageErreur());
     }
