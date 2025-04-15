@@ -1,5 +1,6 @@
 package com.genio.service;
 
+import com.genio.GenioServiceApplication;
 import com.genio.dto.*;
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes = GenioServiceApplication.class)
 class GenioServiceImplTest {
 
 
