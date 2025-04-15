@@ -300,7 +300,7 @@ public class GenioServiceImpl implements GenioService {
         if (modeles.isEmpty()) {
             throw new ModelNotFoundException("Aucun modèle trouvé pour l'année : " + annee);
         }
-
+// modif
         return modeles;
     }
 
@@ -350,7 +350,7 @@ public class GenioServiceImpl implements GenioService {
             replacements.put("TUT_IUT_MEL", "Non défini");
         }
         logger.info("Préparation des remplacements terminée.");
-        return replacements; //
+        return replacements;
     }
 
     private String safeString(String value) {
