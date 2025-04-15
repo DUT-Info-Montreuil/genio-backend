@@ -100,9 +100,5 @@ public class StageDTO {
                 '}';
     }
 
-    public StageDTO(String anneeStage, String sujetDuStage, String dateDebutStage, String dateFinStage,
-                    String duree, int joursTot, int heuresTot, String remunerationHoraire, String saeStageProfessionnel) {
-        this(anneeStage, sujetDuStage, dateDebutStage, dateFinStage, duree,
-                Integer.valueOf(joursTot), Integer.valueOf(heuresTot), remunerationHoraire, saeStageProfessionnel);
-    }
+
 }
