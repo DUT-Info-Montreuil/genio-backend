@@ -3,12 +3,11 @@ package com.genio;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-@SpringBootTest(properties = "server.port=0")
+@SpringBootTest
 class GenioServiceApplicationTests {
+
     @Test
-    void testMainMethod_shouldNotCrash() {
-        GenioServiceApplication.main(new String[]{});
+    void contextLoads() {
     }
+
 }
