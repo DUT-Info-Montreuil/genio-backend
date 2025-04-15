@@ -1,14 +1,13 @@
 package com.genio;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class GenioServiceApplicationTests {
 
     @Test
-    void testMainMethod() {
-        GenioServiceApplication.main(new String[]{});
+    void testMainMethod_shouldNotCrash() {
+        assertDoesNotThrow(() -> GenioServiceApplication.main(new String[]{}));
     }
-
 }
