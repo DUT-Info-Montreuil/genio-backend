@@ -31,10 +31,7 @@ import java.util.stream.Collectors;
 public class GenioServiceImpl implements GenioService {
 
     private final ModeleRepository modeleRepository;
-    private final HistorisationRepository historisationRepository;
     private final TuteurRepository tuteurRepository;
-    private final ErrorDetailsRepository errorDetailsRepository;
-
     private static final Logger logger = LoggerFactory.getLogger(GenioServiceImpl.class);
 
     private final DocxGenerator docxGenerator;
@@ -49,18 +46,14 @@ public class GenioServiceImpl implements GenioService {
                             MaitreDeStageRepository maitreDeStageRepository,
                             ConventionRepository conventionRepository,
                             ModeleRepository modeleRepository,
-                            HistorisationRepository historisationRepository,
                             TuteurRepository tuteurRepository,
-                            ErrorDetailsRepository errorDetailsRepository,
                             DocxGenerator docxGenerator,
                             HistorisationService historisationService) {
         this.etudiantRepository = etudiantRepository;
         this.maitreDeStageRepository = maitreDeStageRepository;
         this.conventionRepository = conventionRepository;
         this.modeleRepository = modeleRepository;
-        this.historisationRepository = historisationRepository;
         this.tuteurRepository = tuteurRepository;
-        this.errorDetailsRepository = errorDetailsRepository;
         this.docxGenerator = docxGenerator;
         this.historisationService = historisationService;
     }

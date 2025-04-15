@@ -7,7 +7,6 @@ import com.genio.exception.business.InvalidDataException;
 import com.genio.exception.business.ModelNotFoundException;
 import com.genio.exception.technical.FileConversionException;
 import com.genio.exception.technical.SystemErrorException;
-import com.genio.model.Convention;
 import com.genio.model.Modele;
 
 import java.util.List;
