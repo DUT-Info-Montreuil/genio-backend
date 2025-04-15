@@ -12,6 +12,7 @@ import com.genio.repository.ModeleRepository;
 import com.genio.repository.TuteurRepository;
 import com.genio.service.impl.DocxGenerator;
 import com.genio.service.impl.GenioServiceImpl;
+import com.genio.service.impl.HistorisationService;
 import com.genio.service.impl.ModeleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,9 @@ class GenioServiceImplTest {
 
     @Autowired
     private TuteurRepository tuteurRepository;
+
+    @MockBean
+    private HistorisationService historisationService;
 
     @BeforeEach
     void setup() {

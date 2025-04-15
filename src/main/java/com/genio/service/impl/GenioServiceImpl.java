@@ -1,6 +1,5 @@
 package com.genio.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
@@ -44,7 +43,7 @@ public class GenioServiceImpl implements GenioService {
     private final EtudiantRepository etudiantRepository;
     private final MaitreDeStageRepository maitreDeStageRepository;
     private final ConventionRepository conventionRepository;
-    private final GenioService proxySelf;
+    private final HistorisationService historisationService;
 
     public GenioServiceImpl(EtudiantRepository etudiantRepository,
                             MaitreDeStageRepository maitreDeStageRepository,
@@ -54,7 +53,7 @@ public class GenioServiceImpl implements GenioService {
                             TuteurRepository tuteurRepository,
                             ErrorDetailsRepository errorDetailsRepository,
                             DocxGenerator docxGenerator,
-                            GenioService proxySelf) {
+                            HistorisationService historisationService) {
         this.etudiantRepository = etudiantRepository;
         this.maitreDeStageRepository = maitreDeStageRepository;
         this.conventionRepository = conventionRepository;
@@ -63,7 +62,7 @@ public class GenioServiceImpl implements GenioService {
         this.tuteurRepository = tuteurRepository;
         this.errorDetailsRepository = errorDetailsRepository;
         this.docxGenerator = docxGenerator;
-        this.proxySelf = proxySelf;
+        this.historisationService = historisationService;
     }
 
     private boolean isFormatValide(String format) {
@@ -161,19 +160,19 @@ public class GenioServiceImpl implements GenioService {
             }
 
             logger.info("Enregistrement de l'historisation pour la convention générée avec succès.");
-            proxySelf.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
+            historisationService.sauvegarderHistorisation(input, convention, fichierBinaire, "SUCCES", null);
 
             logger.info("La convention a été générée avec succès.");
             return new ConventionBinaireRes(true, fichierBinaire, null);
 
         } catch (ModelNotFoundException e) {
             logger.error("Modèle introuvable : {}", e.getMessage());
-            proxySelf.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
+            historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
             return new ConventionBinaireRes(false, null, e.getMessage());
 
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
-            proxySelf.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
+            historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
@@ -221,51 +220,6 @@ public class GenioServiceImpl implements GenioService {
         boolean exists = modeleRepository.existsById(modeleId);
         logger.info("Le modèle {}.", exists ? "existe" : "n'existe pas");
         return exists;
-    }
-
-    @Transactional
-    public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
-        logger.info("Début de la sauvegarde de l'historisation avec le statut : {}", status);
-        try {
-            Historisation historisation = new Historisation();
-            historisation.setConvention(convention);
-            historisation.setStatus(status);
-            historisation.setDetails(erreurs != null && !erreurs.isEmpty() ? "Des erreurs de validation ont été détectées." : "Aucune erreur détectée.");
-            historisation.setFluxJsonBinaire(new ObjectMapper().writeValueAsBytes(input));
-            historisation.setTimestamp();
-
-            if (fichierBinaire != null) {
-                historisation.setDocxBinaire(fichierBinaire);
-            }
-
-            logger.info("Sauvegarde de l'historisation...");
-            historisationRepository.save(historisation);
-
-            logger.info("Historisation sauvegardée avec succès.");
-
-            if (erreurs != null && !erreurs.isEmpty()) {
-                String messageErreur = erreurs.toString();
-                if (messageErreur.length() > 255) {
-                    messageErreur = messageErreur.substring(0, 255);
-                }
-
-                ErrorDetails errorDetails = new ErrorDetails();
-                errorDetails.setMessageErreur(messageErreur);
-                StringBuilder champsManquants = new StringBuilder();
-                erreurs.forEach((key, value) -> {
-                    champsManquants.append(key).append(" ; ");
-                });
-
-                errorDetails.setChampsManquants(champsManquants.toString());
-                errorDetails.setHistorisation(historisation);
-                errorDetailsRepository.save(errorDetails);
-
-                logger.warn("Des détails d'erreurs ont été enregistrés.");
-            }
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la sauvegarde de l'historisation : {}", e.getMessage());
-        }
     }
 
     private Etudiant sauvegarderEtudiant(EtudiantDTO etudiantDTO) {

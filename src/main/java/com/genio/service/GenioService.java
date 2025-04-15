@@ -35,5 +35,4 @@ public interface GenioService {
     Map<String, String> validerDonnees(ConventionServiceDTO input);
     boolean modeleExiste(Long modeleId);
     List<Modele> getModelesByAnnee(String annee);
-    void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs);
 }
