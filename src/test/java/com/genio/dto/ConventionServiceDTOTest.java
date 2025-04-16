@@ -8,7 +8,6 @@ class ConventionServiceDTOTest {
 
     @Test
     void testSettersAndGetters() {
-        // Mock des objets DTO utilisés
         EtudiantDTO etudiant = new EtudiantDTO(
                 "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05", "email@etu.com", "CPAM 75");
         MaitreDeStageDTO maitre = new MaitreDeStageDTO(
@@ -21,7 +20,6 @@ class ConventionServiceDTOTest {
 
         Long modeleId = 123L;
 
-        // Création et remplissage du DTO
         ConventionServiceDTO dto = new ConventionServiceDTO();
         dto.setEtudiant(etudiant);
         dto.setMaitreDeStage(maitre);
@@ -30,7 +28,6 @@ class ConventionServiceDTOTest {
         dto.setTuteur(tuteur);
         dto.setModeleId(modeleId);
 
-        // Vérifications
         assertEquals(etudiant, dto.getEtudiant());
         assertEquals(maitre, dto.getMaitreDeStage());
         assertEquals(organisme, dto.getOrganisme());

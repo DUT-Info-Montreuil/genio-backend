@@ -250,7 +250,6 @@ public class GenioServiceImpl implements GenioService {
         if (modeles.isEmpty()) {
             throw new ModelNotFoundException("Aucun modèle trouvé pour l'année : " + annee);
         }
-// modif
         return modeles;
     }
 
