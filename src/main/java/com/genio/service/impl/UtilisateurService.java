@@ -51,4 +51,15 @@ public class UtilisateurService {
             return utilisateurRepository.save(utilisateur);
         });
     }
+
+    public Utilisateur modifierRoleEtActivation(Long id, String nouveauRole, boolean actif) {
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        utilisateur.setRole(nouveauRole);
+        utilisateur.setActif(actif);
+        utilisateur.setUpdatedAt(LocalDateTime.now());
+
+        return utilisateurRepository.save(utilisateur);
+    }
 }

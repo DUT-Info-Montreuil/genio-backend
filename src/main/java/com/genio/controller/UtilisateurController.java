@@ -39,4 +39,14 @@ public class UtilisateurController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}/role-activation")
+    public ResponseEntity<Utilisateur> modifierRoleEtActivation(
+            @PathVariable Long id,
+            @RequestParam String role,
+            @RequestParam boolean actif
+    ) {
+        Utilisateur utilisateur = utilisateurService.modifierRoleEtActivation(id, role, actif);
+        return ResponseEntity.ok(utilisateur);
+    }
 }
