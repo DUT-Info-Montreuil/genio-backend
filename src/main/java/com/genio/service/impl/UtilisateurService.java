@@ -62,4 +62,13 @@ public class UtilisateurService {
 
         return utilisateurRepository.save(utilisateur);
     }
+
+    public Optional<Utilisateur> modifierRoleEtStatut(Long id, String role, Boolean actif) {
+        return utilisateurRepository.findById(id).map(utilisateur -> {
+            if (role != null) utilisateur.setRole(role);
+            if (actif != null) utilisateur.setActif(actif);
+            utilisateur.setUpdatedAt(LocalDateTime.now());
+            return utilisateurRepository.save(utilisateur);
+        });
+    }
 }

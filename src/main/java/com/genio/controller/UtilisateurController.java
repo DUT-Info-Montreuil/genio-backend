@@ -1,6 +1,7 @@
 package com.genio.controller;
 
 import com.genio.dto.UtilisateurDTO;
+import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.model.Utilisateur;
 import com.genio.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,15 @@ public class UtilisateurController {
     ) {
         Utilisateur utilisateur = utilisateurService.modifierRoleEtActivation(id, role, actif);
         return ResponseEntity.ok(utilisateur);
+    }
+
+    @PutMapping("/{id}/admin-update")
+    public ResponseEntity<Utilisateur> adminUpdate(
+            @PathVariable Long id,
+            @RequestBody UtilisateurUpdateDTO dto
+    ) {
+        return utilisateurService.modifierRoleEtStatut(id, dto.getRole(), dto.getActif())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
