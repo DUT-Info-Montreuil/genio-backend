@@ -1,11 +1,12 @@
 package com.genio.exception;
 
-
 import com.genio.controller.ExceptionTriggerController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +20,7 @@ class GlobalExceptionHandlerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     void shouldHandleInvalidFileFormatException() throws Exception {
         mockMvc.perform(get("/test/invalid-format"))
                 .andExpect(status().isBadRequest())
@@ -26,6 +28,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleEmptyFileException() throws Exception {
         mockMvc.perform(get("/test/empty-file"))
                 .andExpect(status().isBadRequest())
@@ -33,6 +36,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleFileTooLargeException() throws Exception {
         mockMvc.perform(get("/test/file-too-large"))
                 .andExpect(status().isBadRequest())
@@ -40,6 +44,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleEmptyDirectoryException() throws Exception {
         mockMvc.perform(get("/test/empty-dir"))
                 .andExpect(status().isBadRequest())
@@ -47,6 +52,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleConventionServiceAlreadyExistsException() throws Exception {
         mockMvc.perform(get("/test/already-exists"))
                 .andExpect(status().isBadRequest())
@@ -54,6 +60,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleConventionServiceInUseException() throws Exception {
         mockMvc.perform(get("/test/in-use"))
                 .andExpect(status().isBadRequest())
@@ -61,6 +68,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleInvalidFilterException() throws Exception {
         mockMvc.perform(get("/test/invalid-filter"))
                 .andExpect(status().isBadRequest())
@@ -68,6 +76,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldHandleGenericException() throws Exception {
         mockMvc.perform(get("/test/unexpected"))
                 .andExpect(status().isInternalServerError())
