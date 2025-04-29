@@ -7,6 +7,7 @@ import com.genio.service.impl.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -57,6 +58,14 @@ public class UtilisateurController {
             @RequestBody UtilisateurUpdateDTO dto
     ) {
         return utilisateurService.modifierRoleEtStatut(id, dto.getRole(), dto.getActif())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Utilisateur> getMonProfil(Authentication authentication) {
+        String username = authentication.getName();
+        return utilisateurService.getByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
