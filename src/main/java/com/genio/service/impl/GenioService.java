@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;

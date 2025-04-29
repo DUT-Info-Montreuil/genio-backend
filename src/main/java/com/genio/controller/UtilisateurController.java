@@ -3,7 +3,8 @@ package com.genio.controller;
 import com.genio.dto.UtilisateurDTO;
 import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.model.Utilisateur;
-import com.genio.service.UtilisateurService;
+
+import com.genio.service.impl.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

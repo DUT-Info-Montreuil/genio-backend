@@ -1,7 +1,7 @@
 package com.genio.controller;
 
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
-import com.genio.service.GenioService;
+import com.genio.service.impl.GenioService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

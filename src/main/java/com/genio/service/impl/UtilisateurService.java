@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.dto.UtilisateurDTO;
 import com.genio.model.Utilisateur;

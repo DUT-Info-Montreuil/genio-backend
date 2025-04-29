@@ -6,7 +6,7 @@ import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.business.ModelNotFoundException;
 import com.genio.mapper.ConventionMapper;
 import com.genio.model.Modele;
-import com.genio.service.GenioService;
+import com.genio.service.impl.GenioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -12,7 +12,6 @@ import com.genio.model.*;
 import com.genio.repository.*;
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
-import com.genio.service.GenioService;
 import com.genio.service.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
