@@ -35,7 +35,7 @@ public class Utilisateur {
     private LocalDateTime updatedAt;
 
     @Builder.Default
-    private String role = "UTILISATEUR";
+    private String role = "CONSULTATION";
 
     @Builder.Default
     private boolean actif = false;

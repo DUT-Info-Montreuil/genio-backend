@@ -1,6 +1,7 @@
 package com.genio.service.impl;
 
 import com.genio.dto.UtilisateurDTO;
+import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UtilisateurService {
                 .prenom(dto.getPrenom())
                 .username(dto.getUsername())
                 .motDePasse(passwordEncoder.encode(dto.getMotDePasse()))
-                .role("UTILISATEUR")
+                .role("CONSULTATION") // défaut
                 .actif(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

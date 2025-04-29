@@ -46,7 +46,7 @@ class UtilisateurControllerTest {
                 .prenom("Jean")
                 .username("jdupont")
                 .motDePasse("password")
-                .role("UTILISATEUR")
+                .role("CONSULTATION")
                 .actif(true)
                 .build();
     }
@@ -130,16 +130,16 @@ class UtilisateurControllerTest {
                         .param("role", "ADMIN")
                         .param("actif", "true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.role").value("UTILISATEUR"));
+                .andExpect(jsonPath("$.role").value("CONSULTATION"));
     }
 
     @Test
     void testAdminUpdate_Success() throws Exception {
         UtilisateurUpdateDTO updateDTO = new UtilisateurUpdateDTO();
-        updateDTO.setRole("ADMIN");
+        updateDTO.setRole("GESTIONNAIRE");
         updateDTO.setActif(true);
 
-        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "ADMIN", true))
+        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "GESTIONNAIRE", true))
                 .thenReturn(Optional.of(utilisateur));
 
         mockMvc.perform(put("/api/utilisateurs/1/admin-update")
@@ -153,10 +153,10 @@ class UtilisateurControllerTest {
     @Test
     void testAdminUpdate_NotFound() throws Exception {
         UtilisateurUpdateDTO updateDTO = new UtilisateurUpdateDTO();
-        updateDTO.setRole("ADMIN");
+        updateDTO.setRole("GESTIONNAIRE");
         updateDTO.setActif(true);
 
-        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "ADMIN", true))
+        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "GESTIONNAIRE", true))
                 .thenReturn(Optional.empty());
 
         mockMvc.perform(put("/api/utilisateurs/1/admin-update")
