@@ -28,15 +28,16 @@ public class Utilisateur {
     @Column(nullable = false)
     private String motDePasse;
 
-    @Column(nullable = false)
-    private String role = "UTILISATEUR";
-
-    @Column(nullable = false)
-    private boolean actif = false;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Builder.Default
+    private String role = "UTILISATEUR";
+
+    @Builder.Default
+    private boolean actif = false;
+
 }
