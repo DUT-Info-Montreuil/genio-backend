@@ -140,7 +140,7 @@ class UtilisateurControllerTest {
         updateDTO.setRole("ADMIN");
         updateDTO.setActif(true);
 
-        Mockito.when(utilisateurService.modifierRoleEtStatut(eq(1L), eq("ADMIN"), eq(true)))
+        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "ADMIN", true))
                 .thenReturn(Optional.of(utilisateur));
 
         mockMvc.perform(put("/api/utilisateurs/1/admin-update")
@@ -157,7 +157,7 @@ class UtilisateurControllerTest {
         updateDTO.setRole("ADMIN");
         updateDTO.setActif(true);
 
-        Mockito.when(utilisateurService.modifierRoleEtStatut(eq(1L), eq("ADMIN"), eq(true)))
+        Mockito.when(utilisateurService.modifierRoleEtStatut(1L, "ADMIN", true))
                 .thenReturn(Optional.empty());
 
         mockMvc.perform(put("/api/utilisateurs/1/admin-update")
