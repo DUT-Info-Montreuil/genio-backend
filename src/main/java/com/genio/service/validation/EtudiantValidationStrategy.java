@@ -1,7 +1,7 @@
 package com.genio.service.validation;
 
 import com.genio.dto.input.ConventionServiceDTO;
-import com.genio.utils.ErrorMessages;
+import com.genio.config.ErrorMessages;
 
 import java.util.HashMap;
 import java.util.Map;

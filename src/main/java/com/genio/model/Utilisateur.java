@@ -23,7 +23,7 @@ public class Utilisateur {
     private String prenom;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String username; //c'est le mail
 
     @Column(nullable = false)
     private String motDePasse;

@@ -3,7 +3,10 @@ package com.genio.service.impl;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .username(utilisateur.getUsername())
                 .password(utilisateur.getMotDePasse())
                 .roles(utilisateur.getRole())
+                .disabled(!utilisateur.isActif())
                 .build();
     }
 }

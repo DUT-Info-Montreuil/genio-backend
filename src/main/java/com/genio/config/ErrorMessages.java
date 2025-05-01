@@ -1,4 +1,4 @@
-package com.genio.utils;
+package com.genio.config;
 
 public class ErrorMessages {
 

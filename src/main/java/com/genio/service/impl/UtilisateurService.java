@@ -25,7 +25,7 @@ public class UtilisateurService {
                 .prenom(dto.getPrenom())
                 .username(dto.getUsername())
                 .motDePasse(passwordEncoder.encode(dto.getMotDePasse()))
-                .role("CONSULTATION") // défaut
+                .role("CONSULTATION")
                 .actif(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
