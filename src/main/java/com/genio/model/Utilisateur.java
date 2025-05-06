@@ -7,8 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
+@Entity
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +22,8 @@ public class Utilisateur {
     private String nom;
     private String prenom;
 
-    @Column(unique = true, nullable = false)
-    private String username; //c'est le mail
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String motDePasse;
@@ -34,10 +34,46 @@ public class Utilisateur {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Builder.Default
-    private String role = "CONSULTATION";
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setActif(boolean actif) {
+        this.actif = actif;
+    }
 
     @Builder.Default
-    private boolean actif = false;
+    private String role = "NONE";
+
+    @Builder.Default
+    private boolean actif = true;
 
 }

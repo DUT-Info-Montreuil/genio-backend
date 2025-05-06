@@ -69,5 +69,10 @@ public class GlobalExceptionHandler {
         response.put(KEY_ERROR, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(EmailDejaUtiliseException.class)
+    public ResponseEntity<?> handleEmailDejaUtilise(EmailDejaUtiliseException ex) {
+        return ResponseEntity.status(409).body(ex.getMessage());
+    }
+
 
 }

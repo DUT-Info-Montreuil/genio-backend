@@ -2,6 +2,7 @@ package com.genio.controller;
 
 import com.genio.dto.UtilisateurDTO;
 import com.genio.dto.UtilisateurUpdateDTO;
+import com.genio.exception.business.EmailDejaUtiliseException;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
 import com.genio.service.impl.UtilisateurService;
@@ -11,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
@@ -22,9 +25,21 @@ public class UtilisateurController {
     private final UtilisateurRepository utilisateurRepository;
 
     @PostMapping
-    public ResponseEntity<Utilisateur> creer(@RequestBody UtilisateurDTO dto) {
-        Utilisateur u = utilisateurService.creerUtilisateur(dto);
-        return ResponseEntity.ok(u);
+    public ResponseEntity<?> creer(@RequestBody UtilisateurDTO dto) {
+        try {
+            Utilisateur u = utilisateurService.creerUtilisateur(dto);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Utilisateur créé avec succès.");
+            return ResponseEntity.status(201).body(response);
+        } catch (EmailDejaUtiliseException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(409).body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Une erreur est survenue : " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
     }
 
     @GetMapping
@@ -67,7 +82,12 @@ public class UtilisateurController {
 
     @GetMapping("/me")
     public Utilisateur getUtilisateurConnecte(@AuthenticationPrincipal UserDetails userDetails) {
-        return utilisateurRepository.findByUsername(userDetails.getUsername())
+        return utilisateurRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
+
+    @GetMapping("/non-actifs")
+    public ResponseEntity<List<Utilisateur>> getUtilisateursNonActifs() {
+        return ResponseEntity.ok(utilisateurService.getUtilisateursNonActifs());
     }
 }

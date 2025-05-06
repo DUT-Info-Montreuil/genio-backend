@@ -16,12 +16,12 @@ public class TestController {
 
     @PostMapping("/create-user")
     public String createTestUser(
-            @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String password,
             @RequestParam String role
     ) {
         Utilisateur utilisateur = Utilisateur.builder()
-                .username(username)
+                .email(email)
                 .motDePasse(passwordEncoder.encode(password))
                 .nom("Test")
                 .prenom("User")
@@ -30,18 +30,18 @@ public class TestController {
                 .build();
 
         utilisateurRepository.save(utilisateur);
-        return "Utilisateur " + username + " créé avec succès.";
+        return "Utilisateur " + email + " créé avec succès.";
     }
 
     @PutMapping("/update-password")
     public String updatePassword(
-            @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String newPassword
     ) {
-        return utilisateurRepository.findByUsername(username).map(user -> {
+        return utilisateurRepository.findByEmail(email).map(user -> {
             user.setMotDePasse(passwordEncoder.encode(newPassword));
             utilisateurRepository.save(user);
-            return "Mot de passe de " + username + " mis à jour.";
-        }).orElse("Utilisateur " + username + " non trouvé.");
+            return "Mot de passe de " + email + " mis à jour.";
+        }).orElse("Utilisateur " + email + " non trouvé.");
     }
 }

@@ -1,5 +1,6 @@
 package com.genio.service.impl;
 
+import com.genio.exception.business.CompteInactifException;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +17,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UtilisateurRepository utilisateurRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utilisateur utilisateur = utilisateurRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
 
+        if (!utilisateur.isActif()) {
+            throw new CompteInactifException("Votre compte est inactif. En attente d’activation par un gestionnaire.");
+        }
+
         return User.builder()
-                .username(utilisateur.getUsername())
+                .username(utilisateur.getEmail())
                 .password(utilisateur.getMotDePasse())
                 .roles(utilisateur.getRole())
-                .disabled(!utilisateur.isActif())
                 .build();
     }
 }

@@ -2,6 +2,7 @@ package com.genio.service.impl;
 
 import com.genio.dto.UtilisateurDTO;
 import com.genio.dto.UtilisateurUpdateDTO;
+import com.genio.exception.business.EmailDejaUtiliseException;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +21,19 @@ public class UtilisateurService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Utilisateur creerUtilisateur(UtilisateurDTO dto) {
-        Utilisateur utilisateur = Utilisateur.builder()
-                .nom(dto.getNom())
-                .prenom(dto.getPrenom())
-                .username(dto.getUsername())
-                .motDePasse(passwordEncoder.encode(dto.getMotDePasse()))
-                .role("CONSULTATION")
-                .actif(false)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        if (utilisateurRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new EmailDejaUtiliseException("Un utilisateur avec cet e-mail existe déjà.");
+        }
+
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        utilisateur.setRole("NONE");
+        utilisateur.setActif(false);
+        utilisateur.setCreatedAt(LocalDateTime.now());
+        utilisateur.setUpdatedAt(LocalDateTime.now());
 
         return utilisateurRepository.save(utilisateur);
     }
@@ -46,7 +50,7 @@ public class UtilisateurService {
         return utilisateurRepository.findById(id).map(utilisateur -> {
             utilisateur.setNom(dto.getNom());
             utilisateur.setPrenom(dto.getPrenom());
-            utilisateur.setUsername(dto.getUsername());
+            utilisateur.setEmail(dto.getEmail());
             utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
             utilisateur.setUpdatedAt(LocalDateTime.now());
             return utilisateurRepository.save(utilisateur);
@@ -73,7 +77,16 @@ public class UtilisateurService {
         });
     }
 
-    public Optional<Utilisateur> getByUsername(String username) {
-        return utilisateurRepository.findByUsername(username);
+    public Optional<Utilisateur> getByEmail(String email) {
+        return utilisateurRepository.findByEmail(email);
+    }
+
+    public List<Utilisateur> getUtilisateursNonActifs() {
+        return utilisateurRepository.findAll().stream()
+                .filter(u -> !"GESTIONNAIRE".equals(u.getRole())
+                        && !"EXPLOITANT".equals(u.getRole())
+                        && !"CONSULTANT".equals(u.getRole())
+                        && !u.isActif())
+                .toList();
     }
 }
