@@ -4,13 +4,12 @@ import com.genio.dto.UtilisateurDTO;
 import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.exception.business.EmailDejaUtiliseException;
 import com.genio.model.Utilisateur;
-import com.genio.repository.UtilisateurRepository;
 import com.genio.service.impl.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.Map;
 public class UtilisateurController {
 
     private final UtilisateurService utilisateurService;
-    private final UtilisateurRepository utilisateurRepository;
 
     @PostMapping
     public ResponseEntity<?> creer(@RequestBody UtilisateurDTO dto) {
@@ -81,9 +79,10 @@ public class UtilisateurController {
     }
 
     @GetMapping("/me")
-    public Utilisateur getUtilisateurConnecte(@AuthenticationPrincipal UserDetails userDetails) {
-        return utilisateurRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    public ResponseEntity<Utilisateur> getUtilisateurConnecte(@AuthenticationPrincipal UserDetails userDetails) {
+        return utilisateurService.getByEmail(userDetails.getUsername())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/non-actifs")

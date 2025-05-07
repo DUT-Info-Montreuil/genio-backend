@@ -44,7 +44,7 @@ class UtilisateurControllerTest {
                 .id(1L)
                 .nom("Dupont")
                 .prenom("Jean")
-                .username("jdupont")
+                .email("jdupont@gmail.com")
                 .motDePasse("password")
                 .role("CONSULTATION")
                 .actif(true)
@@ -56,7 +56,7 @@ class UtilisateurControllerTest {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setNom("Dupont");
         dto.setPrenom("Jean");
-        dto.setUsername("jdupont");
+        dto.setEmail("jdupont@gmail.com");
         dto.setMotDePasse("password");
 
         Mockito.when(utilisateurService.creerUtilisateur(any(UtilisateurDTO.class))).thenReturn(utilisateur);
@@ -65,9 +65,8 @@ class UtilisateurControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom").value("Dupont"))
-                .andExpect(jsonPath("$.prenom").value("Jean"));
+                .andExpect(status().isCreated())  // <-- ici le bon code HTTP attendu : 201
+                .andExpect(jsonPath("$.message").value("Utilisateur créé avec succès."));
     }
 
     @Test
@@ -76,7 +75,9 @@ class UtilisateurControllerTest {
 
         mockMvc.perform(get("/api/utilisateurs"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].username").value("jdupont"));
+                .andExpect(jsonPath("$[0].email").value("jdupont@gmail.com"))
+                .andExpect(jsonPath("$[0].nom").value("Dupont"))
+                .andExpect(jsonPath("$[0].prenom").value("Jean"));
     }
 
     @Test
@@ -92,7 +93,7 @@ class UtilisateurControllerTest {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setNom("NewNom");
         dto.setPrenom("NewPrenom");
-        dto.setUsername("newusername");
+        dto.setEmail("newusername@gmail.com");
         dto.setMotDePasse("newpassword");
 
         Mockito.when(utilisateurService.modifierUtilisateur(eq(1L), any(UtilisateurDTO.class)))
@@ -147,7 +148,9 @@ class UtilisateurControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("jdupont"));
+                .andExpect(jsonPath("$.email").value("jdupont@gmail.com"))
+                .andExpect(jsonPath("$.role").value("CONSULTATION"))
+                .andExpect(jsonPath("$.nom").value("Dupont"));
     }
 
     @Test

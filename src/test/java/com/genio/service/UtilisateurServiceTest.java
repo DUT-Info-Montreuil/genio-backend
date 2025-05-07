@@ -34,13 +34,13 @@ class UtilisateurServiceTest {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setNom("Test");
         dto.setPrenom("User");
-        dto.setUsername("testuser");
+        dto.setEmail("testuser@genio.com");
         dto.setMotDePasse("password");
 
         Utilisateur utilisateurSaved = Utilisateur.builder()
                 .nom("Test")
                 .prenom("User")
-                .username("testuser")
+                .email("testuser@genio.com")
                 .motDePasse("hashedPassword")
                 .role("UTILISATEUR")
                 .actif(false)
@@ -83,7 +83,7 @@ class UtilisateurServiceTest {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setNom("NouveauNom");
         dto.setPrenom("NouveauPrenom");
-        dto.setUsername("newuser");
+        dto.setEmail("testuser@genio.com");
         dto.setMotDePasse("newpassword");
 
         Optional<Utilisateur> updatedUtilisateur = utilisateurService.modifierUtilisateur(1L, dto);

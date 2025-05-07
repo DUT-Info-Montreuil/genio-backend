@@ -12,7 +12,7 @@ class UtilisateurTest {
                 .id(1L)
                 .nom("Dupont")
                 .prenom("Jean")
-                .username("jdupont")
+                .email("jdupont@gmail.com")
                 .motDePasse("mdp")
                 .role("ADMIN")
                 .actif(true)
@@ -21,7 +21,7 @@ class UtilisateurTest {
         assertEquals(1L, u.getId());
         assertEquals("Dupont", u.getNom());
         assertEquals("Jean", u.getPrenom());
-        assertEquals("jdupont", u.getUsername());
+        assertEquals("jdupont", u.getEmail());
         assertEquals("mdp", u.getMotDePasse());
         assertEquals("ADMIN", u.getRole());
         assertTrue(u.isActif());
