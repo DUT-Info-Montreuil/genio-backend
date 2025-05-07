@@ -25,7 +25,7 @@ public class UtilisateurController {
     @PostMapping
     public ResponseEntity<?> creer(@RequestBody UtilisateurDTO dto) {
         try {
-            Utilisateur u = utilisateurService.creerUtilisateur(dto);
+            utilisateurService.creerUtilisateur(dto);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Utilisateur créé avec succès.");
             return ResponseEntity.status(201).body(response);
