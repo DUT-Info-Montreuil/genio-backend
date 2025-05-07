@@ -69,10 +69,10 @@ public class GlobalExceptionHandler {
         response.put(KEY_ERROR, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(EmailDejaUtiliseException.class)
     public ResponseEntity<Map<String, String>> handleEmailDejaUtilise(EmailDejaUtiliseException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", ex.getMessage());
+        response.put(KEY_ERROR, ex.getMessage());
         return ResponseEntity.status(409).body(response);
     }
 

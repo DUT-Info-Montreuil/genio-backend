@@ -23,18 +23,16 @@ public class UtilisateurController {
     private final UtilisateurService utilisateurService;
 
     @PostMapping
-    public ResponseEntity<?> creer(@RequestBody UtilisateurDTO dto) {
+    public ResponseEntity<Map<String, String>> creer(@RequestBody UtilisateurDTO dto) {
+        Map<String, String> response = new HashMap<>();
         try {
             utilisateurService.creerUtilisateur(dto);
-            Map<String, String> response = new HashMap<>();
             response.put("message", "Utilisateur créé avec succès.");
             return ResponseEntity.status(201).body(response);
         } catch (EmailDejaUtiliseException e) {
-            Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());
             return ResponseEntity.status(409).body(response);
         } catch (Exception e) {
-            Map<String, String> response = new HashMap<>();
             response.put("error", "Une erreur est survenue : " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
