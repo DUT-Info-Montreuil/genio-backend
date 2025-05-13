@@ -65,7 +65,7 @@ class UtilisateurControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())  // <-- ici le bon code HTTP attendu : 201
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Utilisateur créé avec succès."));
     }
 

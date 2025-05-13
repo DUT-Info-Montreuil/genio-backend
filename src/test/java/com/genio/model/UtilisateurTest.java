@@ -21,7 +21,7 @@ class UtilisateurTest {
         assertEquals(1L, u.getId());
         assertEquals("Dupont", u.getNom());
         assertEquals("Jean", u.getPrenom());
-        assertEquals("jdupont@gmail.com", u.getEmail()); // ✅ corrigé ici
+        assertEquals("jdupont@gmail.com", u.getEmail());
         assertEquals("mdp", u.getMotDePasse());
         assertEquals("ADMIN", u.getRole());
         assertTrue(u.isActif());

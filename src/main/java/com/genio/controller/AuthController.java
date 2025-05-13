@@ -2,6 +2,9 @@ package com.genio.controller;
 
 import com.genio.dto.LoginResponse;
 import com.genio.exception.business.CompteInactifException;
+import com.genio.repository.UtilisateurRepository;
+import com.genio.service.impl.MailService;
+import com.genio.service.impl.TokenService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,11 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final UtilisateurRepository utilisateurRepository;
+    private final TokenService tokenService;
+    private final MailService mailService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
@@ -47,6 +57,38 @@ public class AuthController {
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new LoginResponse("Erreur interne d'authentification"));
+        }
+    }
+
+    @PostMapping("/mot-de-passe-oublie")
+    public ResponseEntity<?> motDePasseOublie(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Email requis."));
+        }
+
+        utilisateurRepository.findByEmail(email.trim()).ifPresent(utilisateur -> {
+            String token = tokenService.generateResetToken(utilisateur.getEmail());
+            mailService.sendResetPasswordEmail(utilisateur.getEmail(), token);
+        });
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "Si cet email est enregistré, un e-mail a été envoyé."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String nouveauMotDePasse = request.get("nouveauMotDePasse");
+
+        if (token == null || token.isEmpty() || nouveauMotDePasse == null || nouveauMotDePasse.isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Token et nouveau mot de passe requis."));
+        }
+
+        boolean result = tokenService.resetPassword(token, nouveauMotDePasse);
+        if (result) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Mot de passe réinitialisé avec succès."));
+        } else {
+            return ResponseEntity.status(400).body(Collections.singletonMap("message", "Token invalide ou expiré."));
         }
     }
 }
