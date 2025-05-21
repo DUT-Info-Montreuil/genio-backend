@@ -163,38 +163,45 @@ public class ModeleService {
         return malformed;
     }
 
-    public ModeleDTO createModelConvention(MultipartFile file)
-            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException {
+    public ModeleDTO createModelConvention(MultipartFile file, String annee)
+            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException, InvalidFileFormatException {
 
         String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null || !originalFilename.matches(FILENAME_REGEX)) {
-            throw new InvalidFileFormatException("Format invalide : le fichier doit être nommé sous la forme 'modeleConvention_YYYY.docx'.");
+        if (originalFilename == null || !originalFilename.toLowerCase().endsWith(".docx")) {
+            throw new InvalidFileFormatException("Format non supporté, uniquement .docx accepté.");
         }
 
-        if (modeleRepository.findFirstByNom(originalFilename).isPresent()) {
-            throw new ModelConventionAlreadyExistsException("Un modèle avec ce fichier existe déjà");
+        if (annee == null || !annee.matches("^\\d{4}$")) {
+            throw new InvalidFileFormatException("Année invalide. Format attendu : 4 chiffres (ex: 2025).");
         }
 
-        Pattern pattern = Pattern.compile("_(\\d{4})\\.docx$");
-        Matcher matcher = pattern.matcher(originalFilename);
-        String modelYear = matcher.find() ? matcher.group(1) : "2025";
+        String generatedFilename = "modeleConvention_" + annee + ".docx";
+
+        if (modeleRepository.findFirstByNom(generatedFilename).isPresent()) {
+            throw new ModelConventionAlreadyExistsException("Un modèle pour l'année " + annee + " existe déjà.");
+        }
 
         List<String> foundVariables = docxParser.extractVariables(file);
+
+        if (foundVariables == null || foundVariables.isEmpty()) {
+            throw new InvalidFileFormatException("Le fichier ne semble pas être un modèle valide. Aucun contenu exploitable détecté.");
+        }
+
         List<String> missingVariables = findMissingVariables(foundVariables);
         List<String> malformedVariables = findMalformedVariables(foundVariables);
 
         if (!missingVariables.isEmpty() || !malformedVariables.isEmpty()) {
-            throw new MissingVariableException(generateDetailedErrorMessage(missingVariables, malformedVariables));
+            throw new MissingVariableException("Le fichier semble être un modèle de convention, mais il contient des erreurs. Cliquez ci-dessous pour consulter les variables attendues.");
         }
 
         byte[] fileBytes = file.getBytes();
         Modele modele = new Modele();
-        modele.setNom(originalFilename);
-        modele.setAnnee(modelYear);
+        modele.setNom(generatedFilename);
+        modele.setAnnee(annee);
         modele.setFichierBinaire(fileBytes);
         modeleRepository.save(modele);
 
-        saveFileToDirectory(file, originalFilename);
+        saveFileToDirectory(file, generatedFilename);
 
         return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée");
     }
@@ -279,5 +286,9 @@ public class ModeleService {
         } catch (Exception e) {
             throw new DeletionFailedException("Échec de la suppression du modèle en raison d'une erreur technique.");
         }
+    }
+
+    public List<String> extractRawVariables(MultipartFile file) throws IOException {
+        return docxParser.extractVariables(file);
     }
 }

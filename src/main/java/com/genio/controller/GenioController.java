@@ -8,6 +8,7 @@ import com.genio.mapper.ConventionMapper;
 import com.genio.model.Historisation;
 import com.genio.model.Modele;
 import com.genio.repository.HistorisationRepository;
+import com.genio.repository.ModeleRepository;
 import com.genio.service.impl.GenioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/genio")
@@ -32,9 +34,10 @@ public class GenioController {
     private final GenioService genioService;
     private final HistorisationRepository historisationRepository;
 
-    public GenioController(GenioService genioService,HistorisationRepository historisationRepository) {
+    public GenioController(GenioService genioService, HistorisationRepository historisationRepository, ModeleRepository modeleRepository) {
         this.genioService = genioService;
         this.historisationRepository = historisationRepository;
+        this.modeleRepository = modeleRepository;
     }
 
     @PostMapping("/generer")
@@ -77,6 +80,22 @@ public class GenioController {
     public ResponseEntity<List<Historisation>> getHistorique() {
         List<Historisation> historique = historisationRepository.findAll();
         return ResponseEntity.ok(historique);
+    }
+
+    private final ModeleRepository modeleRepository;
+
+    @GetMapping("/modele/{id}/download")
+    public ResponseEntity<byte[]> downloadModele(@PathVariable Long id) {
+        Optional<Modele> opt = modeleRepository.findById(id);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Modele modele = opt.get();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=" + modele.getNom())
+                .header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                .body(modele.getFichierBinaire());
     }
 
 

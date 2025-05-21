@@ -20,15 +20,45 @@ public class DocxParserImpl implements DocxParser {
     public List<String> extractVariables(MultipartFile file) throws IOException {
         List<String> vars = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
+
         try (XWPFDocument doc = new XWPFDocument(file.getInputStream())) {
+
             for (XWPFParagraph p : doc.getParagraphs()) {
-                Matcher matcher = pattern.matcher(p.getText());
+                StringBuilder text = new StringBuilder();
+                for (XWPFRun run : p.getRuns()) {
+                    if (run.getText(0) != null) {
+                        text.append(run.getText(0));
+                    }
+                }
+                Matcher matcher = pattern.matcher(text.toString());
                 while (matcher.find()) {
                     String rawVariable = matcher.group(1);
                     vars.add(normalize(rawVariable));
                 }
             }
+
+            for (XWPFTable table : doc.getTables()) {
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph p : cell.getParagraphs()) {
+                            StringBuilder text = new StringBuilder();
+                            for (XWPFRun run : p.getRuns()) {
+                                if (run.getText(0) != null) {
+                                    text.append(run.getText(0));
+                                }
+                            }
+                            Matcher matcher = pattern.matcher(text.toString());
+                            while (matcher.find()) {
+                                String rawVariable = matcher.group(1);
+                                vars.add(normalize(rawVariable));
+                            }
+                        }
+                    }
+                }
+            }
+
         }
+
         return vars;
     }
 }

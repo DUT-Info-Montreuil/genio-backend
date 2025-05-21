@@ -50,16 +50,16 @@ public class ModeleController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createModelConvention(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> createModelConvention(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("annee") String annee
+    ) {
         try {
-            modeleService.createModelConvention(file);
-            return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE, "ModelConvention ajouté avec succès"));
-        } catch (ModelConventionAlreadyExistsException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Un modèle avec ce nom existe déjà"));
-        } catch (InvalidFileFormatException e) {
-            return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, "Format non supporté, uniquement .docx accepté"));
-        } catch (MissingVariableException e) {
-            logger.error("Erreur : {}", e.getMessage());
+            ModeleDTO result = modeleService.createModelConvention(file, annee);
+            return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE,
+                    "Le modèle " + result.getNom() + " a été ajouté avec succès !"));
+        } catch (ModelConventionAlreadyExistsException | InvalidFileFormatException |
+                 MissingVariableException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (DatabaseInsertionException | IOException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de l'enregistrement du modèle"));
@@ -100,5 +100,16 @@ public class ModeleController {
 
     public ModeleController(ModeleService modeleService) {
         this.modeleService = modeleService;
+    }
+
+
+    @PostMapping("/test-generation")
+    public ResponseEntity<String> testDocxVars(@RequestParam("file") MultipartFile file) {
+        try {
+            List<String> variables = modeleService.extractRawVariables(file);
+            return ResponseEntity.ok("Variables détectées : " + String.join(", ", variables));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erreur : " + e.getMessage());
+        }
     }
 }
