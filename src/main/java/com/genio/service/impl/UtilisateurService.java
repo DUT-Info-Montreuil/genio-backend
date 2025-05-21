@@ -1,7 +1,6 @@
 package com.genio.service.impl;
 
 import com.genio.dto.UtilisateurDTO;
-import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.exception.business.EmailDejaUtiliseException;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
@@ -51,7 +50,13 @@ public class UtilisateurService {
             utilisateur.setNom(dto.getNom());
             utilisateur.setPrenom(dto.getPrenom());
             utilisateur.setEmail(dto.getEmail());
-            utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isBlank()) {
+                if (!passwordEncoder.matches(dto.getMotDePasse(), utilisateur.getMotDePasse())) {
+                    utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+                }
+            }
+
             utilisateur.setUpdatedAt(LocalDateTime.now());
             return utilisateurRepository.save(utilisateur);
         });

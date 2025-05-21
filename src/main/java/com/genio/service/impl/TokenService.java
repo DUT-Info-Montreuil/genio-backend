@@ -15,10 +15,12 @@ public class TokenService {
 
     private final UtilisateurRepository utilisateurRepository;
     private final Map<String, String> tokenStore = new HashMap<>();
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public TokenService(UtilisateurRepository utilisateurRepository) {
+    public TokenService(UtilisateurRepository utilisateurRepository,
+                        BCryptPasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String generateResetToken(String email) {

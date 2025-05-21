@@ -90,6 +90,7 @@ public class GenioServiceImpl implements GenioService {
             if (!isFormatValide(formatFichierOutput)) {
                 String message = "Erreur : format de fichier non supporté.";
                 logger.error(message);
+                historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("flux", message));
                 return new ConventionBinaireRes(false, null, message);
             }
 

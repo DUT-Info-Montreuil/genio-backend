@@ -34,7 +34,6 @@ public class HistorisationService {
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
             historisation.setStatus(status);
-            historisation.setDetails(erreurs != null && !erreurs.isEmpty() ? "Des erreurs de validation ont été détectées." : "Aucune erreur détectée.");
             historisation.setFluxJsonBinaire(new ObjectMapper().writeValueAsBytes(input));
             historisation.setTimestamp();
 
@@ -42,16 +41,26 @@ public class HistorisationService {
                 historisation.setDocxBinaire(fichierBinaire);
             }
 
+            if (erreurs != null && !erreurs.isEmpty()) {
+                String messageErreurConcat = erreurs.values().stream()
+                        .reduce((a, b) -> a + " ; " + b)
+                        .orElse("Erreur inconnue");
+
+                historisation.setDetails(messageErreurConcat);
+            } else {
+                historisation.setDetails("Aucune erreur détectée.");
+            }
+
             historisationRepository.save(historisation);
 
             if (erreurs != null && !erreurs.isEmpty()) {
-                String messageErreur = erreurs.toString();
-                if (messageErreur.length() > 255) {
-                    messageErreur = messageErreur.substring(0, 255);
+                String messageErreurBrut = erreurs.toString();
+                if (messageErreurBrut.length() > 255) {
+                    messageErreurBrut = messageErreurBrut.substring(0, 255);
                 }
 
                 ErrorDetails errorDetails = new ErrorDetails();
-                errorDetails.setMessageErreur(messageErreur);
+                errorDetails.setMessageErreur(messageErreurBrut);
                 errorDetails.setHistorisation(historisation);
 
                 StringBuilder champsManquants = new StringBuilder();
@@ -65,4 +74,6 @@ public class HistorisationService {
             logger.error("Erreur lors de la sauvegarde de l'historisation : {}", e.getMessage());
         }
     }
+
+
 }

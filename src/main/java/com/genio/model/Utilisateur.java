@@ -76,4 +76,7 @@ public class Utilisateur {
     @Builder.Default
     private boolean actif = true;
 
+    public boolean isActif() {
+        return actif;
+    }
 }

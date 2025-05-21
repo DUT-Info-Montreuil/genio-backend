@@ -5,7 +5,9 @@ import com.genio.dto.input.ConventionWsDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.business.ModelNotFoundException;
 import com.genio.mapper.ConventionMapper;
+import com.genio.model.Historisation;
 import com.genio.model.Modele;
+import com.genio.repository.HistorisationRepository;
 import com.genio.service.impl.GenioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,9 +30,11 @@ public class GenioController {
 
     private static final Logger logger = LoggerFactory.getLogger(GenioController.class);
     private final GenioService genioService;
+    private final HistorisationRepository historisationRepository;
 
-    public GenioController(GenioService genioService) {
+    public GenioController(GenioService genioService,HistorisationRepository historisationRepository) {
         this.genioService = genioService;
+        this.historisationRepository = historisationRepository;
     }
 
     @PostMapping("/generer")
@@ -67,6 +71,12 @@ public class GenioController {
         } catch (ModelNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/historique")
+    public ResponseEntity<List<Historisation>> getHistorique() {
+        List<Historisation> historique = historisationRepository.findAll();
+        return ResponseEntity.ok(historique);
     }
 
 

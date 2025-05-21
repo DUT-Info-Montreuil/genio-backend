@@ -41,6 +41,7 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
             );
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
@@ -48,15 +49,19 @@ public class AuthController {
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse("Identifiants invalides"));
+                    .body(new LoginResponse("Email ou mot de passe incorrect."));
 
-        } catch (InternalAuthenticationServiceException e) {
-            if (e.getCause() instanceof CompteInactifException) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new LoginResponse(e.getCause().getMessage()));
+        } catch (InternalAuthenticationServiceException ex) {
+            if (ex.getCause() instanceof CompteInactifException inactiveEx) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new LoginResponse(inactiveEx.getMessage()));
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse("Erreur interne d'authentification"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginResponse("Erreur interne d'authentification."));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginResponse("Erreur inattendue lors de l'authentification."));
         }
     }
 

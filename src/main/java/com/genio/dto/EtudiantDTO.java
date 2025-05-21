@@ -33,7 +33,10 @@ public class EtudiantDTO {
     @NotBlank(message = "Le CPAM de l'étudiant est obligatoire.")
     private String cpam;
 
-    public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email, String cpam) {
+    @NotBlank(message = "La promotion de l'étudiant est obligatoire.")
+    private String promotion;
+
+    public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email, String cpam, String promotion) {
         this.nom = nom;
         this.prenom = prenom;
         this.sexe = sexe;
@@ -42,6 +45,7 @@ public class EtudiantDTO {
         this.telephone = telephone;
         this.email = email;
         this.cpam = cpam;
+        this.promotion = promotion;
     }
 
     public void setPrenom(String prenom) {
@@ -108,6 +112,14 @@ public class EtudiantDTO {
         return email;
     }
 
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
     @Override
     public String toString() {
         return "EtudiantDTO{" +
@@ -119,6 +131,7 @@ public class EtudiantDTO {
                 ", telephone='" + telephone + '\'' +
                 ", email='" + email + '\'' +
                 ", cpam='" + cpam + '\'' +
+                ", promotion='" + promotion + '\'' +
                 '}';
     }
 }

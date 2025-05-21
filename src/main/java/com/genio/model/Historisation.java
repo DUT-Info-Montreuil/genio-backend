@@ -19,8 +19,13 @@ public class Historisation {
 
     private String status;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp", nullable = false)
-    private String timestamp;
+    private Date timestamp;
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 
     private String details;
 
@@ -57,9 +62,7 @@ public class Historisation {
     }
 
     public void setTimestamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.timestamp = sdf.format(new Date(timestamp.getTime()));
+        this.timestamp = new Date();
     }
 
     public String getDetails() {
@@ -96,6 +99,10 @@ public class Historisation {
 
     public void setConvention(Convention convention) {
         this.convention = convention;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 
 }

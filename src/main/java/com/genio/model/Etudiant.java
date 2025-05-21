@@ -12,6 +12,7 @@ public class Etudiant {
     private String nom;
     private String prenom;
     private String email;
+    private String promotion;
 
     public String getNom() {
         return nom;
@@ -35,5 +36,13 @@ public class Etudiant {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
     }
 }
