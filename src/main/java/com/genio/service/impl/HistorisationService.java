@@ -1,6 +1,7 @@
 package com.genio.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.genio.config.ErreurDetaillee;
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.model.Convention;
 import com.genio.model.ErrorDetails;
@@ -12,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class HistorisationService {
@@ -29,7 +32,7 @@ public class HistorisationService {
     }
 
     @Transactional
-    public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, Map<String, String> erreurs) {
+    public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, List<ErreurDetaillee> erreurs) {
         try {
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
@@ -42,38 +45,29 @@ public class HistorisationService {
             }
 
             if (erreurs != null && !erreurs.isEmpty()) {
-                String messageErreurConcat = erreurs.values().stream()
+                String detailsConcat = erreurs.stream()
+                        .map(ErreurDetaillee::getMessage)
                         .reduce((a, b) -> a + " ; " + b)
                         .orElse("Erreur inconnue");
 
-                historisation.setDetails(messageErreurConcat);
+                historisation.setDetails(detailsConcat);
+                historisationRepository.save(historisation);
+
+                for (ErreurDetaillee err : erreurs) {
+                    ErrorDetails errorDetails = new ErrorDetails();
+                    errorDetails.setHistorisation(historisation);
+                    errorDetails.setChampsManquants(err.getChamp());
+                    errorDetails.setMessageErreur(err.getMessage());
+                    errorDetailsRepository.save(errorDetails);
+                }
             } else {
                 historisation.setDetails("Aucune erreur détectée.");
-            }
-
-            historisationRepository.save(historisation);
-
-            if (erreurs != null && !erreurs.isEmpty()) {
-                String messageErreurBrut = erreurs.toString();
-                if (messageErreurBrut.length() > 255) {
-                    messageErreurBrut = messageErreurBrut.substring(0, 255);
-                }
-
-                ErrorDetails errorDetails = new ErrorDetails();
-                errorDetails.setMessageErreur(messageErreurBrut);
-                errorDetails.setHistorisation(historisation);
-
-                StringBuilder champsManquants = new StringBuilder();
-                erreurs.forEach((key, value) -> champsManquants.append(key).append(" ; "));
-                errorDetails.setChampsManquants(champsManquants.toString());
-
-                errorDetailsRepository.save(errorDetails);
+                historisationRepository.save(historisation);
             }
 
         } catch (Exception e) {
-            logger.error("Erreur lors de la sauvegarde de l'historisation : {}", e.getMessage());
+            logger.error("Erreur lors de l'historisation : {}", e.getMessage());
         }
     }
-
 
 }

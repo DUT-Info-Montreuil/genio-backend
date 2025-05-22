@@ -19,6 +19,9 @@ public class Modele {
     @Column(name = "fichier_binaire", columnDefinition = "LONGBLOB")
     private byte[] fichierBinaire;
 
+    @Column(name = "fichier_hash", unique = true, nullable = false)
+    private String fichierHash;
+
     public String getNom() {
         return nom;
     }
@@ -49,5 +52,13 @@ public class Modele {
 
     public void setFichierBinaire(byte[] fichierBinaire) {
         this.fichierBinaire = fichierBinaire;
+    }
+
+    public String getFichierHash() {
+        return fichierHash;
+    }
+
+    public void setFichierHash(String fichierHash) {
+        this.fichierHash = fichierHash;
     }
 }

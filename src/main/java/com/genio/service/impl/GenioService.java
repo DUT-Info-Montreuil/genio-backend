@@ -1,5 +1,6 @@
 package com.genio.service.impl;
 
+import com.genio.config.ErreurDetaillee;
 import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.business.GenerationConventionException;
@@ -31,7 +32,7 @@ public interface GenioService {
             throws IllegalArgumentException, ModelNotFoundException, InvalidDataException,
             GenerationConventionException, FileConversionException, SystemErrorException;
 
-    Map<String, String> validerDonnees(ConventionServiceDTO input);
+    List<ErreurDetaillee> validerDonnees(ConventionServiceDTO input);
     boolean modeleExiste(Long modeleId);
     List<Modele> getModelesByAnnee(String annee);
 }

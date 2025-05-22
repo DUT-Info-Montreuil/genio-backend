@@ -1,5 +1,7 @@
 package com.genio.service.impl;
 
+import com.genio.utils.ErreurType;
+import com.genio.config.ErreurDetaillee;
 import org.springframework.transaction.annotation.Transactional;
 import com.genio.dto.TuteurDTO;
 import com.genio.dto.EtudiantDTO;
@@ -21,6 +23,7 @@ import com.genio.config.ErrorMessages;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +93,13 @@ public class GenioServiceImpl implements GenioService {
             if (!isFormatValide(formatFichierOutput)) {
                 String message = "Erreur : format de fichier non supporté.";
                 logger.error(message);
-                historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("flux", message));
+                historisationService.sauvegarderHistorisation(
+                        input,
+                        null,
+                        null,
+                        STATUS_ECHEC,
+                        List.of(new ErreurDetaillee("flux", message, ErreurType.FLUX))
+                );
                 return new ConventionBinaireRes(false, null, message);
             }
 
@@ -109,12 +118,15 @@ public class GenioServiceImpl implements GenioService {
                 return erreurModele;
             }
 
-            Map<String, String> erreurs = validerDonnees(input);
+            List<ErreurDetaillee> erreurs = validerDonnees(input);
             if (!erreurs.isEmpty()) {
-                String erreursLisibles = erreurs.entrySet().stream()
-                        .map(entry -> "Le champ '" + entry.getKey() + "' : " + entry.getValue())
+                String messageGlobal = erreurs.stream()
+                        .map(e -> "Le champ '" + e.getChamp() + "' : " + e.getMessage())
                         .collect(Collectors.joining(", "));
-                return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + erreursLisibles);
+
+                historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, erreurs); // 👈 c’est maintenant une List
+
+                return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + messageGlobal);
             }
 
             Etudiant etudiant = sauvegarderEtudiant(input.getEtudiant());
@@ -160,19 +172,30 @@ public class GenioServiceImpl implements GenioService {
 
         } catch (ModelNotFoundException e) {
             logger.error("Modèle introuvable : {}", e.getMessage());
-            historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("modele", e.getMessage()));
+            historisationService.sauvegarderHistorisation(
+                    input,
+                    null,
+                    null,
+                    STATUS_ECHEC,
+                    List.of(new ErreurDetaillee("modele", e.getMessage(), ErreurType.FLUX))
+            );
             return new ConventionBinaireRes(false, null, e.getMessage());
 
         } catch (Exception e) {
             logger.error("Une erreur inattendue s'est produite : {}", e.getMessage(), e);
-            historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, Map.of("technique", e.getMessage()));
+            historisationService.sauvegarderHistorisation(
+                    input,
+                    null,
+                    null,
+                    STATUS_ECHEC,
+                    List.of(new ErreurDetaillee("technique", e.getMessage(), ErreurType.TECHNIQUE))
+            );
             return new ConventionBinaireRes(false, null, "Erreur inattendue : contacter l’administrateur.");
         }
     }
 
     @Override
-    public Map<String, String> validerDonnees(ConventionServiceDTO input) {
-
+    public List<ErreurDetaillee> validerDonnees(ConventionServiceDTO input) {
         logger.info("Début de la validation des données...");
         ValidationContext context = new ValidationContext();
         context.addStrategy(new EtudiantValidationStrategy());
@@ -181,26 +204,15 @@ public class GenioServiceImpl implements GenioService {
         context.addStrategy(new OrganismeValidationStrategy());
         context.addStrategy(new StageValidationStrategy());
 
-        Map<String, String> erreurs = context.executeValidations(input);
+        Map<String, String> erreursBrutes = context.executeValidations(input);
+        List<ErreurDetaillee> erreurs = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : erreursBrutes.entrySet()) {
+            erreurs.add(new ErreurDetaillee(entry.getKey(), entry.getValue(), ErreurType.JSON));
+        }
 
         if (input.getModeleId() == null) {
-            erreurs.put("modeleId", ErrorMessages.MISSING_MODEL_ID);
-        }
-
-        if (input.getMaitreDeStage() == null) {
-            erreurs.put("maitreDeStage", "Le champ 'maitreDeStage' est obligatoire.");
-        }
-
-        if (input.getOrganisme() == null || input.getOrganisme().getNom() == null) {
-            erreurs.put("organisme", "Le nom de l'organisme est manquant.");
-        }
-
-        if (input.getStage() == null || input.getStage().getSujetDuStage() == null) {
-            erreurs.put("stage", "Le sujet du stage est manquant.");
-        }
-
-        if (input.getTuteur() == null || input.getTuteur().getNom() == null) {
-            erreurs.put("tuteur", "Le nom de l'enseignant est manquant.");
+            erreurs.add(new ErreurDetaillee("modeleId", ErrorMessages.MISSING_MODEL_ID, ErreurType.FLUX));
         }
 
         logger.info("Validation terminée avec {} erreur(s).", erreurs.size());

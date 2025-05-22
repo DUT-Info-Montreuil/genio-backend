@@ -1,13 +1,20 @@
 package com.genio.exception;
+import com.genio.utils.ErreurType;
+import com.genio.config.ErreurDetaillee;
 import com.genio.exception.business.*;
+import com.genio.service.impl.HistorisationService;
+import com.genio.utils.ErrorMessageTranslator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
@@ -15,13 +22,33 @@ public class GlobalExceptionHandler {
 
     private static final String KEY_ERROR = "error";
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    private final HistorisationService historisationService;
+
+    public GlobalExceptionHandler(HistorisationService historisationService) {
+        this.historisationService = historisationService;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        historisationService.sauvegarderHistorisation(
+                null,
+                null,
+                null,
+                "ECHEC",
+                List.of(new ErreurDetaillee("exception", ex.getMessage(), ErreurType.TECHNIQUE))
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Une erreur interne est survenue : " + ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFilterException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidFilterException(InvalidFilterException ex) {
+        List<ErreurDetaillee> erreurs = List.of(new ErreurDetaillee("filtre", ex.getMessage(), ErreurType.FLUX));
+        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidFileFormatException.class)
@@ -44,10 +71,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur interne est survenue : " + ex.getMessage());
-    }
 
     @ExceptionHandler(ConventionServiceAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleConventionServiceAlreadyExistsException(ConventionServiceAlreadyExistsException ex) {
@@ -63,17 +86,47 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidFilterException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidFilterException(InvalidFilterException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put(KEY_ERROR, ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+
     @ExceptionHandler(EmailDejaUtiliseException.class)
     public ResponseEntity<Map<String, String>> handleEmailDejaUtilise(EmailDejaUtiliseException ex) {
         Map<String, String> response = new HashMap<>();
         response.put(KEY_ERROR, ex.getMessage());
         return ResponseEntity.status(409).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        String champ = "corps";
+        String message = "Le corps de la requête est manquant ou mal formé.";
+
+        List<ErreurDetaillee> erreurs = List.of(
+                new ErreurDetaillee(champ, message, ErreurType.JSON)
+        );
+
+        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+
+        Map<String, String> response = new HashMap<>();
+        response.put(champ, message);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> messagesLisibles = new HashMap<>();
+        List<ErreurDetaillee> erreurs = new ArrayList<>();
+
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            String champ = error.getField();
+            String messageTraduit = ErrorMessageTranslator.translate(champ, error.getDefaultMessage());
+
+            messagesLisibles.put(champ, messageTraduit);
+            erreurs.add(new ErreurDetaillee(champ, messageTraduit, ErreurType.JSON));
+        }
+
+        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+
+        return new ResponseEntity<>(messagesLisibles, HttpStatus.BAD_REQUEST);
     }
 
 

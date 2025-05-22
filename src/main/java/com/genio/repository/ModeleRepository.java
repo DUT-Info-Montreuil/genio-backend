@@ -18,4 +18,5 @@ public interface ModeleRepository extends JpaRepository<Modele, Long> {
     @Query(value = "SELECT COUNT(m) FROM Modele m WHERE m.annee = :annee", nativeQuery = false)
     long countByAnnee(@Param("annee") String annee);
     Optional<Modele> findFirstByNom(String nom);
+    Optional<Modele> findFirstByFichierHash(String fichierHash);
 }

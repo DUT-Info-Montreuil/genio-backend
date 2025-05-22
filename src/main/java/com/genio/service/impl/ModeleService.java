@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -195,10 +196,17 @@ public class ModeleService {
         }
 
         byte[] fileBytes = file.getBytes();
+        String fileHash = generateFileHash(fileBytes);
+
+        if (modeleRepository.findFirstByFichierHash(fileHash).isPresent()) {
+            throw new ModelConventionAlreadyExistsException("Ce fichier a déjà été ajouté.");
+        }
+
         Modele modele = new Modele();
         modele.setNom(generatedFilename);
         modele.setAnnee(annee);
         modele.setFichierBinaire(fileBytes);
+        modele.setFichierHash(fileHash);
         modeleRepository.save(modele);
 
         saveFileToDirectory(file, generatedFilename);
@@ -290,5 +298,15 @@ public class ModeleService {
 
     public List<String> extractRawVariables(MultipartFile file) throws IOException {
         return docxParser.extractVariables(file);
+    }
+
+    private String generateFileHash(byte[] fileBytes) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(fileBytes);
+            return Base64.getEncoder().encodeToString(hashBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du calcul du hash du fichier.", e);
+        }
     }
 }

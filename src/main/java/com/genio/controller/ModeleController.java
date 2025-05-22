@@ -1,5 +1,6 @@
 package com.genio.controller;
 import com.genio.exception.business.*;
+import com.genio.repository.ModeleRepository;
 import com.genio.service.impl.ModeleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import com.genio.dto.outputmodeles.ModeleDTO;
 public class ModeleController {
 
     private final ModeleService modeleService;
+    private final ModeleRepository modeleRepository;
     private static final String KEY_ERROR = "error";
     private static final String KEY_MESSAGE = "message";
 
@@ -98,8 +100,9 @@ public class ModeleController {
         }
     }
 
-    public ModeleController(ModeleService modeleService) {
+    public ModeleController(ModeleService modeleService, ModeleRepository modeleRepository) {
         this.modeleService = modeleService;
+        this.modeleRepository = modeleRepository;
     }
 
 
@@ -107,9 +110,21 @@ public class ModeleController {
     public ResponseEntity<String> testDocxVars(@RequestParam("file") MultipartFile file) {
         try {
             List<String> variables = modeleService.extractRawVariables(file);
+
+            if (variables == null || variables.isEmpty()) {
+                return ResponseEntity.status(400).body("Aucun contenu exploitable détecté.");
+            }
+
             return ResponseEntity.ok("Variables détectées : " + String.join(", ", variables));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erreur : " + e.getMessage());
         }
+    }
+
+    @GetMapping("/check-nom-exists")
+    public ResponseEntity<Map<String, Boolean>> checkModelNameExists(@RequestParam("annee") String annee) {
+        String nom = "modeleConvention_" + annee + ".docx";
+        boolean exists = modeleRepository.findFirstByNom(nom).isPresent();
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 }
