@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,7 +119,10 @@ public class ModeleService {
     }
 
     public List<ModeleDTOForList> getAllConventionServices() throws NoConventionServicesAvailableException {
-        List<Modele> modeles = modeleRepository.findAll();
+        List<Modele> modeles = modeleRepository.findAll()
+                .stream()
+                .filter(m -> !m.isArchived())
+                .toList();
 
         if (modeles.isEmpty()) {
             throw new NoConventionServicesAvailableException("Aucun modèle de convention disponible.");
@@ -129,7 +133,8 @@ public class ModeleService {
                         modele.getId(),
                         modele.getNom(),
                         generateDescription(modele),
-                        "docx"))
+                        "docx",
+                        modele.getTitre()))
                 .toList();
     }
 
@@ -141,7 +146,15 @@ public class ModeleService {
         Modele modele = modeleRepository.findById(id)
                 .orElseThrow(() -> new ConventionServiceNotFoundException(MODEL_NOT_FOUND));
 
-        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée");
+        return new ModeleDTO(
+                modele.getId(),
+                modele.getNom(),
+                modele.getAnnee(),
+                "docx",
+                "Non spécifiée",
+                modele.getTitre(),
+                modele.getDescriptionModification()
+        );
     }
 
     private List<String> findMissingVariables(List<String> foundVariables) {
@@ -164,8 +177,9 @@ public class ModeleService {
         return malformed;
     }
 
-    public ModeleDTO createModelConvention(MultipartFile file, String annee)
-            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException, MissingVariableException, InvalidFileFormatException {
+    public ModeleDTO createModelConvention(MultipartFile file, String annee, String titre)
+            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException,
+            MissingVariableException, InvalidFileFormatException {
 
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null || !originalFilename.toLowerCase().endsWith(".docx")) {
@@ -183,16 +197,15 @@ public class ModeleService {
         }
 
         List<String> foundVariables = docxParser.extractVariables(file);
-
         if (foundVariables == null || foundVariables.isEmpty()) {
-            throw new InvalidFileFormatException("Le fichier ne semble pas être un modèle valide. Aucun contenu exploitable détecté.");
+            throw new InvalidFileFormatException("Le fichier ne semble pas être un modèle valide.");
         }
 
         List<String> missingVariables = findMissingVariables(foundVariables);
         List<String> malformedVariables = findMalformedVariables(foundVariables);
 
         if (!missingVariables.isEmpty() || !malformedVariables.isEmpty()) {
-            throw new MissingVariableException("Le fichier semble être un modèle de convention, mais il contient des erreurs. Cliquez ci-dessous pour consulter les variables attendues.");
+            throw new MissingVariableException("Le fichier contient des erreurs de variables.");
         }
 
         byte[] fileBytes = file.getBytes();
@@ -207,11 +220,12 @@ public class ModeleService {
         modele.setAnnee(annee);
         modele.setFichierBinaire(fileBytes);
         modele.setFichierHash(fileHash);
-        modeleRepository.save(modele);
+        modele.setTitre(titre);
 
+        modeleRepository.save(modele);
         saveFileToDirectory(file, generatedFilename);
 
-        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée");
+        return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée", titre, null);
     }
 
     private String generateDetailedErrorMessage(List<String> missingVariables, List<String> malformedVariables) {
@@ -243,30 +257,24 @@ public class ModeleService {
     }
 
     public void updateModelConvention(Integer id, ModeleDTO modeleDTO)
-            throws ModelConventionNotFoundException, ValidationException, UnauthorizedModificationException, IntegrityCheckFailedException {
+            throws ModelConventionNotFoundException, ValidationException, IntegrityCheckFailedException {
 
         Modele modele = modeleRepository.findById(id.longValue())
                 .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
-        if (modeleDTO.getNom() == null || modeleDTO.getNom().trim().isEmpty() || !modeleDTO.getNom().matches(FILENAME_REGEX)) {
-            throw new ValidationException("Le nom du modèle est invalide ou ne respecte pas le format 'modeleConvention_YYYY.docx'.");
-        }
-        if (modeleDTO.getAnnee() == null || !modeleDTO.getAnnee().matches("^\\d{4}$")) {
-            throw new ValidationException("L'année fournie est invalide.");
+        if (modeleDTO.getTitre() == null || modeleDTO.getTitre().trim().isEmpty()) {
+            throw new ValidationException("Le titre ne peut pas être vide.");
         }
 
-        if (!modele.getAnnee().equals(modeleDTO.getAnnee())) {
-            throw new UnauthorizedModificationException("La modification de l'année d'un modèle existant n'est pas autorisée.");
+        modele.setTitre(modeleDTO.getTitre());
+
+        if (modeleDTO.getDescriptionModification() != null) {
+            modele.setDescriptionModification(modeleDTO.getDescriptionModification());
         }
 
-        if (modeleRepository.findFirstByNom(modeleDTO.getNom()).isPresent() && !modele.getNom().equals(modeleDTO.getNom())) {
-            throw new IntegrityCheckFailedException("Un modèle avec ce nom existe déjà.");
-        }
-
-        modele.setNom(modeleDTO.getNom());
-        modele.setAnnee(modeleDTO.getAnnee());
         modeleRepository.save(modele);
     }
+
 
     private boolean checkIfModelIsInUse(Long modeleId) {
         return conventionRepository.countByModele_Id(modeleId) > 0;
@@ -279,21 +287,19 @@ public class ModeleService {
         return checkIfModelIsInUse(modele.getId());
     }
 
-    public void deleteModelConvention(Long id)
-            throws ModelConventionNotFoundException, ModelConventionInUseException, DeletionFailedException {
+    public void archiveModelConvention(Long id)
+            throws ModelConventionNotFoundException, ModelConventionInUseException {
 
         Modele modele = modeleRepository.findById(id)
                 .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
 
         if (isModelInUse(modele.getId())) {
-            throw new ModelConventionInUseException("Le modèle est toujours utilisé et ne peut pas être supprimé.");
+            throw new ModelConventionInUseException("Le modèle est toujours utilisé et ne peut pas être archivé.");
         }
 
-        try {
-            modeleRepository.delete(modele);
-        } catch (Exception e) {
-            throw new DeletionFailedException("Échec de la suppression du modèle en raison d'une erreur technique.");
-        }
+        modele.setArchived(true);
+        modele.setArchivedAt(LocalDateTime.now());
+        modeleRepository.save(modele);
     }
 
     public List<String> extractRawVariables(MultipartFile file) throws IOException {
@@ -308,5 +314,13 @@ public class ModeleService {
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du calcul du hash du fichier.", e);
         }
+    }
+
+    public void replaceModelFile(Long id, MultipartFile file) throws IOException, ModelConventionNotFoundException {
+        Modele modele = modeleRepository.findById(id)
+                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable"));
+
+        modele.setFichierBinaire(file.getBytes());
+        modeleRepository.save(modele);
     }
 }

@@ -6,12 +6,14 @@ public class ModeleDTOForList {
     private String nom;
     private String description;
     private String format;
+    private String titre;
 
-    public ModeleDTOForList(Long id, String nom, String description, String format) {
+    public ModeleDTOForList(Long id, String nom, String description, String format, String titre) {
         this.id = id;
         this.nom = nom;
         this.description = description;
         this.format = format;
+         this.titre=titre;
     }
 
     public Long getId() {
@@ -53,6 +55,15 @@ public class ModeleDTOForList {
                 ", nom='" + nom + '\'' +
                 ", description='" + description + '\'' +
                 ", format='" + format + '\'' +
+                ", titre='" + titre + '\'' +
                 '}';
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 }

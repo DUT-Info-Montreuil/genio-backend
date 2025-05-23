@@ -8,13 +8,20 @@ public class ModeleDTO {
     private String format;
     private String dateCreation;
 
-    public ModeleDTO(Long id, String nom, String annee, String format, String dateCreation) {
+    private String titre;
+
+    public ModeleDTO(Long id, String nom, String annee, String format, String dateCreation, String titre, String descriptionModification) {
         this.id = id;
         this.nom = nom;
         this.annee = annee;
         this.format = format;
         this.dateCreation = dateCreation;
+        this.titre = titre;
+        this.descriptionModification = descriptionModification;
     }
+
+    public String getTitre() { return titre; }
+    public void setTitre(String titre) { this.titre = titre; }
 
     public Long getId() {
         return id;
@@ -58,6 +65,16 @@ public class ModeleDTO {
         this.format = format;
     }
 
+    private String descriptionModification;
+
+    public String getDescriptionModification() {
+        return descriptionModification;
+    }
+
+    public void setDescriptionModification(String descriptionModification) {
+        this.descriptionModification = descriptionModification;
+    }
+
     @Override
     public String toString() {
         return "ModeleDTO{" +
@@ -66,6 +83,7 @@ public class ModeleDTO {
                 ", annee='" + annee + '\'' +
                 ", format='" + format + '\'' +
                 ", dateCreation='" + dateCreation + '\'' +
+                ", titre='" + titre + '\'' +
                 '}';
     }
 }

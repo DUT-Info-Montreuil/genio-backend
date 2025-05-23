@@ -1,5 +1,6 @@
 package com.genio.controller;
 import com.genio.exception.business.*;
+import com.genio.model.Modele;
 import com.genio.repository.ModeleRepository;
 import com.genio.service.impl.ModeleService;
 import org.slf4j.Logger;
@@ -54,14 +55,14 @@ public class ModeleController {
     @PostMapping
     public ResponseEntity<Map<String, String>> createModelConvention(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("annee") String annee
+            @RequestParam("annee") String annee,
+            @RequestParam("titre") String titre
     ) {
         try {
-            ModeleDTO result = modeleService.createModelConvention(file, annee);
+            ModeleDTO result = modeleService.createModelConvention(file, annee, titre);
             return ResponseEntity.status(201).body(Collections.singletonMap(KEY_MESSAGE,
-                    "Le modèle " + result.getNom() + " a été ajouté avec succès !"));
-        } catch (ModelConventionAlreadyExistsException | InvalidFileFormatException |
-                 MissingVariableException e) {
+                    "Le modèle " + result.getTitre() + " a été ajouté avec succès !"));
+        } catch (ModelConventionAlreadyExistsException | InvalidFileFormatException | MissingVariableException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (DatabaseInsertionException | IOException e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur lors de l'enregistrement du modèle"));
@@ -73,7 +74,7 @@ public class ModeleController {
         try {
             modeleService.updateModelConvention(id, modeleDTO);
             return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention mis à jour avec succès !"));
-        } catch (ModelConventionNotFoundException | ValidationException | UnauthorizedModificationException | IntegrityCheckFailedException e) {
+        } catch (ModelConventionNotFoundException | ValidationException | IntegrityCheckFailedException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Collections.singletonMap(KEY_ERROR, "Erreur interne du serveur"));
@@ -81,11 +82,11 @@ public class ModeleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteModelConvention(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> archiveModelConvention(@PathVariable Long id) {
         try {
-            modeleService.deleteModelConvention(id);
-            return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "ModelConvention supprimé avec succès !"));
-        } catch (ModelConventionNotFoundException | ModelConventionInUseException | DeletionFailedException e) {
+            modeleService.archiveModelConvention(id);
+            return ResponseEntity.ok(Collections.singletonMap(KEY_MESSAGE, "Modèle archivé avec succès !"));
+        } catch (ModelConventionNotFoundException | ModelConventionInUseException e) {
             return ResponseEntity.status(400).body(Collections.singletonMap(KEY_ERROR, e.getMessage()));
         }
     }
@@ -126,5 +127,58 @@ public class ModeleController {
         String nom = "modeleConvention_" + annee + ".docx";
         boolean exists = modeleRepository.findFirstByNom(nom).isPresent();
         return ResponseEntity.ok(Map.of("exists", exists));
+    }
+
+    @PutMapping("/{id}/file")
+    public ResponseEntity<Map<String, String>> updateModelFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            modeleService.replaceModelFile(id, file);
+            return ResponseEntity.ok(Map.of("message", "Fichier remplacé avec succès"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/archives")
+    public ResponseEntity<List<ModeleDTOForList>> getArchivedModels() {
+        List<Modele> archives = modeleRepository.findAll()
+                .stream()
+                .filter(Modele::isArchived)
+                .toList();
+
+        List<ModeleDTOForList> result = archives.stream()
+                .map(m -> new ModeleDTOForList(
+                        m.getId(),
+                        m.getNom(),
+                        "Archivé depuis le " + m.getArchivedAt(),
+                        "docx",
+                        m.getTitre()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ModeleDTOForList>> searchModeles(
+            @RequestParam(required = false) String annee,
+            @RequestParam(required = false) String titre
+    ) {
+        List<Modele> found = modeleRepository.findAll().stream()
+                .filter(m -> !m.isArchived())
+                .filter(m -> annee == null || m.getAnnee().equals(annee))
+                .filter(m -> titre == null || m.getTitre().toLowerCase().contains(titre.toLowerCase()))
+                .toList();
+
+        List<ModeleDTOForList> result = found.stream()
+                .map(m -> new ModeleDTOForList(
+                        m.getId(),
+                        m.getNom(),
+                        "Année : " + m.getAnnee(),
+                        "docx",
+                        m.getTitre()
+                )).toList();
+
+        return ResponseEntity.ok(result);
     }
 }
