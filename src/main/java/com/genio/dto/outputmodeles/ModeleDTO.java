@@ -20,6 +20,16 @@ public class ModeleDTO {
         this.descriptionModification = descriptionModification;
     }
 
+    private String dateDerniereModification;
+
+    public String getDateDerniereModification() {
+        return dateDerniereModification;
+    }
+
+    public void setDateDerniereModification(String dateDerniereModification) {
+        this.dateDerniereModification = dateDerniereModification;
+    }
+
     public String getTitre() { return titre; }
     public void setTitre(String titre) { this.titre = titre; }
 

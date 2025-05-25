@@ -22,6 +22,17 @@ public class Modele {
     @Column(nullable = false)
     private boolean archived = false;
 
+    @Column(name = "date_derniere_modification")
+    private LocalDateTime dateDerniereModification;
+
+    public LocalDateTime getDateDerniereModification() {
+        return dateDerniereModification;
+    }
+
+    public void setDateDerniereModification(LocalDateTime dateDerniereModification) {
+        this.dateDerniereModification = dateDerniereModification;
+    }
+
     public String getDescriptionModification() {
         return descriptionModification;
     }

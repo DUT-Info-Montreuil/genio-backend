@@ -129,13 +129,19 @@ public class ModeleService {
         }
 
         return modeles.stream()
-                .map(modele -> new ModeleDTOForList(
-                        modele.getId(),
-                        modele.getNom(),
-                        generateDescription(modele),
-                        "docx",
-                        modele.getTitre()))
-                .toList();
+                .map(modele -> {
+                    ModeleDTOForList dto = new ModeleDTOForList(
+                            modele.getId(),
+                            modele.getNom(),
+                            generateDescription(modele),
+                            "docx",
+                            modele.getTitre()
+                    );
+                    if (modele.getDateDerniereModification() != null) {
+                        dto.setDateDerniereModification(modele.getDateDerniereModification().toString());
+                    }
+                    return dto;
+                }).toList();
     }
 
     private String generateDescription(Modele modele) {
@@ -151,7 +157,7 @@ public class ModeleService {
                 modele.getNom(),
                 modele.getAnnee(),
                 "docx",
-                "Non spécifiée",
+                modele.getDateDerniereModification() != null ? modele.getDateDerniereModification().toString() : null,
                 modele.getTitre(),
                 modele.getDescriptionModification()
         );
@@ -260,7 +266,7 @@ public class ModeleService {
             throws ModelConventionNotFoundException, ValidationException, IntegrityCheckFailedException {
 
         Modele modele = modeleRepository.findById(id.longValue())
-                .orElseThrow(() -> new ModelConventionNotFoundException(MODEL_NOT_FOUND));
+                .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable"));
 
         if (modeleDTO.getTitre() == null || modeleDTO.getTitre().trim().isEmpty()) {
             throw new ValidationException("Le titre ne peut pas être vide.");
@@ -268,8 +274,24 @@ public class ModeleService {
 
         modele.setTitre(modeleDTO.getTitre());
 
+        if (modeleDTO.getNom() != null) {
+            modele.setNom(modeleDTO.getNom());
+        }
+
+        if (modeleDTO.getAnnee() != null) {
+            modele.setAnnee(modeleDTO.getAnnee());
+        }
+
         if (modeleDTO.getDescriptionModification() != null) {
             modele.setDescriptionModification(modeleDTO.getDescriptionModification());
+        }
+
+        if (modeleDTO.getDateDerniereModification() != null) {
+            try {
+                modele.setDateDerniereModification(LocalDateTime.parse(modeleDTO.getDateDerniereModification().replace("Z", "")));
+            } catch (Exception e) {
+                throw new ValidationException("Format de date invalide : " + modeleDTO.getDateDerniereModification());
+            }
         }
 
         modeleRepository.save(modele);

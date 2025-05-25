@@ -13,7 +13,7 @@ public class ModeleDTOForList {
         this.nom = nom;
         this.description = description;
         this.format = format;
-         this.titre=titre;
+        this.titre=titre;
     }
 
     public Long getId() {
@@ -47,6 +47,11 @@ public class ModeleDTOForList {
     public void setFormat(String format) {
         this.format = format;
     }
+
+    private String dateDerniereModification;
+
+    public String getDateDerniereModification() { return dateDerniereModification; }
+    public void setDateDerniereModification(String dateDerniereModification) { this.dateDerniereModification = dateDerniereModification; }
 
     @Override
     public String toString() {
