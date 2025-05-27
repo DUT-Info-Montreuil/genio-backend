@@ -3,7 +3,11 @@ package com.genio.dto.input;
 import com.genio.dto.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class ConventionWsDTO {
 
     @Valid
@@ -41,30 +45,6 @@ public class ConventionWsDTO {
         this.modeleId = modeleId;
     }
 
-    public EtudiantDTO getEtudiant() {
-        return etudiant;
-    }
-
-    public MaitreDeStageDTO getMaitreDeStage() {
-        return maitreDeStage;
-    }
-
-    public OrganismeDTO getOrganisme() {
-        return organisme;
-    }
-
-    public StageDTO getStage() {
-        return stage;
-    }
-
-    public TuteurDTO getTuteur() {
-        return tuteur;
-    }
-
-    public Long getModeleId() {
-        return modeleId;
-    }
-
     @Override
     public String toString() {
         return "ConventionWsDTO{" +
@@ -77,31 +57,5 @@ public class ConventionWsDTO {
                 '}';
     }
 
-    public ConventionWsDTO() {
 
-    }
-
-    public void setEtudiant(EtudiantDTO etudiant) {
-        this.etudiant = etudiant;
-    }
-
-    public void setMaitreDeStage(MaitreDeStageDTO maitreDeStage) {
-        this.maitreDeStage = maitreDeStage;
-    }
-
-    public void setOrganisme(OrganismeDTO organisme) {
-        this.organisme = organisme;
-    }
-
-    public void setStage(StageDTO stage) {
-        this.stage = stage;
-    }
-
-    public void setTuteur(TuteurDTO tuteur) {
-        this.tuteur = tuteur;
-    }
-
-    public void setModeleId(Long modeleId) {
-        this.modeleId = modeleId;
-    }
 }

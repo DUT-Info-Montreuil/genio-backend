@@ -3,7 +3,11 @@ package com.genio.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class EtudiantDTO {
     @NotBlank(message = "Le nom de l'étudiant est obligatoire.")
     private String nom;
@@ -49,78 +53,6 @@ public class EtudiantDTO {
         this.telephone = telephone;
         this.email = email;
         this.cpam = cpam;
-        this.promotion = promotion;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public void setSexe(String sexe) {
-        this.sexe = sexe;
-    }
-
-    public void setDateNaissance(String dateNaissance) {
-        this.dateNaissance = dateNaissance;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCpam() {
-        return cpam;
-    }
-
-    public void setCpam(String cpam) {
-        this.cpam = cpam;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public String getSexe() {
-        return sexe;
-    }
-
-    public String getDateNaissance() {
-        return dateNaissance;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPromotion() {
-        return promotion;
-    }
-
-    public void setPromotion(String promotion) {
         this.promotion = promotion;
     }
 

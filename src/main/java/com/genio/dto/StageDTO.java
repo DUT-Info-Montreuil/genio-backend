@@ -2,7 +2,10 @@ package com.genio.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class StageDTO {
 
     @NotBlank(message = "Le sujet du stage est obligatoire.")
@@ -29,6 +32,7 @@ public class StageDTO {
     @NotBlank(message = "L'indication du type de stage professionnel est obligatoire.")
     private String SaeStageProfessionnel;
 
+    @Setter
     @NotBlank(message = "L'année de la convention est obligatoire.")
     @Pattern(regexp = "^\\d{4}$", message = "L'année doit être au format YYYY.")
     private String anneeStage;
@@ -43,46 +47,6 @@ public class StageDTO {
         this.remunerationHoraire = remunerationHoraire;
         SaeStageProfessionnel = saeStageProfessionnel;
         this.anneeStage = anneeStage;
-    }
-
-    public String getAnneeStage() {
-        return anneeStage;
-    }
-
-    public void setAnneeStage(String anneeStage) {
-        this.anneeStage = anneeStage;
-    }
-
-    public String getSaeStageProfessionnel() {
-        return SaeStageProfessionnel;
-    }
-
-    public String getSujetDuStage() {
-        return sujetDuStage;
-    }
-
-    public String getDateDebutStage() {
-        return dateDebutStage;
-    }
-
-    public String getDateFinStage() {
-        return dateFinStage;
-    }
-
-    public String getDuree() {
-        return duree;
-    }
-
-    public Integer getJoursTot() {
-        return joursTot;
-    }
-
-    public Integer getHeuresTot() {
-        return heuresTot;
-    }
-
-    public String getRemunerationHoraire() {
-        return remunerationHoraire;
     }
 
     @Override

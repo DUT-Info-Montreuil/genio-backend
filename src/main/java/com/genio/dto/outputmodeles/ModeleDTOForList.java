@@ -1,5 +1,10 @@
 package com.genio.dto.outputmodeles;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ModeleDTOForList {
 
     private Long id;
@@ -16,42 +21,7 @@ public class ModeleDTOForList {
         this.titre=titre;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
     private String dateDerniereModification;
-
-    public String getDateDerniereModification() { return dateDerniereModification; }
-    public void setDateDerniereModification(String dateDerniereModification) { this.dateDerniereModification = dateDerniereModification; }
 
     @Override
     public String toString() {
@@ -64,11 +34,4 @@ public class ModeleDTOForList {
                 '}';
     }
 
-    public String getTitre() {
-        return titre;
-    }
-
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
 }

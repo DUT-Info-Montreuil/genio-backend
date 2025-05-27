@@ -2,9 +2,13 @@ package com.genio.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class TuteurDTO {
 
+    @Setter
     @NotBlank(message = "Le nom du tuteur est obligatoire.")
     private String nom;
 
@@ -19,22 +23,6 @@ public class TuteurDTO {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     @Override

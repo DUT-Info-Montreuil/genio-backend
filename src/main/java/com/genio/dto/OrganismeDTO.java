@@ -3,7 +3,9 @@ package com.genio.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
 
+@Getter
 public class OrganismeDTO {
 
     @NotBlank(message = "Le nom de l'organisme est obligatoire.")
@@ -43,40 +45,8 @@ public class OrganismeDTO {
         this.lieuDuStage = lieuDuStage;
     }
 
-    public String getNom() {
-        return nom;
-    }
-
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public String getNomRepresentant() {
-        return nomRepresentant;
-    }
-
-    public String getQualiteRepresentant() {
-        return qualiteRepresentant;
-    }
-
-    public String getNomDuService() {
-        return nomDuService;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getLieuDuStage() {
-        return lieuDuStage;
     }
 
     @Override

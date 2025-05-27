@@ -8,4 +8,14 @@ public class UtilisateurUpdateDTO {
     private String prenom;
     private String role;
     private Boolean actif;
+
+    @Override
+    public String toString() {
+        return "UtilisateurUpdateDTO{" +
+                "nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", role='" + role + '\'' +
+                ", actif=" + actif +
+                '}';
+    }
 }
