@@ -1,26 +1,35 @@
 package com.genio.dto.input;
 
 import com.genio.dto.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class ConventionWsDTO {
 
-    @NotNull
+    @Valid
+    @NotNull(message = "L'étudiant ne peut pas être nul.")
     private EtudiantDTO etudiant;
 
-    @NotNull
+
+    @Valid
+    @NotNull(message = "Le maître de stage ne peut pas être nul.")
     private MaitreDeStageDTO maitreDeStage;
 
-    @NotNull
+
+    @Valid
+    @NotNull(message = "L'organisme est obligatoire.")
     private OrganismeDTO organisme;
 
-    @NotNull
+
+    @Valid
+    @NotNull(message = "Les informations du stage sont obligatoires.")
     private StageDTO stage;
 
     @NotNull
     private TuteurDTO tuteur;
 
-    @NotNull
+
+    @NotNull(message = "L'ID du modèle est obligatoire.")
     private Long modeleId;
 
     public ConventionWsDTO(EtudiantDTO etudiant, MaitreDeStageDTO maitreDeStage, OrganismeDTO organisme, StageDTO stage, TuteurDTO tuteur, Long modeleId) {

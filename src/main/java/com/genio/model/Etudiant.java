@@ -1,6 +1,7 @@
 package com.genio.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Table(name = "etudiant")
 @Entity
@@ -12,6 +13,8 @@ public class Etudiant {
     private String nom;
     private String prenom;
     private String email;
+
+    @NotBlank(message = "La promotion est obligatoire")
     private String promotion;
 
     public String getNom() {

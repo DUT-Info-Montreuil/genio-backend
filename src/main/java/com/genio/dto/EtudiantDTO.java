@@ -34,6 +34,10 @@ public class EtudiantDTO {
     private String cpam;
 
     @NotBlank(message = "La promotion de l'étudiant est obligatoire.")
+    @Pattern(
+            regexp = "^(?i)but ?[1-3]$",
+            message = "La promotion doit être 'BUT' suivi de 1, 2 ou 3 (avec ou sans espace)."
+    )
     private String promotion;
 
     public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email, String cpam, String promotion) {
