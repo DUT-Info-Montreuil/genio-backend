@@ -12,10 +12,10 @@ public class Modele {
     private Long id;
 
     @Column(nullable = false)
-    private String titre; // Titre modifiable
+    private String titre;
 
     @Column(length = 1000)
-    private String descriptionModification; // Description optionnelle
+    private String descriptionModification;
 
     private LocalDateTime archivedAt;
 

@@ -24,7 +24,6 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Dependencies -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -60,7 +59,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.7.0</version> <!-- Utilise la dernière version disponible -->
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -69,8 +68,6 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
-
-        <!-- MySQL Database (en runtime) -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -93,7 +90,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Apache POI for DOCX handling -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -105,19 +101,16 @@
             <version>5.2.3</version>
         </dependency>
 
-        <!-- Logging (Log4J2) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-        <!-- Testing Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- Byte Buddy Agent (pour tests, si nécessaire) -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
@@ -132,7 +125,6 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
