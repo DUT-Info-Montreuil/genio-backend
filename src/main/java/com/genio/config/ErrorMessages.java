@@ -1,6 +1,9 @@
 package com.genio.config;
 
 public class ErrorMessages {
+    private ErrorMessages() {
+        throw new UnsupportedOperationException("Classe utilitaire");
+    }
 
     public static final String MISSING_STUDENT_NAME = "Le nom de l'étudiant est manquant.";
     public static final String INVALID_STUDENT_NAME = "Le nom de l'étudiant doit être une chaîne alphabétique.";

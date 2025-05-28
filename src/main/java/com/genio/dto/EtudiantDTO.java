@@ -19,7 +19,7 @@ public class EtudiantDTO {
     private String prenom;
 
     @NotBlank(message = "Le sexe de l'étudiant est obligatoire.")
-    @Pattern(regexp = "^(H|F)$", message = "Le sexe de l'étudiant doit être 'H' ou 'F'.")
+    @Pattern(regexp = "^[HF]$", message = "Le sexe de l'étudiant doit être 'H' ou 'F'.")
     private String sexe;
 
     @NotBlank(message = "La date de naissance de l'étudiant est obligatoire.")

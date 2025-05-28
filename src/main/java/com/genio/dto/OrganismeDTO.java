@@ -4,10 +4,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.Builder;
+import lombok.Setter;
 
+@Builder
 @Getter
 public class OrganismeDTO {
 
+    @Setter
     @NotBlank(message = "Le nom de l'organisme est obligatoire.")
     private String nom;
 
@@ -34,20 +38,6 @@ public class OrganismeDTO {
     @NotBlank(message = "Le lieu du stage est obligatoire.")
     private String lieuDuStage;
 
-    public OrganismeDTO(String nom, String adresse, String nomRepresentant, String qualiteRepresentant, String nomDuService, String telephone, String email, String lieuDuStage) {
-        this.nom = nom;
-        this.adresse = adresse;
-        this.nomRepresentant = nomRepresentant;
-        this.qualiteRepresentant = qualiteRepresentant;
-        this.nomDuService = nomDuService;
-        this.telephone = telephone;
-        this.email = email;
-        this.lieuDuStage = lieuDuStage;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
 
     @Override
     public String toString() {

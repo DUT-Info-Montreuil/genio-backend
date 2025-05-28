@@ -110,7 +110,16 @@ class GenioServiceImplTest {
                 .promotion("BUT2")
                 .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
-        input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
         input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
 
@@ -155,7 +164,16 @@ class GenioServiceImplTest {
                 .promotion("BUT2")
                 .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
-        input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Nom")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Qualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
@@ -236,8 +254,17 @@ class GenioServiceImplTest {
                 .build());
         input.setTuteur(new TuteurDTO("NomTuteur", "PrenomTuteur", "tuteur@example.com"));
         input.setMaitreDeStage(new MaitreDeStageDTO("NomMDS", "PrenomMDS", "Fonction", "01.23.45.67.89", "mds@example.com"));
-        input.setOrganisme(new OrganismeDTO("OrgName", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
-        input.setStage(new StageDTO("2025", "Sujet", "2025-01-01", "2025-06-30", "5 mois", 20, 200, "10€", "professionnel"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("OrgName")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Qualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("org@example.com")
+                .lieuDuStage("Lieu")
+                .build());
+       input.setStage(new StageDTO("2025", "Sujet", "2025-01-01", "2025-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -365,7 +392,16 @@ class GenioServiceImplTest {
                 .promotion("BUT2")
                 .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
-        input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
@@ -454,7 +490,16 @@ class GenioServiceImplTest {
                 .build());
         input.setTuteur(tuteurDTO); // 👈 Nom est null ici
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
-        input.setOrganisme(new OrganismeDTO("Org", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");

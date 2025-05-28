@@ -26,9 +26,16 @@ class ConventionMapperTest {
                 "Martin", "Paul", "Responsable IT", "01.23.45.67.89", "paul@example.com"
         );
 
-        OrganismeDTO organisme = new OrganismeDTO(
-                "Entreprise", "Adresse", "Représentant", "Directeur", "Service", "01.02.03.04.05", "mail@org.com", "Paris"
-        );
+        OrganismeDTO organisme = OrganismeDTO.builder()
+                .nom("Entreprise")
+                .adresse("Adresse")
+                .nomRepresentant("Représentant")
+                .qualiteRepresentant("Directeur")
+                .nomDuService("Service")
+                .telephone("01.02.03.04.05")
+                .email("mail@org.com")
+                .lieuDuStage("Paris")
+                .build();
 
         StageDTO stage = new StageDTO(
                 "2025",
