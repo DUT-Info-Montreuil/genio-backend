@@ -1,9 +1,9 @@
 package com.genio.service;
 
+import com.genio.exception.business.DocxGenerationException;
 import com.genio.exception.business.UnreplacedPlaceholderException;
 import com.genio.service.impl.DocxGenerator;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -124,4 +124,80 @@ class DocxGeneratorTest {
 
         assertTrue(exception.getMessage().contains("${AGE}"));
     }
+
+    @Test
+    void generateDocx_shouldThrowException_whenFileNotFound() {
+        String fakePath = "chemin/inexistant.docx";
+        String output = "output_test.docx";
+
+        Exception exception = assertThrows(DocxGenerationException.class, () ->
+                docxGenerator.generateDocx(fakePath, Map.of("NOM", "Elsa"), output)
+        );
+
+        assertTrue(exception.getMessage().contains("Fichier source non trouvé"));
+    }
+
+    @Test
+    void generateDocx_shouldCreateOutputDirectoryIfNotExists() throws Exception {
+        File tempDocx = File.createTempFile("template_", ".docx");
+        try (XWPFDocument doc = new XWPFDocument();
+             FileOutputStream out = new FileOutputStream(tempDocx)) {
+            doc.createParagraph().createRun().setText("Bonjour ${NOM}");
+            doc.write(out);
+        }
+
+        File tempDir = new File("test-output/nested-dir");
+        if (tempDir.exists()) tempDir.delete();
+        String outputPath = new File(tempDir, "generated.docx").getAbsolutePath();
+
+        String result = docxGenerator.generateDocx(
+                tempDocx.getAbsolutePath(),
+                Map.of("NOM", "Eva"),
+                outputPath
+        );
+
+        assertTrue(new File(result).exists());
+        assertTrue(tempDir.exists());
+
+        new File(result).delete();
+        tempDocx.delete();
+        tempDir.delete();
+    }
+    @Test
+    void testProcessDocument_shouldReplacePlaceholdersInTableCells() throws Exception {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFTable table = doc.createTable();
+        XWPFTableRow row = table.getRow(0);
+        XWPFTableCell cell = row.getCell(0);
+        cell.removeParagraph(0);
+        XWPFParagraph paragraph = cell.addParagraph();
+        paragraph.createRun().setText("Bonjour ${NOM}");
+
+        Map<String, String> replacements = Map.of("NOM", "Elsa");
+
+        docxGenerator.processDocument(doc, replacements);
+
+        String resultText = cell.getParagraphs().get(0).getText();
+        assertEquals("Bonjour Elsa", resultText);
+    }
+
+    @Test
+    void testProcessDocument_shouldThrowException_whenPlaceholderNotReplacedInTable() {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFTable table = doc.createTable();
+        XWPFTableRow row = table.getRow(0);
+        XWPFTableCell cell = row.getCell(0);
+        cell.removeParagraph(0);
+        XWPFParagraph paragraph = cell.addParagraph();
+        paragraph.createRun().setText("Bonjour ${MANQUANT}");
+
+        Map<String, String> replacements = Map.of("NOM", "Elsa");
+
+        Exception exception = assertThrows(UnreplacedPlaceholderException.class, () -> {
+            docxGenerator.processDocument(doc, replacements);
+        });
+
+        assertTrue(exception.getMessage().contains("${MANQUANT}"));
+    }
+
 }
