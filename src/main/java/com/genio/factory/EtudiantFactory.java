@@ -5,6 +5,10 @@ import com.genio.model.Etudiant;
 
 public class EtudiantFactory {
 
+    private EtudiantFactory() {
+        throw new UnsupportedOperationException("Cette classe ne doit pas être instanciée.");
+    }
+
     public static Etudiant createEtudiant(EtudiantDTO etudiantDTO) {
         if (etudiantDTO == null) {
             throw new IllegalArgumentException("Les données de l'étudiant sont nulles.");

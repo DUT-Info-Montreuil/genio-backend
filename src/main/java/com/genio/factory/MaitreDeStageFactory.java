@@ -5,6 +5,10 @@ import com.genio.model.MaitreDeStage;
 
 public class MaitreDeStageFactory {
 
+    private MaitreDeStageFactory() {
+        throw new UnsupportedOperationException("Cette classe utilitaire ne doit pas être instanciée.");
+    }
+
     public static MaitreDeStage createMaitreDeStage(MaitreDeStageDTO maitreDeStageDTO) {
         if (maitreDeStageDTO == null) {
             throw new IllegalArgumentException("Les données du maitreDeStage sont nulles.");

@@ -30,7 +30,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import com.genio.service.TestUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -120,9 +119,17 @@ class GenioServiceImplTest {
                 .email("organisme@example.com")
                 .lieuDuStage("Lieu")
                 .build());
-        input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-
-
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("StageSujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
         Tuteur tuteur = new Tuteur();
         tuteur.setNom("TuteurNom");
         tuteur.setPrenom("TuteurPrenom");
@@ -174,7 +181,17 @@ class GenioServiceImplTest {
                 .email("organisme@example.com")
                 .lieuDuStage("Lieu")
                 .build());
-        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, format);
@@ -264,9 +281,18 @@ class GenioServiceImplTest {
                 .email("org@example.com")
                 .lieuDuStage("Lieu")
                 .build());
-       input.setStage(new StageDTO("2025", "Sujet", "2025-01-01", "2025-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-
-        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+        input.setStage(StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2025-01-01")
+                .dateFinStage("2025-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
+       ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
         assertEquals("Erreur : le nom du modèle doit se terminer par .docx.", result.getMessageErreur());
@@ -345,8 +371,17 @@ class GenioServiceImplTest {
                 .cpam("CPAM123")
                 .promotion("BUT2")
                 .build());
-        input.setStage(new StageDTO("2022", null, "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage(null)
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
@@ -402,7 +437,17 @@ class GenioServiceImplTest {
                 .email("organisme@example.com")
                 .lieuDuStage("Lieu")
                 .build());
-        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
         input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
 
         when(docxGenerator.generateDocxFromTemplate(any(), any())).thenReturn(fichierRetourne.getBytes());
@@ -500,8 +545,17 @@ class GenioServiceImplTest {
                 .email("organisme@example.com")
                 .lieuDuStage("Lieu")
                 .build());
-        input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
-
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());

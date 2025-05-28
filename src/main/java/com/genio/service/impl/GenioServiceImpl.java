@@ -151,7 +151,7 @@ public class GenioServiceImpl implements GenioService {
             convention.setModele(modele);
             conventionRepository.save(convention);
 
-            Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur, input.getStage().getAnneeStage());
+            Map<String, String> replacements = prepareReplacements(input, etudiant, maitreDeStage, tuteur);
 
             byte[] fichierBinaire;
             if (modele.getFichierBinaire() != null) {
@@ -265,7 +265,7 @@ public class GenioServiceImpl implements GenioService {
         return modeles;
     }
 
-    private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur, String anneeStage) {
+    private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur) {
         logger.info("Début de la préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = new HashMap<>();
 

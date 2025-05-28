@@ -37,17 +37,17 @@ class ConventionMapperTest {
                 .lieuDuStage("Paris")
                 .build();
 
-        StageDTO stage = new StageDTO(
-                "2025",
-                "Développement logiciel",
-                "2025-03-01",
-                "2025-06-30",
-                "4 mois",
-                90,
-                630,
-                "12€/h",
-                "Oui"
-        );
+        StageDTO stage = StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Développement logiciel")
+                .dateDebutStage("2025-03-01")
+                .dateFinStage("2025-06-30")
+                .duree("4 mois")
+                .joursTot(90)
+                .heuresTot(630)
+                .remunerationHoraire("12€/h")
+                .saeStageProfessionnel("Oui")
+                .build();
         TuteurDTO tuteur = new TuteurDTO("Durand", "Luc", "luc.durand@iut.fr");
 
         Long modeleId = 1L;

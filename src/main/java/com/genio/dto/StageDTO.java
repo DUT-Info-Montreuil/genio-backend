@@ -2,10 +2,13 @@ package com.genio.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StageDTO {
 
     @NotBlank(message = "Le sujet du stage est obligatoire.")
@@ -30,24 +33,11 @@ public class StageDTO {
     private String remunerationHoraire;
 
     @NotBlank(message = "L'indication du type de stage professionnel est obligatoire.")
-    private String SaeStageProfessionnel;
+    private String saeStageProfessionnel;
 
-    @Setter
     @NotBlank(message = "L'année de la convention est obligatoire.")
     @Pattern(regexp = "^\\d{4}$", message = "L'année doit être au format YYYY.")
     private String anneeStage;
-
-    public StageDTO(String anneeStage, String sujetDuStage, String dateDebutStage, String dateFinStage, String duree, Integer joursTot, Integer heuresTot, String remunerationHoraire, String saeStageProfessionnel) {
-        this.sujetDuStage = sujetDuStage;
-        this.dateDebutStage = dateDebutStage;
-        this.dateFinStage = dateFinStage;
-        this.duree = duree;
-        this.joursTot = joursTot;
-        this.heuresTot = heuresTot;
-        this.remunerationHoraire = remunerationHoraire;
-        SaeStageProfessionnel = saeStageProfessionnel;
-        this.anneeStage = anneeStage;
-    }
 
     @Override
     public String toString() {
@@ -59,10 +49,8 @@ public class StageDTO {
                 ", joursTot=" + joursTot +
                 ", heuresTot=" + heuresTot +
                 ", remunerationHoraire='" + remunerationHoraire + '\'' +
-                ", SaeStageProfessionnel='" + SaeStageProfessionnel + '\'' +
+                ", saeStageProfessionnel='" + saeStageProfessionnel + '\'' +
                 ", anneeStage='" + anneeStage + '\'' +
                 '}';
     }
-
-
 }

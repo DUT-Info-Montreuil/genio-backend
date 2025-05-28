@@ -16,8 +16,17 @@ class ConventionServiceDTOTest {
                 "Tuteur", "Prénom", "Dev", "01.01.01.01.01", "tuteur@mail.com");
         OrganismeDTO organisme = new OrganismeDTO(
                 "Organisme", "Adresse", "Rep", "Directeur", "Service", "01.02.03.04.05", "org@mail.com", "Paris");
-        StageDTO stage = new StageDTO(
-                "2025", "Sujet", "2025-04-01", "2025-07-31", "4 mois", 90, 630, "15.00€", "Oui");
+        StageDTO stage = StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2025-04-01")
+                .dateFinStage("2025-07-31")
+                .duree("4 mois")
+                .joursTot(90)
+                .heuresTot(630)
+                .remunerationHoraire("15.00€")
+                .saeStageProfessionnel("Oui")
+                .build();
         TuteurDTO tuteur = new TuteurDTO("Prof", "Marie", "prof@mail.com");
 
         Long modeleId = 123L;
@@ -47,8 +56,17 @@ class ConventionServiceDTOTest {
         ));
         dto.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prénom", "Fonction", "01.02.03.04.05", "mail@mail.com"));
         dto.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.02.03.04.05", "org@mail.com", "Paris"));
-        dto.setStage(new StageDTO("2024", "Sujet", "2024-04-01", "2024-07-01", "3 mois", 60, 420, "12.50€", "Oui"));
-        dto.setTuteur(new TuteurDTO("Nom", "Prénom", "tuteur@mail.com"));
+        dto.setStage(StageDTO.builder()
+                .anneeStage("2024")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2024-04-01")
+                .dateFinStage("2024-07-01")
+                .duree("3 mois")
+                .joursTot(60)
+                .heuresTot(420)
+                .remunerationHoraire("12.50€")
+                .saeStageProfessionnel("Oui")
+                .build()); dto.setTuteur(new TuteurDTO("Nom", "Prénom", "tuteur@mail.com"));
         dto.setModeleId(456L);
 
         String str = dto.toString();

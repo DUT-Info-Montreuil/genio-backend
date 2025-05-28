@@ -7,17 +7,17 @@ class StageDTOTest {
 
     @Test
     void testConstructorAndGetters() {
-        StageDTO dto = new StageDTO(
-                "2025",
-                "Développement d'une appli",
-                "2025-06-01",
-                "2025-08-31",
-                "3 mois",
-                66,
-                462,
-                "4.5€",
-                "Stage SAE"
-        );
+        StageDTO dto = StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Développement d'une appli")
+                .dateDebutStage("2025-06-01")
+                .dateFinStage("2025-08-31")
+                .duree("3 mois")
+                .joursTot(66)
+                .heuresTot(462)
+                .remunerationHoraire("4.5€")
+                .saeStageProfessionnel("Stage SAE")
+                .build();
 
         assertEquals("2025", dto.getAnneeStage());
         assertEquals("Développement d'une appli", dto.getSujetDuStage());
@@ -32,20 +32,34 @@ class StageDTOTest {
 
     @Test
     void testSetterAnneeStage() {
-        StageDTO dto = new StageDTO(
-                "2025", "sujet", "2025-06-01", "2025-08-31", "3 mois",
-                60, 400, "5.0€", "SAE"
-        );
+        StageDTO dto = StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("sujet")
+                .dateDebutStage("2025-06-01")
+                .dateFinStage("2025-08-31")
+                .duree("3 mois")
+                .joursTot(60)
+                .heuresTot(400)
+                .remunerationHoraire("5.0€")
+                .saeStageProfessionnel("SAE")
+                .build();
         dto.setAnneeStage("2026");
         assertEquals("2026", dto.getAnneeStage());
     }
 
     @Test
     void testToString() {
-        StageDTO dto = new StageDTO(
-                "2024", "Sujet de test", "2024-06-01", "2024-08-31", "2 mois",
-                40, 300, "3.0€", "SAE2"
-        );
+        StageDTO dto = StageDTO.builder()
+                .anneeStage("2024")
+                .sujetDuStage("Sujet de test")
+                .dateDebutStage("2024-06-01")
+                .dateFinStage("2024-08-31")
+                .duree("2 mois")
+                .joursTot(40)
+                .heuresTot(300)
+                .remunerationHoraire("3.0€")
+                .saeStageProfessionnel("SAE2")
+                .build();
         String result = dto.toString();
         assertTrue(result.contains("Sujet de test"));
         assertTrue(result.contains("2024-06-01"));

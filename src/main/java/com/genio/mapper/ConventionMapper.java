@@ -5,6 +5,10 @@ import com.genio.dto.input.ConventionWsDTO;
 
 public class ConventionMapper {
 
+    private ConventionMapper() {
+        throw new UnsupportedOperationException("Cette classe utilitaire ne doit pas être instanciée.");
+    }
+
     public static ConventionServiceDTO toServiceDTO(ConventionWsDTO wsDTO) {
         if (wsDTO == null) {
             throw new IllegalArgumentException("Les données d'entrée sont nulles");
