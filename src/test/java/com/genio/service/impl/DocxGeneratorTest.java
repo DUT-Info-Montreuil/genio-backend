@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 
 class DocxGeneratorTest {
 
@@ -21,6 +22,18 @@ class DocxGeneratorTest {
         docxGenerator = new DocxGenerator();
     }
 
+
+    @Test
+    void generateDocx_shouldThrowException_whenFileNotFound() {
+        String fakePath = "chemin/inexistant.docx";
+        String output = "output_test.docx";
+
+        Executable action = () -> docxGenerator.generateDocx(fakePath, Map.of("NOM", "Elsa"), output);
+
+        Exception exception = assertThrows(DocxGenerationException.class, action);
+
+        assertTrue(exception.getMessage().contains("Fichier source non trouvé"));
+    }
     @Test
     void testGenerateDocxFromTemplate_shouldReplaceVariables() throws Exception {
         XWPFDocument document = new XWPFDocument();
@@ -124,17 +137,6 @@ class DocxGeneratorTest {
         assertTrue(exception.getMessage().contains("${AGE}"));
     }
 
-    @Test
-    void generateDocx_shouldThrowException_whenFileNotFound() {
-        String fakePath = "chemin/inexistant.docx";
-        String output = "output_test.docx";
-
-        Exception exception = assertThrows(DocxGenerationException.class, () ->
-                docxGenerator.generateDocx(fakePath, Map.of("NOM", "Elsa"), output)
-        );
-
-        assertTrue(exception.getMessage().contains("Fichier source non trouvé"));
-    }
 
     @Test
     void generateDocx_shouldCreateOutputDirectoryIfNotExists() throws Exception {

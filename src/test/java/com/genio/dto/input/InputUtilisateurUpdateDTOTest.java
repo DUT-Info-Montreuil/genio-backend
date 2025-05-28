@@ -3,7 +3,7 @@ package com.genio.dto.input;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-public class InputUtilisateurUpdateDTOTest {
+class InputUtilisateurUpdateDTOTest {
     @Test
     void testGettersAndSetters() {
         UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();

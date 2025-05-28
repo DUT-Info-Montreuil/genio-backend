@@ -26,7 +26,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class AuthControllerTest {
+class AuthControllerTest {
 
     private AuthenticationManager authenticationManager;
     private UtilisateurRepository utilisateurRepository;
@@ -162,7 +162,7 @@ public class AuthControllerTest {
  
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Si cet email est enregistré, un e-mail a été envoyé.", response.getBody().get("message"));
-        verify(mailService).sendResetPasswordEmail(eq(email), eq("dummy-token"));
+        verify(mailService).sendResetPasswordEmail(email, "dummy-token");
     }
 
     @Test

@@ -309,11 +309,11 @@ class ModeleServiceTest {
 
         modeleService.insertModele(validFile, "2025");
 
-        verify(mockConnection, times(1)).prepareStatement("INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)");
-        verify(mockPreparedStatement, times(1)).setString(eq(1), eq("modeleConvention_2025.docx"));
-        verify(mockPreparedStatement, times(1)).setString(eq(2), eq("2025"));
-        verify(mockPreparedStatement, times(1)).setBytes(eq(3), any());
-        verify(mockPreparedStatement, times(1)).executeUpdate();
+        verify(mockConnection).prepareStatement("INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)");
+        verify(mockPreparedStatement).setString(eq(1), eq("modeleConvention_2025.docx"));
+        verify(mockPreparedStatement).setString(eq(2), eq("2025"));
+        verify(mockPreparedStatement).setBytes(eq(3), any(byte[].class));
+        verify(mockPreparedStatement).executeUpdate();
     }
 
 

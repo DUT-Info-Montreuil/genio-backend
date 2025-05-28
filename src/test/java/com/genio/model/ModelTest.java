@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ModelTest {
+class ModelTest {
     @Test
     void testModeleFields() {
         Modele modele = new Modele();

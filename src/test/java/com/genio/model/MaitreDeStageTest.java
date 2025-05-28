@@ -4,8 +4,12 @@ import com.genio.repository.MaitreDeStageRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,54 +35,37 @@ class MaitreDeStageTest {
         assertEquals("claire.martin@example.com", saved.getEmail());
     }
 
-    @Test
-    @DisplayName("Échec si le nom est vide")
-    void shouldFailWhenNomIsBlank() {
-        MaitreDeStage mds = new MaitreDeStage();
-        mds.setNom(" ");
-        mds.setPrenom("Claire");
-        mds.setEmail("claire.martin@example.com");
-
-        assertThrows(ConstraintViolationException.class, () -> repository.saveAndFlush(mds));
+    static Stream<MaitreDeStage> invalidMaitreDeStageProvider() {
+        return Stream.of(
+                // Nom vide
+                newMaitre(" ", "Claire", "claire@example.com"),
+                // Prénom vide
+                newMaitre("Martin", "", "claire@example.com"),
+                // Email vide
+                newMaitre("Martin", "Claire", " "),
+                // Email invalide
+                newMaitre("Martin", "Claire", "not-an-email")
+        );
     }
 
-    @Test
-    @DisplayName("Échec si le prénom est vide")
-    void shouldFailWhenPrenomIsBlank() {
+    private static MaitreDeStage newMaitre(String nom, String prenom, String email) {
         MaitreDeStage mds = new MaitreDeStage();
-        mds.setNom("Martin");
-        mds.setPrenom("");
-        mds.setEmail("claire.martin@example.com");
-
-        assertThrows(ConstraintViolationException.class, () -> repository.saveAndFlush(mds));
+        mds.setNom(nom);
+        mds.setPrenom(prenom);
+        mds.setEmail(email);
+        return mds;
     }
 
-    @Test
-    @DisplayName("Échec si l'email est vide")
-    void shouldFailWhenEmailIsBlank() {
-        MaitreDeStage mds = new MaitreDeStage();
-        mds.setNom("Martin");
-        mds.setPrenom("Claire");
-        mds.setEmail(" ");
-
-        assertThrows(ConstraintViolationException.class, () -> repository.saveAndFlush(mds));
-    }
-
-    @Test
-    @DisplayName("Échec si l'email est invalide")
-    void shouldFailWhenEmailIsInvalid() {
-        MaitreDeStage mds = new MaitreDeStage();
-        mds.setNom("Martin");
-        mds.setPrenom("Claire");
-        mds.setEmail("not-an-email");
-
-        assertThrows(ConstraintViolationException.class, () -> repository.saveAndFlush(mds));
+    @ParameterizedTest
+    @MethodSource("invalidMaitreDeStageProvider")
+    @DisplayName("Échec de validation pour un maître de stage invalide")
+    void shouldFailForInvalidFields(MaitreDeStage invalidMds) {
+        assertThrows(ConstraintViolationException.class, () -> repository.saveAndFlush(invalidMds));
     }
 
     @Test
     void testSettersAndGetters() {
         MaitreDeStage mds = new MaitreDeStage();
-
         mds.setId(5L);
         mds.setNom("Martin");
         mds.setPrenom("Luc");
