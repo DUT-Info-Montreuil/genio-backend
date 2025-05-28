@@ -69,4 +69,6 @@ class StageDTOTest {
         assertTrue(result.contains("SAE2"));
         assertTrue(result.contains("2024"));
     }
+
+
 }

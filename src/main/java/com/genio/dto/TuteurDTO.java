@@ -4,11 +4,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TuteurDTO {
 
-    @Setter
     @NotBlank(message = "Le nom du tuteur est obligatoire.")
     private String nom;
 
@@ -18,12 +22,6 @@ public class TuteurDTO {
     @NotBlank(message = "L'email du tuteur est obligatoire.")
     @Email(message = "L'email du tuteur doit être valide.")
     private String email;
-
-    public TuteurDTO(String nom, String prenom, String email) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-    }
 
     @Override
     public String toString() {

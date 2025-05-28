@@ -1,12 +1,17 @@
 package com.genio.model;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class HistorisationTest {
 
     @Test
-    void testGettersAndSetters() {
+    void testSetTimestampWithoutParam() {
         Historisation histo = new Historisation();
         histo.setId(10L);
         histo.setStatus("SUCCES");
@@ -26,6 +31,18 @@ class HistorisationTest {
         assertArrayEquals(new byte[]{2}, histo.getPdfBinaire());
         assertArrayEquals(new byte[]{3}, histo.getFluxJsonBinaire());
         assertEquals(convention, histo.getConvention());
+        assertNotNull(histo.getTimestamp());
+    }
 
+    @Test
+    void testSetTimestampWithParam() {
+        Historisation histo = new Historisation();
+
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+
+        histo.setTimestamp(date);
+
+        assertEquals(date, histo.getTimestamp());
     }
 }
