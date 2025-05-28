@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 null,
                 null,
                 null,
-                "ECHEC",
+                STATUS_ECHEC,
                 List.of(new ErreurDetaillee("exception", ex.getMessage(), ErreurType.TECHNIQUE))
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

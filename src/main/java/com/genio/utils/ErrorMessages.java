@@ -2,6 +2,10 @@ package com.genio.utils;
 
 public class ErrorMessages {
 
+    private ErrorMessages() {
+        throw new UnsupportedOperationException("Classe utilitaire - instanciation interdite");
+    }
+
     public static final String MISSING_STUDENT_NAME = "Le nom de l'étudiant est manquant.";
     public static final String INVALID_STUDENT_NAME = "Le nom de l'étudiant doit être une chaîne alphabétique.";
     public static final String MISSING_STUDENT_FIRST_NAME = "Le prénom de l'étudiant est manquant.";

@@ -32,6 +32,7 @@ public class ModeleService {
 
     @Value("${modele.conventionServices.directory}")
     private String directoryPath;
+    private static final String EXTENSION_DOCX = ".docx";
 
     private static final String MODEL_NOT_FOUND = "Modèle introuvable avec l'ID : ";
     private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
@@ -54,7 +55,7 @@ public class ModeleService {
 
     public void insertModeleFromDirectory() throws IOException {
         File dir = new File(directoryPath);
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".docx"));
+        File[] files = dir.listFiles((d, name) -> name.endsWith(EXTENSION_DOCX));
 
         if (files == null || files.length == 0) {
             throw new EmptyDirectoryException("Le répertoire ne contient aucun fichier .docx.");
@@ -188,7 +189,7 @@ public class ModeleService {
             MissingVariableException, InvalidFileFormatException {
 
         String originalFilename = file.getOriginalFilename();
-        if (originalFilename == null || !originalFilename.toLowerCase().endsWith(".docx")) {
+        if (originalFilename == null || !originalFilename.toLowerCase().endsWith(EXTENSION_DOCX)) {
             throw new InvalidFileFormatException("Format non supporté, uniquement .docx accepté.");
         }
 
@@ -196,7 +197,7 @@ public class ModeleService {
             throw new InvalidFileFormatException("Année invalide. Format attendu : 4 chiffres (ex: 2025).");
         }
 
-        String generatedFilename = "modeleConvention_" + annee + ".docx";
+        String generatedFilename = "modeleConvention_" + annee + EXTENSION_DOCX;
 
         if (modeleRepository.findFirstByNom(generatedFilename).isPresent()) {
             throw new ModelConventionAlreadyExistsException("Un modèle pour l'année " + annee + " existe déjà.");
@@ -232,19 +233,6 @@ public class ModeleService {
         saveFileToDirectory(file, generatedFilename);
 
         return new ModeleDTO(modele.getId(), modele.getNom(), modele.getAnnee(), "docx", "Non spécifiée", titre, null);
-    }
-
-    private String generateDetailedErrorMessage(List<String> missingVariables, List<String> malformedVariables) {
-        StringBuilder message = new StringBuilder("Problèmes détectés dans le fichier : ");
-
-        if (!missingVariables.isEmpty()) {
-            message.append("-Variables manquantes : ").append(String.join(", ", missingVariables));
-        }
-        if (!malformedVariables.isEmpty()) {
-            message.append(" Variables mal formatées : ").append(String.join(", ", malformedVariables));
-        }
-
-        return message.toString();
     }
 
     private void saveFileToDirectory(MultipartFile file, String originalFilename) throws IOException {
@@ -333,8 +321,8 @@ public class ModeleService {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(fileBytes);
             return Base64.getEncoder().encodeToString(hashBytes);
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors du calcul du hash du fichier.", e);
+        }catch (Exception e) {
+            throw new FileHashGenerationException("Erreur lors du calcul du hash du fichier.", e);
         }
     }
 
