@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -311,6 +312,114 @@ class ModeleControllerTest {
         assertNotNull(body);
         assertTrue(body.containsKey("error"));
         assertEquals("La modification de l'année d'un modèle existant n'est pas autorisée.", body.get("error"));
+    }
+
+    @Test
+    @Rollback
+    void testCheckModelNameExists_WhenExists() {
+        Modele modele = new Modele();
+        modele.setNom("modeleConvention_2026.docx");
+        modele.setAnnee("2026");
+        modele.setFichierHash("xxx");
+        modele.setTitre("exemple");
+        modeleRepository.saveAndFlush(modele);
+
+        ResponseEntity<Map<String, Boolean>> response = modeleController.checkModelNameExists("2026");
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().get("exists"));
+    }
+
+    @Test
+    @Rollback
+    void testUpdateModelFile_Success() throws Exception {
+        Modele modele = new Modele();
+        modele.setNom("modeleConvention_2030.docx");
+        modele.setAnnee("2030");
+        modele.setFichierHash("aaa");
+        modele.setTitre("titre");
+        modele = modeleRepository.saveAndFlush(modele);
+
+        byte[] content = "nouveau contenu".getBytes();
+        MockMultipartFile file = new MockMultipartFile("file", "fichier.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", content);
+
+        ResponseEntity<Map<String, String>> response = modeleController.updateModelFile(modele.getId(), file);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals("Fichier remplacé avec succès", response.getBody().get("message"));
+    }
+
+    @Test
+    @Rollback
+    void testDocxVars_ShouldReturnVariableList() throws Exception {
+        byte[] content = "dummy docx".getBytes();
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test.docx",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                content
+        );
+
+        when(modeleService.extractRawVariables(any())).thenReturn(List.of("VAR1", "VAR2"));
+
+        ResponseEntity<String> response = modeleController.testDocxVars(file);
+
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("Variables détectées"));
+        assertTrue(response.getBody().contains("VAR1"));
+        assertTrue(response.getBody().contains("VAR2"));
+    }
+
+    @Test
+    @Rollback
+    void testGetArchivedModels_ShouldReturnArchivedOnly() {
+        Modele archived = new Modele();
+        archived.setNom("arch.docx");
+        archived.setAnnee("2033");
+        archived.setTitre("archivé");
+        archived.setFichierHash("hash");
+        archived.setArchived(true);
+        archived.setArchivedAt(LocalDateTime.now());
+        modeleRepository.saveAndFlush(archived);
+
+        Modele actif = new Modele();
+        actif.setNom("actif.docx");
+        actif.setAnnee("2033");
+        actif.setTitre("actif");
+        actif.setFichierHash("hash2");
+        actif.setArchived(false);
+        modeleRepository.saveAndFlush(actif);
+
+        ResponseEntity<List<ModeleDTOForList>> response = modeleController.getArchivedModels();
+
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+
+        ModeleDTOForList archivedDTO = response.getBody().get(0);
+        assertTrue(archivedDTO.getNom().contains("arch"));
+    }
+
+    @Test
+    @Rollback
+    void testSearchModeles_WithParams() {
+        Modele modele = new Modele();
+        modele.setNom("modele.docx");
+        modele.setAnnee("2040");
+        modele.setTitre("Stage Web");
+        modele.setFichierHash("hash");
+        modele.setArchived(false);
+        modeleRepository.saveAndFlush(modele);
+
+        ResponseEntity<List<ModeleDTOForList>> response = modeleController.searchModeles("2040", "web");
+
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+
+        ModeleDTOForList dto = response.getBody().get(0);
+        assertTrue(dto.getTitre().toLowerCase().contains("web"));
     }
 
 }
