@@ -1,3 +1,17 @@
+/*
+ *  GenioService
+ *  ------------
+ *  Copyright (c) 2025
+ *  Elsa HADJADJ <elsa.simha.hadjadj@gmail.com>
+ *
+ *  Licence sous Creative Commons CC-BY-NC-SA 4.0.
+ *  Vous pouvez obtenir une copie de la licence à l'adresse suivante :
+ *  https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ *  Dépôt GitHub (Back) :
+ *  https://github.com/DUT-Info-Montreuil/GenioService
+ */
+
 package com.genio.controller;
 
 import com.genio.repository.ModeleRepository;
@@ -9,10 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-
 import java.util.List;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
