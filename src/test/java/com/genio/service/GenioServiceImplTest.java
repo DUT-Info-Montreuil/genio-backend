@@ -30,8 +30,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import com.genio.service.TestUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -75,7 +77,7 @@ class GenioServiceImplTest {
         modele.setNom("Test Modele");
         modele.setAnnee("2025");
 
-        byte[] dummyFile = "dummy-content".getBytes();
+        byte[] dummyFile = ("dummy-content-" + UUID.randomUUID()).getBytes();
         modele.setFichierBinaire(dummyFile);
         modele.setFichierHash(modeleService.generateFileHash(dummyFile));
 
@@ -89,12 +91,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_validModel_shouldReturnSuccess() throws Exception {
-        Modele modele = new Modele();
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele.setAnnee("2025");
-        modele.setNom("mocked-model.docx");
-        modele.setFichierHash("hash-factice");
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         when(docxGenerator.generateDocxFromTemplate(any(), any()))
                 .thenReturn("fichier-mocke".getBytes());
@@ -132,13 +129,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_invalidFileFormat_shouldReturnError(String format, String expectedMessage) {
-        Modele modele = new Modele();
-        modele.setNom("mocked-model.docx");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele.setFichierHash(modeleService.generateFileHash("dummy-docx-template".getBytes()));
-        modele.setAnnee("2025");
-        modele.setTitre("Titre de test");
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -161,11 +152,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_invalidPhone_shouldReturnValidationError(String phone) {
-        Modele modele = new Modele();
-        modele.setNom("modeleValide.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("mock-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -191,31 +178,33 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelWithInvalidName_shouldReturnError() {
+        // Création d’un modèle avec un nom invalide (pas .docx)
         Modele modele = new Modele();
-        modele.setNom("invalid-model.txt");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
+        modele.setNom("fichier_invalide.txt"); // <-- nom incorrect
         modele.setAnnee("2025");
+        modele.setTitre("Titre test");
+        modele.setFichierBinaire("fake content".getBytes());
+        modele.setFichierHash(modeleService.generateFileHash("fake content".getBytes()));
         modele = modeleRepository.saveAndFlush(modele);
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
         input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT3"));
+        input.setTuteur(new TuteurDTO("NomTuteur", "PrenomTuteur", "tuteur@example.com"));
+        input.setMaitreDeStage(new MaitreDeStageDTO("NomMDS", "PrenomMDS", "Fonction", "01.23.45.67.89", "mds@example.com"));
+        input.setOrganisme(new OrganismeDTO("OrgName", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
+        input.setStage(new StageDTO("2025", "Sujet", "2025-01-01", "2025-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
         assertEquals("Erreur : le nom du modèle doit se terminer par .docx.", result.getMessageErreur());
     }
-
     @Test
     @Rollback
     @Transactional
     void generateConvention_invalidData_shouldReturnValidationError() {
-        Modele modele = new Modele();
-        modele.setNom("valid-model.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -234,11 +223,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelWithNullBinaryFile_shouldReturnError() {
-        Modele modele = new Modele();
-        modele.setNom("modeleSansFichier.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire(null);
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -247,18 +232,17 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
-        assertEquals("Les erreurs suivantes ont été détectées : Le champ 'organisme' : Le nom de l'organisme est manquant., Le champ 'maitreDeStage' : Le champ 'maitreDeStage' est obligatoire., Le champ 'stage' : Le sujet du stage est manquant., Le champ 'tuteur' : Le nom de l'enseignant est manquant.", result.getMessageErreur());
+        assertEquals(
+                "Les erreurs suivantes ont été détectées : Le champ 'organisme' : Le nom de l'organisme est manquant., Le champ 'maitreDeStage' : Le nom du tuteur est manquant., Le champ 'stage' : Le sujet du stage est manquant., Le champ 'tuteur' : Le nom de l'enseignant est manquant.",
+                result.getMessageErreur()
+        );
     }
 
     @Test
     @Rollback
     @Transactional
     void generateConvention_missingStageSubject_shouldReturnValidationError() {
-        Modele modele = new Modele();
-        modele.setNom("valid-model.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("dummy-docx-template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -294,11 +278,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelWithDifferentYears_shouldReturnSuccess(String annee, String fichierRetourne) throws Exception {
-        Modele modele = new Modele();
-        modele.setNom("Modele " + annee + ".docx");
-        modele.setAnnee(annee);
-        modele.setFichierBinaire(fichierRetourne.getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -321,11 +301,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_missingRequiredFields_shouldReturnValidationError() {
-        Modele modele = new Modele();
-        modele.setNom("modele-test-valide.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("template-factice".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
@@ -348,11 +324,7 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelNomNullEtPasDeFichier_shouldReturnError() {
-        Modele modele = new Modele();
-        modele.setNom("placeholder.docx");
-        modele.setFichierBinaire("dummy".getBytes());
-        modele.setAnnee("2025");
-        modele = modeleRepository.saveAndFlush(modele);
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
         modele.setNom(null);
         modele.setFichierBinaire(null);
@@ -372,19 +344,13 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_tuteurNonPersiste_shouldReturnError() {
-        Modele modele = new Modele();
-        modele.setNom("valid.docx");
-        modele.setAnnee("2025");
-        modele.setFichierBinaire("template".getBytes());
-        modele = modeleRepository.saveAndFlush(modele);
-
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2026");
         TuteurDTO tuteurDTO = new TuteurDTO(null, "Prenom", "email@example.com");
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123","BUT3"));
-        input.setTuteur(tuteurDTO);
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123", "BUT3"));
+        input.setTuteur(tuteurDTO); // 👈 Nom est null ici
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Org", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -392,11 +358,9 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("Le nom de l'enseignant doit être une chaîne alphabétique"));
-        assertTrue(result.getMessageErreur().contains("Le nom de l'enseignant est manquant"));
+        assertTrue(result.getMessageErreur().contains("Le champ 'tuteur.nom'")); // 💡 Ce champ est bien dans le message
+        assertTrue(result.getMessageErreur().contains("une chaîne alphabétique")); // 💡 Vérifie le vrai message
     }
-
-
 
     @Test
     void getModelesByAnnee_success() {

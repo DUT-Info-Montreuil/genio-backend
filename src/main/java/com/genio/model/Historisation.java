@@ -27,6 +27,7 @@ public class Historisation {
         this.timestamp = timestamp;
     }
 
+    @Column(name = "details", columnDefinition = "TEXT")
     private String details;
 
     @Lob
