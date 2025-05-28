@@ -210,7 +210,7 @@ class UtilisateurServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals("ADMIN", result.get().getRole());
-        assertFalse(result.get().isActif()); // reste inchangé
+        assertFalse(result.get().isActif());
         assertNotNull(result.get().getUpdatedAt());
         verify(utilisateurRepository, times(1)).save(utilisateur);
     }

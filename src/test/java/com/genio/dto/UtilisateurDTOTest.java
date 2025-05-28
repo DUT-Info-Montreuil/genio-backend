@@ -78,4 +78,30 @@ class UtilisateurDTOTest {
         assertEquals(dto1.getEmail(), dto2.getEmail());
         assertEquals(dto1.getMotDePasse(), dto2.getMotDePasse());
     }
+    @Test
+    void testEqualsAndHashCode() {
+        UtilisateurUpdateDTO dto1 = new UtilisateurUpdateDTO();
+        dto1.setNom("Dupont");
+        dto1.setPrenom("Alice");
+        dto1.setRole("USER");
+        dto1.setActif(true);
+
+        UtilisateurUpdateDTO dto2 = new UtilisateurUpdateDTO();
+        dto2.setNom("Dupont");
+        dto2.setPrenom("Alice");
+        dto2.setRole("USER");
+        dto2.setActif(true);
+
+        UtilisateurUpdateDTO dto3 = new UtilisateurUpdateDTO();
+        dto3.setNom("Martin");
+        dto3.setPrenom("Paul");
+        dto3.setRole("ADMIN");
+        dto3.setActif(false);
+
+        assertEquals(dto1, dto2);
+        assertNotEquals(dto1, dto3);
+
+        assertEquals(dto1.hashCode(), dto2.hashCode());
+        assertNotEquals(dto1.hashCode(), dto3.hashCode());
+    }
 }
