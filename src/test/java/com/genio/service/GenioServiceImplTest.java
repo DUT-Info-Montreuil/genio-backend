@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +57,9 @@ class GenioServiceImplTest {
     @MockBean
     private DocxGenerator docxGenerator;
 
+    @MockBean
+    private JavaMailSender javaMailSender;
+
 
     @Autowired
     private TuteurRepository tuteurRepository;
@@ -66,9 +70,17 @@ class GenioServiceImplTest {
     @BeforeEach
     void setup() {
         modeleRepository.deleteAll();
+
         Modele modele = new Modele();
         modele.setNom("Test Modele");
         modele.setAnnee("2025");
+
+        byte[] dummyFile = "dummy-content".getBytes();
+        modele.setFichierBinaire(dummyFile);
+        modele.setFichierHash(modeleService.generateFileHash(dummyFile));
+
+        modele.setTitre("Titre de test");
+
         modeleRepository.saveAndFlush(modele);
     }
 
@@ -81,6 +93,7 @@ class GenioServiceImplTest {
         modele.setFichierBinaire("dummy-docx-template".getBytes());
         modele.setAnnee("2025");
         modele.setNom("mocked-model.docx");
+        modele.setFichierHash("hash-factice");
         modele = modeleRepository.saveAndFlush(modele);
 
         when(docxGenerator.generateDocxFromTemplate(any(), any()))
@@ -88,7 +101,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT2"));
         input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
         input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -120,13 +133,16 @@ class GenioServiceImplTest {
     @Transactional
     void generateConvention_invalidFileFormat_shouldReturnError(String format, String expectedMessage) {
         Modele modele = new Modele();
-        modele.setNom("Modele Test");
+        modele.setNom("mocked-model.docx");
+        modele.setFichierBinaire("dummy-docx-template".getBytes());
+        modele.setFichierHash(modeleService.generateFileHash("dummy-docx-template".getBytes()));
         modele.setAnnee("2025");
+        modele.setTitre("Titre de test");
         modele = modeleRepository.saveAndFlush(modele);
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -153,7 +169,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", phone, "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", phone, "johndoe@example.com", "CPAM123","BUT2"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -183,7 +199,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT3"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -203,7 +219,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", null, "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", null, "01.23.45.67.89", "johndoe@example.com", "CPAM123","BUT1"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -226,7 +242,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT2"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -246,7 +262,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
         input.setStage(new StageDTO("2022", null, "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
@@ -286,7 +302,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -318,7 +334,8 @@ class GenioServiceImplTest {
                 null,
                 "01.23.45.67.89",
                 "johndoe@example.com",
-                "CPAM123"
+                "CPAM123",
+                "BUT1"
         ));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
@@ -342,7 +359,7 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "0123456789", "john@example.com", "CPAM"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "0123456789", "john@example.com", "CPAM","BUT2"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -366,7 +383,7 @@ class GenioServiceImplTest {
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
 
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123"));
+        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123","BUT3"));
         input.setTuteur(tuteurDTO);
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Org", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
@@ -384,9 +401,12 @@ class GenioServiceImplTest {
     @Test
     void getModelesByAnnee_success() {
         Modele modele = new Modele();
-        modele.setNom("modele.docx");
+        modele.setNom("mocked-model.docx");
+        modele.setFichierBinaire("dummy-docx-template".getBytes());
+        modele.setFichierHash(modeleService.generateFileHash("dummy-docx-template".getBytes()));
         modele.setAnnee("2026");
-        modeleRepository.saveAndFlush(modele);
+        modele.setTitre("Titre de test");
+        modele = modeleRepository.saveAndFlush(modele);
 
         List<Modele> modeles = genioService.getModelesByAnnee("2026");
 

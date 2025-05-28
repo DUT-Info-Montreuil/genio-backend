@@ -11,7 +11,7 @@ class ConventionMapperTest {
     @Test
     void testToServiceDTO() {
         EtudiantDTO etudiant = new EtudiantDTO(
-                "Dupont", "Marie", "F", "2002-05-15", "12 rue du stage", "06.12.34.56.78", "marie@example.com", "CPAM Paris"
+                "Dupont", "Marie", "F", "2002-05-15", "12 rue du stage", "06.12.34.56.78", "marie@example.com", "CPAM Paris", "BUT3"
         );
 
         MaitreDeStageDTO maitre = new MaitreDeStageDTO(

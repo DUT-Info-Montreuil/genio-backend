@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.genio.dto.UtilisateurDTO;
 import com.genio.dto.UtilisateurUpdateDTO;
 import com.genio.model.Utilisateur;
+import com.genio.repository.UtilisateurRepository;
+import com.genio.service.impl.HistorisationService;
 import com.genio.service.impl.UtilisateurService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
@@ -35,6 +39,20 @@ class UtilisateurControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private UtilisateurRepository utilisateurRepository;
+
+
+    @MockBean
+    private JavaMailSender javaMailSender;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private HistorisationService historisationService;
+
 
     private Utilisateur utilisateur;
 

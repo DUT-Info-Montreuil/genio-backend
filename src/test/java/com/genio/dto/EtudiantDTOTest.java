@@ -15,7 +15,8 @@ class EtudiantDTOTest {
                 "12 rue des Lilas",
                 "06.12.34.56.78",
                 "sophie.durand@example.com",
-                "CPAM 75"
+                "CPAM 75",
+                "BUT1"
         );
 
         assertEquals("Durand", dto.getNom());
@@ -32,7 +33,7 @@ class EtudiantDTOTest {
     void testSetters() {
         EtudiantDTO dto = new EtudiantDTO(
                 "NomTest", "PrenomTest", "H", "1999-01-01",
-                "AdresseTest", "01.02.03.04.05", "test@example.com", "CPAMTEST"
+                "AdresseTest", "01.02.03.04.05", "test@example.com", "CPAMTEST","BUT2"
         );
 
         dto.setNom("Lemoine");
@@ -58,7 +59,7 @@ class EtudiantDTOTest {
     void testToString() {
         EtudiantDTO dto = new EtudiantDTO(
                 "Martin", "Claire", "F", "2002-09-10",
-                "5 rue du Général", "06.66.66.66.66", "claire.martin@etu.fr", "CPAM 33"
+                "5 rue du Général", "06.66.66.66.66", "claire.martin@etu.fr", "CPAM 33","BUT1"
         );
 
         String result = dto.toString();

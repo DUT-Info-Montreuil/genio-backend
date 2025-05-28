@@ -9,7 +9,9 @@ class ConventionServiceDTOTest {
     @Test
     void testSettersAndGetters() {
         EtudiantDTO etudiant = new EtudiantDTO(
-                "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05", "email@etu.com", "CPAM 75");
+                "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05",
+                "email@etu.com", "CPAM 75", "BUT1"
+        );
         MaitreDeStageDTO maitre = new MaitreDeStageDTO(
                 "Tuteur", "Prénom", "Dev", "01.01.01.01.01", "tuteur@mail.com");
         OrganismeDTO organisme = new OrganismeDTO(
@@ -39,7 +41,10 @@ class ConventionServiceDTOTest {
     @Test
     void testToString_containsAllFields() {
         ConventionServiceDTO dto = new ConventionServiceDTO();
-        dto.setEtudiant(new EtudiantDTO("Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05", "email@etu.com", "CPAM"));
+        dto.setEtudiant(new EtudiantDTO(
+                "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05",
+                "email@etu.com", "CPAM", "BUT2"
+        ));
         dto.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prénom", "Fonction", "01.02.03.04.05", "mail@mail.com"));
         dto.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.02.03.04.05", "org@mail.com", "Paris"));
         dto.setStage(new StageDTO("2024", "Sujet", "2024-04-01", "2024-07-01", "3 mois", 60, 420, "12.50€", "Oui"));

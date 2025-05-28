@@ -268,6 +268,10 @@ public class ModeleService {
         Modele modele = modeleRepository.findById(id.longValue())
                 .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable"));
 
+        if (modeleDTO.getAnnee() != null && !modeleDTO.getAnnee().equals(modele.getAnnee())) {
+            throw new ValidationException("La modification de l'année d'un modèle existant n'est pas autorisée.");
+        }
+
         if (modeleDTO.getTitre() == null || modeleDTO.getTitre().trim().isEmpty()) {
             throw new ValidationException("Le titre ne peut pas être vide.");
         }
@@ -276,10 +280,6 @@ public class ModeleService {
 
         if (modeleDTO.getNom() != null) {
             modele.setNom(modeleDTO.getNom());
-        }
-
-        if (modeleDTO.getAnnee() != null) {
-            modele.setAnnee(modeleDTO.getAnnee());
         }
 
         if (modeleDTO.getDescriptionModification() != null) {
@@ -328,7 +328,7 @@ public class ModeleService {
         return docxParser.extractVariables(file);
     }
 
-    private String generateFileHash(byte[] fileBytes) {
+    public String generateFileHash(byte[] fileBytes) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(fileBytes);

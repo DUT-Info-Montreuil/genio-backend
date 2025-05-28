@@ -29,15 +29,13 @@ public class ModeleController {
 
 
     private static final Logger logger = LoggerFactory.getLogger(ModeleController.class);
-
     @GetMapping
     public ResponseEntity<Object> getAllModelConvention() {
         try {
             List<ModeleDTOForList> conventionServices = modeleService.getAllConventionServices();
             return ResponseEntity.ok(conventionServices);
         } catch (NoConventionServicesAvailableException e) {
-            Map<String, String> error = Map.of(KEY_ERROR, "Aucun modèle de convention disponible");
-            return ResponseEntity.status(204).body(error);
+            return ResponseEntity.ok(List.of());
         }
     }
 

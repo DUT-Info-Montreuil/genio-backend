@@ -1,10 +1,14 @@
 package com.genio.exception;
 
 import com.genio.controller.ExceptionTriggerController;
+import com.genio.service.impl.HistorisationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +23,14 @@ class GlobalExceptionHandlerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private JavaMailSender javaMailSender;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private HistorisationService historisationService;
     @Test
     @WithMockUser
     void shouldHandleInvalidFileFormatException() throws Exception {

@@ -18,7 +18,8 @@ class EtudiantFactoryTest {
                 "123 rue Test",
                 "01.23.45.67.89",
                 "john.doe@example.com",
-                "CPAM-Paris"
+                "CPAM-Paris",
+                "BUT2"
         );
 
         Etudiant etudiant = EtudiantFactory.createEtudiant(dto);

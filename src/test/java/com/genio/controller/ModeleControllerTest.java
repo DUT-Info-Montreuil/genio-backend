@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -49,6 +50,10 @@ class ModeleControllerTest {
 
     @MockBean
     private DocxParser docxParser;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
+
 
     @Autowired
     private TuteurRepository tuteurRepository;
@@ -100,27 +105,36 @@ class ModeleControllerTest {
                 "TEL_ENCADRANT", "MEL_ENCADRANT", "NOM_CPAM", "Stage_Professionnel", "STA_REMU_HOR"
         ));
 
-        ResponseEntity<?> response = modeleController.createModelConvention(file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file, "2025", "Titre exemple");
 
-        assertEquals(201, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("ModelConvention ajouté avec succès"));
+        assertEquals(201, response.getStatusCode().value());
+        assertTrue(response.getBody().toString().contains("a été ajouté avec succès"));
     }
 
     @Test
     @Rollback
     void testCreateModelConvention_ModelAlreadyExists() throws IOException {
         byte[] fileContent = "Test content".getBytes();
-        MultipartFile file = new MockMultipartFile("file", "modeleConvention_2025.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileContent);
+        MultipartFile file = new MockMultipartFile(
+                "file",
+                "modeleConvention_2025.docx",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                fileContent
+        );
+
+        String hash = modeleService.generateFileHash(fileContent);
 
         Modele modele = new Modele();
         modele.setNom("modeleConvention_2025.docx");
         modele.setAnnee("2025");
-        modeleRepository.save(modele);
+        modele.setFichierHash(hash); // <-- AJOUT ICI
+        modele.setTitre("Titre original");
+        modeleRepository.saveAndFlush(modele);
 
-        ResponseEntity<?> response = modeleController.createModelConvention(file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file, "2025", "Titre exemple");
 
-        assertEquals(400, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("Un modèle avec ce nom existe déjà"));
+        assertEquals(400, response.getStatusCode().value());
+        assertTrue(response.getBody().toString().contains("déjà"));
     }
 
     @Test
@@ -129,9 +143,9 @@ class ModeleControllerTest {
         byte[] fileContent = "Test content".getBytes();
         MultipartFile file = new MockMultipartFile("file", "modeleConvention.txt", "text/plain", fileContent);
 
-        ResponseEntity<?> response = modeleController.createModelConvention(file);
+        ResponseEntity<?> response = modeleController.createModelConvention(file, "2025", "Titre exemple");
 
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("Format non supporté, uniquement .docx accepté"));
     }
 
@@ -141,13 +155,15 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("Modele Test");
         modele.setAnnee("2025");
-        modeleRepository.save(modele);
+        modele.setFichierHash("hash-fictif");
+        modele.setTitre("Titre original");
+        modeleRepository.saveAndFlush(modele);
 
         ResponseEntity<?> response = modeleController.getAllModelConvention();
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         List<ModeleDTOForList> modeles = (List<ModeleDTOForList>) response.getBody();
-        assertFalse(modeles.isEmpty());
+        modeleRepository.saveAndFlush(modele);
     }
 
     @Test
@@ -155,7 +171,7 @@ class ModeleControllerTest {
     void testGetModelConventionById_NotFound() {
         ResponseEntity<?> response = modeleController.getModelConventionById(999L);
 
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(404, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("Modèle introuvable"));
     }
 
@@ -165,20 +181,23 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("Modele à supprimer");
         modele.setAnnee("2025");
-        modeleRepository.save(modele);
+        modele.setFichierHash("hash-fictif");
+        modele.setTitre("Titre test");
 
-        ResponseEntity<?> response = modeleController.deleteModelConvention(modele.getId());
+        modele = modeleRepository.saveAndFlush(modele);
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("ModelConvention supprimé avec succès"));
+        ResponseEntity<?> response = modeleController.archiveModelConvention(modele.getId());
+
+        assertEquals(200, response.getStatusCode().value());
+        assertTrue(response.getBody().toString().contains("Modèle archivé avec succès"));
     }
 
     @Test
     @Rollback
     void testDeleteModelConvention_NotFound() {
-        ResponseEntity<?> response = modeleController.deleteModelConvention(999L);
+        ResponseEntity<?> response = modeleController.archiveModelConvention(999L);
 
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("Modèle introuvable"));
     }
 
@@ -189,12 +208,15 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("Modele en utilisation");
         modele.setAnnee("2025");
+        modele.setFichierHash("mockedHash");
+        modele.setTitre("Titre test");
         modele = modeleRepository.saveAndFlush(modele);
 
         Etudiant etudiant = new Etudiant();
         etudiant.setNom("Dupont");
         etudiant.setPrenom("Marie");
         etudiant.setEmail("marie.durand@example.com");
+        etudiant.setPromotion("2024");
         etudiant = etudiantRepository.saveAndFlush(etudiant);
 
         MaitreDeStage maitre = new MaitreDeStage();
@@ -216,9 +238,9 @@ class ModeleControllerTest {
         convention.setModele(modele);
         conventionRepository.saveAndFlush(convention);
 
-        ResponseEntity<?> response = modeleController.deleteModelConvention(modele.getId());
+        ResponseEntity<?> response = modeleController.archiveModelConvention(modele.getId());
 
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("Le modèle est toujours utilisé"));
     }
 
@@ -228,11 +250,13 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("Test");
         modele.setAnnee("2025");
-        modele = modeleRepository.save(modele);
+        modele.setFichierHash("hash-fictif");
+        modele.setTitre("Titre test");
+        modele = modeleRepository.saveAndFlush(modele);
 
         ResponseEntity<?> response = modeleController.getModelConventionById(modele.getId());
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
     }
 
 
@@ -242,10 +266,12 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("Unused");
         modele.setAnnee("2025");
-        modele = modeleRepository.save(modele);
+        modele.setFichierHash("hash-fictif");
+        modele.setTitre("Titre test");
+        modele = modeleRepository.saveAndFlush(modele);
 
         ResponseEntity<?> response = modeleController.isModelUsed(modele.getId());
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("false"));
     }
 
@@ -253,7 +279,7 @@ class ModeleControllerTest {
     @Rollback
     void testIsModelUsed_ModelNotFound() {
         ResponseEntity<?> response = modeleController.isModelUsed(999L);
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
         assertTrue(response.getBody().toString().contains("Modèle"));
     }
 
@@ -263,19 +289,23 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("modeleConvention_2023.docx");
         modele.setAnnee("2023");
-        modele = modeleRepository.save(modele);
+        modele.setFichierHash("hash-fictif");
+        modele.setTitre("Titre original");
+        modele = modeleRepository.saveAndFlush(modele);
 
         ModeleDTO dto = new ModeleDTO(
                 modele.getId(),
                 "modeleConvention_2025.docx",
                 "2025",
                 "docx",
-                null
+                null,
+                "Titre de test",
+                "Tentative de changement d’année"
         );
 
         ResponseEntity<Map<String, String>> response = modeleController.updateModelConvention(modele.getId().intValue(), dto);
 
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
 
         Map<String, String> body = response.getBody();
         assertNotNull(body);

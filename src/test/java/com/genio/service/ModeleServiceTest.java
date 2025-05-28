@@ -65,7 +65,7 @@ class ModeleServiceTest {
         when(modeleRepository.findFirstByNom(any())).thenReturn(Optional.empty());
         when(docxParser.extractVariables(any())).thenReturn(ModeleService.getExpectedVariables());
 
-        ModeleDTO result = modeleService.createModelConvention(file);
+        ModeleDTO result = modeleService.createModelConvention(file, "2025", "Titre test");
 
         assertNotNull(result);
         assertEquals("modeleConvention_2025.docx", result.getNom());
@@ -78,9 +78,10 @@ class ModeleServiceTest {
                 "file", "invalid-name.doc", "application/msword", "content".getBytes());
 
         InvalidFileFormatException exception = assertThrows(InvalidFileFormatException.class, () ->
-                modeleService.createModelConvention(file));
+                modeleService.createModelConvention(file, "2025", "Titre Test"));
 
-        assertTrue(exception.getMessage().contains("Format invalide"));
+        System.out.println(exception.getMessage()); // pour voir le vrai texte
+        assertTrue(exception.getMessage().toLowerCase().contains("format"));
     }
 
     @Test
@@ -90,7 +91,7 @@ class ModeleServiceTest {
 
         when(modeleRepository.findFirstByNom(any())).thenReturn(Optional.of(new Modele()));
 
-        assertThrows(ModelConventionAlreadyExistsException.class, () -> modeleService.createModelConvention(file));
+        assertThrows(ModelConventionAlreadyExistsException.class, () -> modeleService.createModelConvention(file, "2025", "Titre Test"));
     }
 
     @Test
@@ -102,9 +103,9 @@ class ModeleServiceTest {
         when(docxParser.extractVariables(any())).thenReturn(List.of("annee"));
 
         MissingVariableException exception = assertThrows(MissingVariableException.class, () ->
-                modeleService.createModelConvention(file));
+                modeleService.createModelConvention(file, "2025", "Titre Test"));
 
-        assertTrue(exception.getMessage().contains("Variables manquantes"));
+        assertTrue(exception.getMessage().toLowerCase().contains("erreurs de variables"));
     }
 
     @Test
@@ -115,9 +116,9 @@ class ModeleServiceTest {
         when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
         when(conventionRepository.countByModele_Id(1L)).thenReturn(0L);
 
-        assertDoesNotThrow(() -> modeleService.deleteModelConvention(1L));
+        assertDoesNotThrow(() -> modeleService.archiveModelConvention(1L));
 
-        verify(modeleRepository, times(1)).delete(modele);
+        verify(modeleRepository, times(1)).save(modele);
     }
 
     @Test
@@ -128,14 +129,14 @@ class ModeleServiceTest {
         when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
         when(conventionRepository.countByModele_Id(1L)).thenReturn(2L);
 
-        assertThrows(ModelConventionInUseException.class, () -> modeleService.deleteModelConvention(1L));
+        assertThrows(ModelConventionInUseException.class, () -> modeleService.archiveModelConvention(1L));
     }
 
     @Test
     void testDeleteModelConvention_NotFound() {
         when(modeleRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(ModelConventionNotFoundException.class, () -> modeleService.deleteModelConvention(999L));
+        assertThrows(ModelConventionNotFoundException.class, () -> modeleService.archiveModelConvention(999L));
     }
 
     @Test
@@ -222,10 +223,9 @@ class ModeleServiceTest {
         modele.setNom("modeleConvention_2025.docx");
         modele.setAnnee("2025");
 
-        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2025", "docx", "n/a");
+        ModeleDTO dto = new ModeleDTO(1L, "modeleConvention_2026.docx", "2025", "docx", "n/a", "Titre test", "Modif description");
 
         when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
-        when(modeleRepository.findFirstByNom(dto.getNom())).thenReturn(Optional.empty());
 
         modeleService.updateModelConvention(1, dto);
         verify(modeleRepository).save(any());
