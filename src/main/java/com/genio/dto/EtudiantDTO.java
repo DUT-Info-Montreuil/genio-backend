@@ -3,12 +3,15 @@ package com.genio.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 public class EtudiantDTO {
+
     @NotBlank(message = "Le nom de l'étudiant est obligatoire.")
     private String nom;
 
@@ -43,18 +46,6 @@ public class EtudiantDTO {
             message = "La promotion doit être 'BUT' suivi de 1, 2 ou 3 (avec ou sans espace)."
     )
     private String promotion;
-
-    public EtudiantDTO(String nom, String prenom, String sexe, String dateNaissance, String adresse, String telephone, String email, String cpam, String promotion) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.sexe = sexe;
-        this.dateNaissance = dateNaissance;
-        this.adresse = adresse;
-        this.telephone = telephone;
-        this.email = email;
-        this.cpam = cpam;
-        this.promotion = promotion;
-    }
 
     @Override
     public String toString() {

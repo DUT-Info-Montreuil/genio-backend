@@ -21,6 +21,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private static final String KEY_ERROR = "error";
+    private static final String STATUS_ECHEC = "ECHEC";
+
 
     private final HistorisationService historisationService;
 
@@ -44,10 +46,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFilterException.class)
     public ResponseEntity<Map<String, String>> handleInvalidFilterException(InvalidFilterException ex) {
         List<ErreurDetaillee> erreurs = List.of(new ErreurDetaillee("filtre", ex.getMessage(), ErreurType.FLUX));
-        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+        historisationService.sauvegarderHistorisation(null, null, null,  STATUS_ECHEC, erreurs);
 
         Map<String, String> response = new HashMap<>();
-        response.put("error", ex.getMessage());
+        response.put(KEY_ERROR, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -103,7 +105,7 @@ public class GlobalExceptionHandler {
                 new ErreurDetaillee(champ, message, ErreurType.JSON)
         );
 
-        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+        historisationService.sauvegarderHistorisation(null, null, null,  STATUS_ECHEC, erreurs);
 
         Map<String, String> response = new HashMap<>();
         response.put(champ, message);
@@ -124,7 +126,7 @@ public class GlobalExceptionHandler {
             erreurs.add(new ErreurDetaillee(champ, messageTraduit, ErreurType.JSON));
         }
 
-        historisationService.sauvegarderHistorisation(null, null, null, "ECHEC", erreurs);
+        historisationService.sauvegarderHistorisation(null, null, null,  STATUS_ECHEC, erreurs);
 
         return new ResponseEntity<>(messagesLisibles, HttpStatus.BAD_REQUEST);
     }
