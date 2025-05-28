@@ -1,6 +1,6 @@
-package com.genio.dto;
+package com.genio.dto.input;
 
-import com.genio.dto.input.ConventionServiceDTO;
+import com.genio.dto.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,14 +8,32 @@ class ConventionServiceDTOTest {
 
     @Test
     void testSettersAndGetters() {
-        EtudiantDTO etudiant = new EtudiantDTO(
-                "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05",
-                "email@etu.com", "CPAM 75", "BUT1"
-        );
+        EtudiantDTO etudiant = EtudiantDTO.builder()
+                .nom("Nom")
+                .prenom("Prénom")
+                .sexe("F")
+                .dateNaissance("2000-01-01")
+                .adresse("1 rue Exemple")
+                .telephone("01.02.03.04.05")
+                .email("email@etu.com")
+                .cpam("CPAM 75") // <-- ICI
+                .promotion("BUT1")
+                .build();
+
         MaitreDeStageDTO maitre = new MaitreDeStageDTO(
                 "Tuteur", "Prénom", "Dev", "01.01.01.01.01", "tuteur@mail.com");
-        OrganismeDTO organisme = new OrganismeDTO(
-                "Organisme", "Adresse", "Rep", "Directeur", "Service", "01.02.03.04.05", "org@mail.com", "Paris");
+
+        OrganismeDTO organisme = OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Directeur")
+                .nomDuService("Service")
+                .telephone("01.02.03.04.05")
+                .email("org@mail.com")
+                .lieuDuStage("Paris")
+                .build();
+
         StageDTO stage = StageDTO.builder()
                 .anneeStage("2025")
                 .sujetDuStage("Sujet")
@@ -27,6 +45,7 @@ class ConventionServiceDTOTest {
                 .remunerationHoraire("15.00€")
                 .saeStageProfessionnel("Oui")
                 .build();
+
         TuteurDTO tuteur = new TuteurDTO("Prof", "Marie", "prof@mail.com");
 
         Long modeleId = 123L;
@@ -50,12 +69,33 @@ class ConventionServiceDTOTest {
     @Test
     void testToString_containsAllFields() {
         ConventionServiceDTO dto = new ConventionServiceDTO();
-        dto.setEtudiant(new EtudiantDTO(
-                "Nom", "Prénom", "F", "2000-01-01", "1 rue Exemple", "01.02.03.04.05",
-                "email@etu.com", "CPAM", "BUT2"
-        ));
-        dto.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prénom", "Fonction", "01.02.03.04.05", "mail@mail.com"));
-        dto.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.02.03.04.05", "org@mail.com", "Paris"));
+
+        dto.setEtudiant(EtudiantDTO.builder()
+                .nom("Nom")
+                .prenom("Prénom")
+                .sexe("F")
+                .dateNaissance("2000-01-01")
+                .adresse("1 rue Exemple")
+                .telephone("01.02.03.04.05")
+                .email("email@etu.com")
+                .cpam("CPAM") // <-- ICI
+                .promotion("BUT2")
+                .build());
+
+        dto.setMaitreDeStage(new MaitreDeStageDTO(
+                "Nom", "Prénom", "Fonction", "01.02.03.04.05", "mail@mail.com"));
+
+        dto.setOrganisme(OrganismeDTO.builder()
+                .nom("Nom")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Qualité")
+                .nomDuService("Service")
+                .telephone("01.02.03.04.05")
+                .email("org@mail.com")
+                .lieuDuStage("Paris")
+                .build());
+
         dto.setStage(StageDTO.builder()
                 .anneeStage("2024")
                 .sujetDuStage("Sujet")
@@ -66,7 +106,9 @@ class ConventionServiceDTOTest {
                 .heuresTot(420)
                 .remunerationHoraire("12.50€")
                 .saeStageProfessionnel("Oui")
-                .build()); dto.setTuteur(new TuteurDTO("Nom", "Prénom", "tuteur@mail.com"));
+                .build());
+
+        dto.setTuteur(new TuteurDTO("Nom", "Prénom", "tuteur@mail.com"));
         dto.setModeleId(456L);
 
         String str = dto.toString();

@@ -1,9 +1,8 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.exception.business.CompteInactifException;
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
-import com.genio.service.impl.CustomUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.genio.dto;
+package com.genio.dto.input;
 
 import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import org.junit.jupiter.api.Test;

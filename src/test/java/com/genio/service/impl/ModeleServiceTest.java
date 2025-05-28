@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
@@ -7,7 +7,6 @@ import com.genio.mapper.DocxParser;
 import com.genio.model.Modele;
 import com.genio.repository.ConventionRepository;
 import com.genio.repository.ModeleRepository;
-import com.genio.service.impl.ModeleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

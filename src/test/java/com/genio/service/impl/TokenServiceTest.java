@@ -1,7 +1,6 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.repository.UtilisateurRepository;
-import com.genio.service.impl.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import com.genio.model.Utilisateur;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 

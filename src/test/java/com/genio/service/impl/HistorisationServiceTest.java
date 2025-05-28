@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.config.ErreurDetaillee;
 import com.genio.dto.input.ConventionServiceDTO;
@@ -7,7 +7,6 @@ import com.genio.model.ErrorDetails;
 import com.genio.model.Historisation;
 import com.genio.repository.ErrorDetailsRepository;
 import com.genio.repository.HistorisationRepository;
-import com.genio.service.impl.HistorisationService;
 import com.genio.utils.ErreurType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;

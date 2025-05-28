@@ -1,8 +1,7 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.exception.business.DocxGenerationException;
 import com.genio.exception.business.UnreplacedPlaceholderException;
-import com.genio.service.impl.DocxGenerator;
 import org.apache.poi.xwpf.usermodel.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.genio.service;
+package com.genio.service.impl;
 
 import com.genio.mapper.DocxParserImpl;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
