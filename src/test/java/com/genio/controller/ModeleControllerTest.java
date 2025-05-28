@@ -312,4 +312,5 @@ class ModeleControllerTest {
         assertTrue(body.containsKey("error"));
         assertEquals("La modification de l'année d'un modèle existant n'est pas autorisée.", body.get("error"));
     }
+
 }

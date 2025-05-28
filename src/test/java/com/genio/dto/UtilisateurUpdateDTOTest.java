@@ -66,4 +66,21 @@ class UtilisateurUpdateDTOTest {
         assertEquals(dto1.getNom(), dto2.getNom());
         assertEquals(dto1.getPrenom(), dto2.getPrenom());
     }
+
+    @Test
+    void testToString() {
+        UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();
+        dto.setNom("Martin");
+        dto.setPrenom("Luc");
+        dto.setRole("USER");
+        dto.setActif(false);
+
+        String str = dto.toString();
+
+        assertTrue(str.contains("UtilisateurUpdateDTO"));
+        assertTrue(str.contains("nom='Martin'"));
+        assertTrue(str.contains("prenom='Luc'"));
+        assertTrue(str.contains("role='USER'"));
+        assertTrue(str.contains("actif=false"));
+    }
 }

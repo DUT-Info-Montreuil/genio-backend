@@ -20,6 +20,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +83,7 @@ class ModeleServiceTest {
         InvalidFileFormatException exception = assertThrows(InvalidFileFormatException.class, () ->
                 modeleService.createModelConvention(file, "2025", "Titre Test"));
 
-        System.out.println(exception.getMessage()); // pour voir le vrai texte
+        System.out.println(exception.getMessage());
         assertTrue(exception.getMessage().toLowerCase().contains("format"));
     }
 
@@ -229,6 +232,89 @@ class ModeleServiceTest {
 
         modeleService.updateModelConvention(1, dto);
         verify(modeleRepository).save(any());
+    }
+
+    @Test
+    void testInsertModeleFromDirectory_InvalidFilename_ThrowsException() throws IOException {
+        File dir = new File(directoryPath);
+        for (File f : dir.listFiles()) f.delete();
+
+        File invalidFile = new File(directoryPath + "/invalide.docx");
+        Files.write(invalidFile.toPath(), "dummy content".getBytes());
+
+        ModeleService spyService = spy(modeleService);
+        ReflectionTestUtils.setField(spyService, "directoryPath", directoryPath);
+
+        InvalidFileFormatException exception = assertThrows(
+                InvalidFileFormatException.class,
+                spyService::insertModeleFromDirectory
+        );
+
+        assertTrue(exception.getMessage().contains("Format invalide"));
+    }
+
+    @Test
+    void testInsertModeleFromDirectory_ValidFile_CallsInsert() throws IOException {
+        File dir = new File(directoryPath);
+        for (File file : dir.listFiles()) {
+            file.delete();
+        }
+
+        File validFile = new File(directoryPath + "/modeleConvention_2025.docx");
+        Files.write(validFile.toPath(), "dummy content".getBytes());
+
+        ModeleService spyService = spy(modeleService);
+        doNothing().when(spyService).insertModele(any(File.class), eq("2025"));
+        ReflectionTestUtils.setField(spyService, "directoryPath", directoryPath);
+
+        spyService.insertModeleFromDirectory();
+
+        verify(spyService, times(1)).insertModele(any(File.class), eq("2025"));
+    }
+
+    @Test
+    void testInsertModele_MissingYear_ThrowsException() throws IOException {
+        File file = new File(directoryPath + "/modeleSansAnnee.docx");
+        Files.writeString(file.toPath(), "Contenu");
+
+        Exception exception = assertThrows(InvalidFileFormatException.class, () ->
+                modeleService.insertModele(file, ""));
+
+        assertTrue(exception.getMessage().contains("doit contenir une année"));
+    }
+
+    @Test
+    void testInsertModele_DataSourceNull_ThrowsException() throws IOException {
+        File file = new File(directoryPath + "/modeleConvention_2025.docx");
+        Files.writeString(file.toPath(), "Contenu");
+
+        ModeleService modeleServiceNullDS = new ModeleService(null, conventionRepository, modeleRepository, docxParser);
+        ReflectionTestUtils.setField(modeleServiceNullDS, "directoryPath", directoryPath);
+
+        Exception exception = assertThrows(IllegalStateException.class, () ->
+                modeleServiceNullDS.insertModele(file, "2025"));
+
+        assertTrue(exception.getMessage().contains("DataSource is not initialized"));
+    }
+
+    @Test
+    void testInsertModele_Success() throws Exception {
+        File validFile = new File(directoryPath + "/modeleConvention_2025.docx");
+        Files.write(validFile.toPath(), "Contenu du modèle".getBytes());
+
+        Connection mockConnection = mock(Connection.class);
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(dataSource.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+
+        modeleService.insertModele(validFile, "2025");
+
+        verify(mockConnection, times(1)).prepareStatement("INSERT INTO modele (nom, annee, fichier_binaire) VALUES (?, ?, ?)");
+        verify(mockPreparedStatement, times(1)).setString(eq(1), eq("modeleConvention_2025.docx"));
+        verify(mockPreparedStatement, times(1)).setString(eq(2), eq("2025"));
+        verify(mockPreparedStatement, times(1)).setBytes(eq(3), any());
+        verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
 
