@@ -27,8 +27,6 @@ public class ModeleController {
     private static final String KEY_ERROR = "error";
     private static final String KEY_MESSAGE = "message";
 
-
-    private static final Logger logger = LoggerFactory.getLogger(ModeleController.class);
     @GetMapping
     public ResponseEntity<Object> getAllModelConvention() {
         try {
@@ -131,9 +129,9 @@ public class ModeleController {
     public ResponseEntity<Map<String, String>> updateModelFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
             modeleService.replaceModelFile(id, file);
-            return ResponseEntity.ok(Map.of("message", "Fichier remplacé avec succès"));
+            return ResponseEntity.ok(Map.of(KEY_MESSAGE, "Fichier remplacé avec succès"));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(400).body(Map.of(KEY_ERROR, e.getMessage()));
         }
     }
 
