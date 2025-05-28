@@ -9,18 +9,17 @@ import java.util.UUID;
 public class TestUtils {
 
     public static Modele createUniqueTestModele(ModeleService modeleService, ModeleRepository repository, String annee) {
-        // 👉 Génère un contenu unique à chaque appel
-        String uniqueContent = "template-" + UUID.randomUUID(); // 👍 identifiant unique
-        byte[] content = uniqueContent.getBytes(); // 👍 contenu unique = hash unique
+        String uniqueContent = "template-" + UUID.randomUUID();
+        byte[] content = uniqueContent.getBytes();
 
         Modele modele = new Modele();
-        modele.setNom(uniqueContent + ".docx"); // nom unique
-        modele.setAnnee(annee); // année passée en paramètre
+        modele.setNom(uniqueContent + ".docx");
+        modele.setAnnee(annee);
         modele.setTitre("Titre auto");
 
-        modele.setFichierBinaire(content); // contenu binaire
-        modele.setFichierHash(modeleService.generateFileHash(content)); // hash généré à partir du contenu
+        modele.setFichierBinaire(content);
+        modele.setFichierHash(modeleService.generateFileHash(content));
 
-        return repository.saveAndFlush(modele); // persisté et retourné
+        return repository.saveAndFlush(modele);
     }
 }

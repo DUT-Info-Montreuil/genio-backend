@@ -127,7 +127,7 @@ class ModeleControllerTest {
         Modele modele = new Modele();
         modele.setNom("modeleConvention_2025.docx");
         modele.setAnnee("2025");
-        modele.setFichierHash(hash); // <-- AJOUT ICI
+        modele.setFichierHash(hash);
         modele.setTitre("Titre original");
         modeleRepository.saveAndFlush(modele);
 

@@ -48,7 +48,7 @@ class ModeleControllerMockMvcTest {
         mockMvc.perform(multipart("/conventionServices/test-generation")
                         .file(file)
                         .with(csrf())
-                        .with(user("test").roles("ADMIN"))) // ← Simule un utilisateur authentifié avec un rôle
+                        .with(user("test").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Variables détectées")))
                 .andExpect(content().string(containsString("NOM_ETUDIANT")))

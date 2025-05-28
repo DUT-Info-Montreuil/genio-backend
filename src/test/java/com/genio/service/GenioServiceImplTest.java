@@ -24,6 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,16 +36,13 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = GenioServiceApplication.class)
 class GenioServiceImplTest {
-
-
-    @Autowired
-    private GenioServiceImpl genioService;
 
     @Autowired
     private ModeleRepository modeleRepository;
@@ -60,6 +58,9 @@ class GenioServiceImplTest {
 
     @MockBean
     private JavaMailSender javaMailSender;
+
+    @SpyBean
+    private GenioServiceImpl genioService;
 
 
     @Autowired
@@ -247,9 +248,8 @@ class GenioServiceImplTest {
     @Rollback
     @Transactional
     void generateConvention_modelWithInvalidName_shouldReturnError() {
-        // Création d’un modèle avec un nom invalide (pas .docx)
         Modele modele = new Modele();
-        modele.setNom("fichier_invalide.txt"); // <-- nom incorrect
+        modele.setNom("fichier_invalide.txt");
         modele.setAnnee("2025");
         modele.setTitre("Titre test");
         modele.setFichierBinaire("fake content".getBytes());
@@ -533,7 +533,7 @@ class GenioServiceImplTest {
                 .cpam("CPAM123")
                 .promotion("BUT2")
                 .build());
-        input.setTuteur(tuteurDTO); // 👈 Nom est null ici
+        input.setTuteur(tuteurDTO);
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(OrganismeDTO.builder()
                 .nom("Organisme")
@@ -559,8 +559,8 @@ class GenioServiceImplTest {
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("Le champ 'tuteur.nom'")); // 💡 Ce champ est bien dans le message
-        assertTrue(result.getMessageErreur().contains("une chaîne alphabétique")); // 💡 Vérifie le vrai message
+        assertTrue(result.getMessageErreur().contains("Le champ 'tuteur.nom'"));
+        assertTrue(result.getMessageErreur().contains("une chaîne alphabétique"));
     }
 
     @Test
@@ -582,5 +582,38 @@ class GenioServiceImplTest {
     @Test
     void getModelesByAnnee_modelNotFound_shouldThrowException() {
         assertThrows(ModelNotFoundException.class, () -> genioService.getModelesByAnnee("1900"));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_verifierModeleFails_shouldReturnError() throws Exception {
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
+
+        ConventionBinaireRes erreurMockee = new ConventionBinaireRes(false, null, "Erreur simulée sur le modèle");
+
+        doReturn(erreurMockee).when(genioService).verifierModele(any());
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe").prenom("John").sexe("H").dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple").telephone("01.23.45.67.89").email("johndoe@example.com")
+                .cpam("CPAM123").promotion("BUT2").build());
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme").adresse("Adresse").nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite").nomDuService("Service")
+                .telephone("01.23.45.67.89").email("organisme@example.com").lieuDuStage("Lieu").build());
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022").sujetDuStage("Sujet").dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30").duree("5 mois").joursTot(20).heuresTot(200)
+                .remunerationHoraire("10€").saeStageProfessionnel("professionnel").build());
+        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertEquals("Erreur simulée sur le modèle", result.getMessageErreur());
     }
 }

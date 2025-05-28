@@ -24,12 +24,10 @@ public class DocxParserImpl implements DocxParser {
         List<String> vars = new ArrayList<>();
 
         try (XWPFDocument doc = new XWPFDocument(file.getInputStream())) {
-            // Paragraphs
             for (XWPFParagraph p : doc.getParagraphs()) {
                 extractFromParagraph(p, vars);
             }
 
-            // Tables
             for (XWPFTable table : doc.getTables()) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {

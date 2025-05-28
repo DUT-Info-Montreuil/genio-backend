@@ -69,6 +69,6 @@ class ModeleDTOTest {
         assertTrue(result.contains("annee='2023'"));
         assertTrue(result.contains("format='docx'"));
         assertTrue(result.contains("dateCreation='2023-05-10'"));
-        assertTrue(result.contains("titre='Titre de test'")); // optionnel selon le `toString`
+        assertTrue(result.contains("titre='Titre de test'"));
     }
 }

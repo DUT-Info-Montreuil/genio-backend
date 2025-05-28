@@ -64,7 +64,7 @@ public class GenioServiceImpl implements GenioService {
         return "docx".equalsIgnoreCase(format) || "pdf".equalsIgnoreCase(format);
     }
 
-    private ConventionBinaireRes verifierModele(Modele modele) {
+    public ConventionBinaireRes verifierModele(Modele modele) {
         if (modele.getFichierBinaire() == null && (modele.getNom() == null || modele.getNom().isBlank())) {
             String message = "Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.";
             logger.error(message);
