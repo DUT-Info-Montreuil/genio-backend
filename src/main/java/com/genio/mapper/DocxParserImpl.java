@@ -11,6 +11,9 @@ import java.util.regex.*;
 
 @Component
 public class DocxParserImpl implements DocxParser {
+
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{(.*?)}");
+
     private String normalize(String variable) {
         return Normalizer.normalize(variable, Normalizer.Form.NFD)
                 .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
@@ -19,46 +22,38 @@ public class DocxParserImpl implements DocxParser {
     @Override
     public List<String> extractVariables(MultipartFile file) throws IOException {
         List<String> vars = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
 
         try (XWPFDocument doc = new XWPFDocument(file.getInputStream())) {
-
+            // Paragraphs
             for (XWPFParagraph p : doc.getParagraphs()) {
-                StringBuilder text = new StringBuilder();
-                for (XWPFRun run : p.getRuns()) {
-                    if (run.getText(0) != null) {
-                        text.append(run.getText(0));
-                    }
-                }
-                Matcher matcher = pattern.matcher(text.toString());
-                while (matcher.find()) {
-                    String rawVariable = matcher.group(1);
-                    vars.add(normalize(rawVariable));
-                }
+                extractFromParagraph(p, vars);
             }
 
+            // Tables
             for (XWPFTable table : doc.getTables()) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph p : cell.getParagraphs()) {
-                            StringBuilder text = new StringBuilder();
-                            for (XWPFRun run : p.getRuns()) {
-                                if (run.getText(0) != null) {
-                                    text.append(run.getText(0));
-                                }
-                            }
-                            Matcher matcher = pattern.matcher(text.toString());
-                            while (matcher.find()) {
-                                String rawVariable = matcher.group(1);
-                                vars.add(normalize(rawVariable));
-                            }
+                            extractFromParagraph(p, vars);
                         }
                     }
                 }
             }
-
         }
 
         return vars;
+    }
+
+    private void extractFromParagraph(XWPFParagraph paragraph, List<String> vars) {
+        StringBuilder text = new StringBuilder();
+        for (XWPFRun run : paragraph.getRuns()) {
+            String part = run.getText(0);
+            if (part != null) text.append(part);
+        }
+
+        Matcher matcher = VARIABLE_PATTERN.matcher(text.toString());
+        while (matcher.find()) {
+            vars.add(normalize(matcher.group(1)));
+        }
     }
 }
