@@ -51,12 +51,11 @@ public class UtilisateurService {
             utilisateur.setPrenom(dto.getPrenom());
             utilisateur.setEmail(dto.getEmail());
 
-            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isBlank()) {
-                if (!passwordEncoder.matches(dto.getMotDePasse(), utilisateur.getMotDePasse())) {
-                    utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
-                }
+            if (dto.getMotDePasse() != null
+                    && !dto.getMotDePasse().isBlank()
+                    && !passwordEncoder.matches(dto.getMotDePasse(), utilisateur.getMotDePasse())) {
+                utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
             }
-
             utilisateur.setUpdatedAt(LocalDateTime.now());
             return utilisateurRepository.save(utilisateur);
         });
