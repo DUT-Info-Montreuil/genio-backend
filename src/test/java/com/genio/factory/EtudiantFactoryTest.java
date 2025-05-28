@@ -10,17 +10,17 @@ class EtudiantFactoryTest {
 
     @Test
     void testCreateEtudiant_shouldMapOnlyPersistedFields() {
-        EtudiantDTO dto = new EtudiantDTO(
-                "Doe",
-                "John",
-                "H",
-                "2000-01-01",
-                "123 rue Test",
-                "01.23.45.67.89",
-                "john.doe@example.com",
-                "CPAM-Paris",
-                "BUT2"
-        );
+        EtudiantDTO dto = EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("john.doe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build();
 
         Etudiant etudiant = EtudiantFactory.createEtudiant(dto);
 

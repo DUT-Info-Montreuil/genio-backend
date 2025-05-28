@@ -10,9 +10,17 @@ class ConventionMapperTest {
 
     @Test
     void testToServiceDTO() {
-        EtudiantDTO etudiant = new EtudiantDTO(
-                "Dupont", "Marie", "F", "2002-05-15", "12 rue du stage", "06.12.34.56.78", "marie@example.com", "CPAM Paris", "BUT3"
-        );
+        EtudiantDTO etudiant = EtudiantDTO.builder()
+                .nom("Dupont")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("john.doe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build();
 
         MaitreDeStageDTO maitre = new MaitreDeStageDTO(
                 "Martin", "Paul", "Responsable IT", "01.23.45.67.89", "paul@example.com"

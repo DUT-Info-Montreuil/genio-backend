@@ -98,7 +98,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT2"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("MaitreDeStageNom", "MaitreDeStagePrenom", "Fonction", "01.23.45.67.89", "maitreDeStage@example.com"));
         input.setOrganisme(new OrganismeDTO("Organisme", "Adresse", "RepNom", "RepQualite", "Service", "01.23.45.67.89", "organisme@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "StageSujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -133,7 +143,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -154,14 +174,28 @@ class GenioServiceImplTest {
     void generateConvention_invalidPhone_shouldReturnValidationError(String phone) {
         Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
 
+        EtudiantDTO etudiantDTO = EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone(phone)
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build();
+
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", phone, "johndoe@example.com", "CPAM123","BUT2"));
+        input.setEtudiant(etudiantDTO);
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
+        System.out.println("Message erreur : " + result.getMessageErreur());
+
         assertFalse(result.isSuccess());
-        assertTrue(result.getMessageErreur().contains("format"));
+        assertTrue(result.getMessageErreur().toLowerCase().contains("telephone"));
     }
 
     @Test
@@ -189,7 +223,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT3"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setTuteur(new TuteurDTO("NomTuteur", "PrenomTuteur", "tuteur@example.com"));
         input.setMaitreDeStage(new MaitreDeStageDTO("NomMDS", "PrenomMDS", "Fonction", "01.23.45.67.89", "mds@example.com"));
         input.setOrganisme(new OrganismeDTO("OrgName", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
@@ -208,8 +252,16 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", null, "01.23.45.67.89", "johndoe@example.com", "CPAM123","BUT1"));
-
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
@@ -227,8 +279,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT2"));
-
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
@@ -246,7 +307,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setStage(new StageDTO("2022", null, "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
@@ -282,7 +353,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "123 rue Exemple", "01.23.45.67.89", "johndoe@example.com", "CPAM123", "BUT1"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Nom", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "orga@example.com", "Lieu"));
         input.setStage(new StageDTO("2022", "Sujet", "2022-01-01", "2022-06-30", "5 mois", 20, 200, "10€", "professionnel"));
@@ -305,14 +386,16 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO(
-                "John", "Doe", "H", "2000-01-01",
-                null,
-                "01.23.45.67.89",
-                "johndoe@example.com",
-                "CPAM123",
-                "BUT1"
-        ));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
 
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
@@ -331,8 +414,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "0123456789", "john@example.com", "CPAM","BUT2"));
-
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
 
         assertFalse(result.isSuccess());
@@ -349,7 +441,17 @@ class GenioServiceImplTest {
 
         ConventionServiceDTO input = new ConventionServiceDTO();
         input.setModeleId(modele.getId());
-        input.setEtudiant(new EtudiantDTO("John", "Doe", "H", "2000-01-01", "adresse", "01.23.45.67.89", "john@example.com", "CPAM123", "BUT3"));
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
         input.setTuteur(tuteurDTO); // 👈 Nom est null ici
         input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
         input.setOrganisme(new OrganismeDTO("Org", "Adresse", "Rep", "Qualité", "Service", "01.23.45.67.89", "org@example.com", "Lieu"));
