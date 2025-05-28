@@ -1,4 +1,4 @@
-package com.genio.controller;
+package com.genio;
 
 import com.genio.model.Utilisateur;
 import com.genio.repository.UtilisateurRepository;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
-public class TestController {
+public class CreateUserController {
 
     private final UtilisateurRepository utilisateurRepository;
     private final BCryptPasswordEncoder passwordEncoder;
