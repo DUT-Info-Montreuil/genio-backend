@@ -45,8 +45,8 @@ class UtilisateurTest {
                 .motDePasse("pass")
                 .build();
 
-        assertEquals("NONE", u.getRole()); // valeur par défaut
-        assertTrue(u.isActif()); // valeur par défaut
+        assertEquals("NONE", u.getRole());
+        assertTrue(u.isActif());
     }
 
     @Test

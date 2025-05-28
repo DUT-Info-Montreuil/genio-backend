@@ -16,7 +16,7 @@ class ConventionServiceDTOTest {
                 .adresse("1 rue Exemple")
                 .telephone("01.02.03.04.05")
                 .email("email@etu.com")
-                .cpam("CPAM 75") // <-- ICI
+                .cpam("CPAM 75")
                 .promotion("BUT1")
                 .build();
 
@@ -78,7 +78,7 @@ class ConventionServiceDTOTest {
                 .adresse("1 rue Exemple")
                 .telephone("01.02.03.04.05")
                 .email("email@etu.com")
-                .cpam("CPAM") // <-- ICI
+                .cpam("CPAM")
                 .promotion("BUT2")
                 .build());
 

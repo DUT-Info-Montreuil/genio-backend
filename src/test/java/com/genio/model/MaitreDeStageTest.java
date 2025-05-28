@@ -37,13 +37,9 @@ class MaitreDeStageTest {
 
     static Stream<MaitreDeStage> invalidMaitreDeStageProvider() {
         return Stream.of(
-                // Nom vide
                 newMaitre(" ", "Claire", "claire@example.com"),
-                // Prénom vide
                 newMaitre("Martin", "", "claire@example.com"),
-                // Email vide
                 newMaitre("Martin", "Claire", " "),
-                // Email invalide
                 newMaitre("Martin", "Claire", "not-an-email")
         );
     }
