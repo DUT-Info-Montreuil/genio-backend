@@ -10,8 +10,15 @@
 - [Écran de réinitialisation du mot de passe - nouveau mot de passe](#écran-de-réinitialisation-du-mot-de-passe---nouveau-mot-de-passe)
 - [Écran de consultation des modèles – Consultant](#écran-de-consultation-des-modèles--consultant)
 - [Écran de consultation des modèles – Exploitant](#écran-de-consultation-des-modèles--exploitant)
+- [Écran de consultation des modèles – Gestionnaire](#écran-de-consultation-des-modèles--gestionnaire)
 - [Écran de visualisation de l’historique des conventions – Exploitant](#écran-de-visualisation-de-lhistorique-des-conventions--exploitant)
-
+- [Écran de visualisation de l’historique des conventions – Gestionnaire](#écran-de-visualisation-de-lhistorique-des-conventions--gestionnaire)
+- [Écran de gestion des modèles – Gestionnaire](#écran-de-gestion-des-modèles--gestionnaire)
+  - [Sous-onglet : Ajouter un modèle](#sous-onglet--ajouter-un-modèle)
+  - [Sous-onglet : Modifier un modèle](#sous-onglet--modifier-un-modèle)
+  - [Sous-onglet : Archiver un modèle](#sous-onglet--archiver-un-modèle)
+- [Écran de gestion des utilisateurs – Gestionnaire](#écran-de-gestion-des-utilisateurs--gestionnaire)
+- [Pied de page (footer)](#pied-de-page-footer)
 ## Page d’accueil
 
 ### Objectif de l’écran
@@ -88,7 +95,7 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-## Fonctionnement de l’écran
+### Fonctionnement de l’écran
 - L’utilisateur saisit son **email** et son **mot de passe**.
 - Le bouton **“Se connecter”** déclenche une requête d’authentification (POST /auth/login).
 - En cas d’échec, un **message d’erreur** s’affiche dynamiquement (401 ou 403).
@@ -100,7 +107,7 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-## Exigences fonctionnelles
+### Exigences fonctionnelles
 - Tous les champs sont **obligatoires** (required HTML).
 - Le champ **email** doit respecter un format valide.
 - L’utilisateur est informé en cas d'erreur (email ou mot de passe incorrect / compte non activé).
@@ -111,7 +118,7 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-## Exigences techniques
+### Exigences techniques
 - **Framework** : Angular 17
 - **Composants utilisés** : FormsModule, NgIf, RouterLink
 - **Services utilisés** :
@@ -134,7 +141,6 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-
 ## Écran d’inscription
 
 ### Objectif de l’écran
@@ -151,7 +157,7 @@ C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-## Fonctionnement de l’écran
+### Fonctionnement de l’écran
 
 - L’utilisateur doit renseigner :
   - **Prénom**
@@ -171,7 +177,7 @@ C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-## Exigences fonctionnelles
+### Exigences fonctionnelles
 
 - Tous les champs sont **obligatoires** (required)
 - Le mot de passe doit **respecter toutes les règles suivantes** :
@@ -189,7 +195,7 @@ C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-## Exigences techniques
+### Exigences techniques
 
 - **Framework** : Angular 17
 - **Composants** : FormsModule, NgIf, NgForOf, RouterLink
@@ -337,126 +343,248 @@ C’est la dernière étape de la procédure “Mot de passe oublié”.
   - Message temporaire (succès ou erreur)
 
 ---
-# Écran de consultation des modèles – Consultant
 
-## Objectif de l’écran
-Permet aux utilisateurs **Consultant** de visualiser les modèles de conventions disponibles, en lecture seule.
+
+## Écran de consultation des modèles – Consultant
+
+### Objectif de l’écran
+
+Permet aux utilisateurs ayant le rôle **Consultant** de consulter les modèles de conventions disponibles dans GenioService.
+
+Cette interface offre un accès en **lecture seule** à l’ensemble des modèles enregistrés, sans possibilité de modification, ajout ou archivage.  
+Elle constitue l’interface de consultation standard, simple et sécurisée.
 
 ---
 
-## Aperçu de la page
+### Aperçu de la page
+
 <div>
-  <img src="./assets/images/page-consulter-modeles.png" alt="Écran de consultation - Consultant" width="600"/>
+  <img src="./assets/images/page-consulter-modeles.png" alt="Page de consultation – Consultant GenioService" width="600"/>
 </div>
 
 ---
 
-## Fonctionnement de l’écran
+### Fonctionnement de l’écran
 
-- La page liste tous les modèles de convention enregistrés dans le système.
-- Le **Consultant** peut :
-  - Utiliser les filtres de recherche par titre, année ou texte libre
-  - Consulter les détails d’un modèle (en cliquant sur l’icône en forme d’œil)
-  - Visualiser les variables attendues pour chaque modèle via une modale
-- Les icônes **ajouter / modifier / archiver** sont désactivées et inaccessibles.
----
+- L’interface se compose d’un tableau listant tous les modèles de convention enregistrés.
+- L’utilisateur **Consultant** peut :
+  - Filtrer les modèles par **nom**, **année**, ou **recherche avancée** (texte libre)
+  - Consulter les détails d’un modèle (via l’icône œil)
+  - Voir les **variables attendues** dans une modale (affichage limité avec bouton “Voir toutes les variables”)
+- Les actions suivantes sont **désactivées et grisées** :
+  - ➕ Ajouter un modèle
+  - ✏️ Modifier un modèle
+  - 🗃️ Archiver un modèle
+- Aucun bouton de gestion des utilisateurs n’est présent.
+- Aucun accès à l’onglet “Visualiser”.
+- En haut à droite, un badge affiche le rôle actuel :
 
-## Exigences fonctionnelles
-
-- **Rôle requis** : Consultant (affichage en haut à droite)
-- Les actions disponibles sont :
-  - **Voir** le modèle (`fa-eye`)
-- Les actions **non autorisées** pour ce rôle sont :
-  - Ajouter
-  - Modifier
-  - Archiver
-- La consultation inclut :
-  - Nom du modèle
-  - Année de création
-  - Format (Document)
-  - Statut d’utilisation (utilisé ou non)
-  - Variables attendues (affichage limité puis dépliable)
+  > Connecté en tant que : **Consultant**
 
 ---
 
-## Filtres disponibles
+### Exigences fonctionnelles
 
-- **Nom du modèle**
-- **Année** (champ numérique avec datalist entre 2000 et 2099)
-- **Recherche avancée** (sur texte libre, statut, description…)
+- **Rôle requis** : Consultant
+- Les fonctionnalités disponibles sont strictement limitées à la **consultation** :
+  - Visualisation du modèle
+  - Filtres actifs (nom, année, recherche avancée)
+  - Consultation des variables attendues (via modale)
+- Les actions de gestion (ajout, édition, archivage) sont **désactivées**
+- Affichage des champs :
+  - Titre du modèle
+  - Année
+  - Format
+  - Statut d’utilisation
+- Les champs de filtre sont accessibles à tous les rôles
 
 ---
 
-## Accessibilité
-
-- Icônes annotées (`aria-label`, `aria-hidden`)
-- Focus clavier sur les lignes du tableau
-- Boutons utilisables via `Enter`
-- Modale accessible (`role=dialog`, `aria-labelledby`, `aria-describedby`)
-- Pagination accessible au clavier
-
----
-
-## Exigences techniques
+### Exigences techniques
 
 - **Framework** : Angular 17
-- **Droits contrôlés** via `AuthService` (`isConsultant`)
-- **Requête API** : `GET /conventionServices` pour obtenir les modèles
-- Les modèles sont paginés (5 / 10 / 15 lignes)
-- Aucune action n’effectue de POST/PUT/DELETE en tant que Consultant
-- Utilisation de `NgClass` pour désactiver dynamiquement les boutons non autorisés
-- Icônes grisées avec `disabled-style` sur les boutons restreints
+- **Composants utilisés** :
+  - `ConsulterModeleTousComponent`
+  - `RouterLink` pour la navigation
+- **Droits et sécurité** :
+  - Vérification du rôle via `AuthService.isConsultant()`
+  - Aucune possibilité d’accéder à `/gerer-modeles`
+  - Les actions POST, PUT et DELETE sont bloquées côté frontend et backend
+- **Accessibilité (WCAG)** :
+  - Boutons désactivés avec `aria-disabled="true"` et `title="Réservé au gestionnaire"`
+  - Focus clavier activé sur les lignes du tableau
+  - Icônes annotées (`aria-label`, `aria-hidden`)
+  - Modale accessible (`role="dialog"`, `aria-labelledby`, `aria-describedby`)
+- **UX & Design** :
+  - Boutons non autorisés grisées (`disabled-style`)
+  - Badge “Connecté en tant que : Consultant”
+  - Aide ❔ en haut à droite ouvrant une modale d’explication
 
 ---
 
-## Éléments supplémentaires
-
-- Un **badge** en haut à droite affiche le rôle actuel :  
-  `Connecté en tant que : Consultant`
-
-- Un **bouton d’aide** (❔) ouvre une fenêtre modale expliquant le fonctionnement de la page.
-
----
 ## Écran de consultation des modèles – Exploitant
-## Objectif de l’écran
-Accès **identique** à celui du Consultant pour consulter les modèles, avec une navigation **supplémentaire**.
 
+### Objectif de l’écran
+
+Permet aux utilisateurs ayant le rôle Exploitant de consulter les modèles de conventions disponibles.
+
+Cette interface reprend celle du Consultant, avec quelques différences fonctionnelles et visuelles,
+notamment l’accès à l’onglet “Visualiser” pour suivre les tentatives de génération de conventions.
 ---
 
-## Aperçu de la page
+### Aperçu de la page
 <div>
-  <img src="./assets/images/page-historique-exploitant.png" alt="Écran de consultation - Consultant" width="600"/>
+  <img src="./assets/images/page-consulter-exploitant.png" alt="Page de consultation – Exploitant GenioService" width="600"/>
 </div>
 
-### Fonctionnalités
+---
 
-- Identiques à celles du rôle Consultant
-- Lecture seule, sans bouton d’action
+### Fonctionnement de l’écran
 
-### Spécificités
+- L’exploitant accède à une interface identique à celle du consultant, à l’exception de deux éléments :
+  - Un **badge vert** en haut à droite : Connecté en tant que : Exploitant
+  - Un **onglet supplémentaire “Visualiser”** affiché dans la barre de navigation
+  - Les actions affichées dans le tableau sont toutes **grisés et inactives** (lecture seule) :
+    - 👁️ Voir le modèle : **actif**
+    - ➕ Ajouter : **désactivé**
+    - ✏️ Modifier : **désactivé**
+    - 🗃️ Archiver : **désactivé**
+- En cliquant sur l’onglet “Visualiser”, l’exploitant accède **à la page d’historique des générations.**
+- Aucune cloche de notification, aucun bouton de gestion des utilisateurs n’est visible (réservé au Gestionnaire).
 
-- Rôle requis : **Exploitant**
-- Badge : `Connecté en tant que : Exploitant`
-- Section **“Gérer les utilisateurs”** invisible
-- Accès supplémentaire à l’onglet **“Visualiser”**
+---
 
+### Exigences fonctionnelles
+- Rôle requis : Exploitant
+- Le tableau permet :
+  - Filtrage par nom, année, texte libre
+  - Visualisation des détails d’un modèle (modale)
+- Les boutons ➕ ✏️ 🗃️ sont visibles mais non interactifs
+- L’onglet **Visualiser** est exclusif au rôle Exploitant et Gestionnaire
+- 
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composants Angular** :
+  - ConsulterModeleTousComponent
+  - RouterLink vers /historique-conventions
+  - AuthService.isExploitant() pour activer le rôle
+  
+- **Sécurité** :
+  - Droits contrôlés en frontend et backend
+  - Actions d’édition désactivées (grisés via disabled-style)
+  - Blocage complet de /gerer-modeles
+
+- **UX & accessibilité** :
+  - Boutons inactifs signalés avec aria-disabled="true"
+  - Icônes grisées avec title="Réservé au gestionnaire"
+  - Clavier uniquement sur la visualisation (fa-eye)
+  - Focus rétabli après navigation
+  - Affichage clair du rôle connecté
+  
+- Design :
+  - Badge Connecté en tant que : Exploitant vert
+  - Onglet “Visualiser” visible uniquement pour les exploitants
+  - Pas de cloche, pas de gestion utilisateurs
+
+---
+
+## Écran de consultation des modèles – Gestionnaire
+
+### Objectif de l’écran
+
+Permet aux utilisateurs ayant le rôle Gestionnaire de consulter les modèles de conventions disponibles,
+avec des droits complets sur chaque ligne (ajout, modification, archivage).
+Cette page est une version enrichie de la vue “Consultant”, avec des outils d’administration intégrés.
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-consulter-modele-gestionnaire.png" alt="Page de consultation – Gestionnaire GenioService" width="600"/>
+</div>
+
+
+---
+
+### Fonctionnement de l’écran
+
+- La page est identique à celle du Consultant en apparence, mais avec :
+  - Une **cloche de notification** pour visualiser les demandes d’habilitation utilisateurs.
+  - Un **bouton “Gérer les utilisateurs”** pour accéder à l’administration des comptes.
+  - **Toutes les actions activées** dans la colonne “Actions” du tableau :
+     - 👁️ Voir le modèle
+     - ➕ Ajouter un modèle (redirige vers l’onglet “Ajouter”)
+     - ✏️ Modifier un modèle (redirige vers l’onglet “Modifier” avec le modèle préchargé)
+     - 🗃️ Archiver un modèle (redirige vers l’onglet “Archiver” avec confirmation)
+- En cliquant sur ces icônes, l’utilisateur est redirigé vers l’interface de gestion des modèles avec l’onglet correspondant actif (ajouter, modifier, ou archiver).
+- La cloche en haut à droite indique le nombre de demandes d’habilitation en attente :
+
+  - ✅ badge vert si aucune demande
+  - 🔴 badge rouge si une ou plusieurs demandes
+  - Un message temporaire s’affiche à l’ouverture de la cloche 
+- Le bouton “Gérer les utilisateurs” permet d’accéder à la page dédiée (non accessible aux autres rôles).
+ 
+
+---
+
+### Exigences fonctionnelles
+- Rôle requis : Gestionnaire
+- Le tableau permet :
+	- Filtrage par nom, année, texte libre
+	- Consultation des détails
+	- Ajout direct
+	- Modification immédiate
+	- Archivage immédiat
+- Les boutons d’action sont interactifs uniquement pour les gestionnaires :
+	- Désactivés ou absents pour les autres rôles
+	- Accessibles au clavier (avec Tab + Enter)
+- En tête enrichi :
+	- Cloche d’habilitation visible uniquement pour les gestionnaires
+	- Bouton “Gérer les utilisateurs” accessible avec focus clavier
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composants Angular** :
+    - ConsulterModeleTousComponent
+    - RouterLink avec queryParams ({ onglet: 'ajouter' | 'modifier' | 'archiver' })
+    - AuthService pour vérifier le rôle utilisateur
+- **Sécurité** :
+  - Vérification du rôle en frontend et backend
+  - Redirection sécurisée selon droits
+- **UX & accessibilité** :
+  - Boutons annotés (aria-label, aria-disabled)
+  - Clavier compatible sur toutes les actions
+  - Focus automatique sur tableau à chaque navigation
+  - Icône de notification : aria-haspopup, aria-live
+- Design :
+    - Icônes : 👁️ fa-eye, ➕ fa-plus, ✏️ fa-edit, 🗃️ fa-archive
+    - Badge dynamique sur cloche (vert/rouge)
+    - Messages temporaires (toast ou infobulle)
+
+---
 
 ## Écran de visualisation de l’historique des conventions – Exploitant
 
-## Objectif de l’écran
+### Objectif de l’écran
 
 Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique des tentatives de génération de conventions, avec un détail sur les étapes de traitement (Flux, JSON, DOCX) et la possibilité d’en consulter les erreurs.
 
 ---
 
-## Aperçu de la page
+### Aperçu de la page
 <div>
   <img src="./assets/images/page-historique-exploitant.png" alt="Écran de consultation - Consultant" width="600"/>
 </div>
 
 ---
 
-## Fonctionnement de l’écran
+### Fonctionnement de l’écran
 
 - Liste paginée des tentatives de génération de conventions.
 - Filtres disponibles :
@@ -473,7 +601,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-## Exigences fonctionnelles
+### Exigences fonctionnelles
 
 - **Rôle requis** : Exploitant (affiché en haut à droite)
 - Accès en lecture seule aux historiques
@@ -486,7 +614,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-## Accessibilité
+### Accessibilité
 
 - Icônes annotées (`aria-label`)
 - Focus clavier activé sur les lignes
@@ -496,7 +624,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-## Exigences techniques
+### Exigences techniques
 
 - **Framework** : Angular 17
 - **Contrôle d’accès** : via `AuthService.isExploitant()`
@@ -508,16 +636,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-## Éléments spécifiques à l’utilisateur "Exploitant"
-
-- Affichage du badge : `Connecté en tant que : Exploitant`
-- Section "Gérer les utilisateurs" non visible (réservée au gestionnaire)
-- Bouton **Visualiser** actif dans la navigation secondaire
-- Aucun bouton d’ajout, modification ou suppression de conventions ou modèles
-
----
-
-## Aide intégrée
+### Aide intégrée
 
 - Bouton ❔ général : explication du fonctionnement de l'écran
 - Boutons ❔ spécifiques pour :
@@ -525,6 +644,601 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
   - **JSON** : erreurs de validation de champs
   - **DOCX** : erreurs d’export ou fichier manquant
 - Ces aides ouvrent une modale explicative contextualisée
+
+---
+
+## Écran de visualisation de l’historique des conventions – Gestionnaire
+
+### Objectif de l’écran
+
+Permet aux utilisateurs ayant le rôle **Gestionnaire** de consulter l’ensemble des tentatives de génération de conventions enregistrées dans le système.
+
+Cette interface est **identique à celle de l’Exploitant** sur le fond et les fonctionnalités, mais avec une **affichage distinct du rôle** et l’accès parallèle aux fonctions de gestion.
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-historique-gestionnaire.png" alt="Écran de visualisation – Gestionnaire GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Le tableau liste toutes les **tentatives de génération de conventions**, paginées.
+- Chaque ligne présente :
+  - Le **Nom de l’étudiant**
+  - La **Promotion**
+  - L’**Année**
+  - Le **statut de chaque étape** :
+    - ✔️ OK ou ❌ KO pour les phases **Flux**, **JSON**, **DOCX**
+  - Le **statut global** : `SUCCÈS` ou `ÉCHEC`
+  - La **date** de la tentative
+  - Un bouton 👁️ pour accéder au **détail de l’erreur**
+- Les **filtres disponibles** en haut de page :
+  - Nom d’étudiant
+  - Année
+  - Promotion
+- Un bouton **❔ d’aide globale** est affiché pour expliquer le fonctionnement.
+- Des **icônes d’aide spécifiques** sont également visibles dans l’en-tête de chaque colonne (Flux, JSON, DOCX).
+- Aucune action d’édition ou de suppression n’est présente.
+
+---
+
+### Exigences fonctionnelles
+
+- **Rôle requis** : Gestionnaire
+- Consultation complète de l’historique des générations :
+  - Détails par tentative
+  - Statuts intermédiaires par étape
+  - Affichage chronologique
+- Lecture seule : aucune modification, suppression ou export
+- Modale détaillée disponible via l’icône 👁️
+
+---
+
+### Accessibilité
+
+- Navigation au **clavier** (touches `Tab`, `Enter`)
+- Icônes avec attributs `aria-label` et `aria-hidden`
+- Boutons d’ouverture de modale accessibles
+- Filtrage accessible aux lecteurs d’écran
+- Modales conformes WCAG (`role="dialog"`, `aria-labelledby`, etc.)
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant principal** : `HistoriqueConventionsComponent`
+- **Contrôle d’accès** :
+  - Vérification via `AuthService.isGestionnaire()`
+  - Interface identique à l’exploitant mais badge différent
+- **Données** :
+  - Récupérées via `GET /api/genio/historique`
+  - Formatées pour affichage paginé
+  - Champs analysés : nom, promotion, année, statuts
+- **CSS dynamique** :
+  - `status-success` (vert) pour SUCCÈS
+  - `status-error` (rouge) pour ÉCHEC
+- **Design & UX** :
+  - Icônes d’aide dans l’en-tête de colonnes
+  - Bouton général ❔ pour guide d’utilisation
+  - Pagination fluide et focus maintenu
+
+---
+
+### Aide intégrée
+
+- **Bouton ❔ général** : affichage d’une modale expliquant l’usage de la page
+- **Boutons ❔ contextuels** dans chaque colonne :
+  - **Flux** : transformation des données en entrée
+  - **JSON** : validation des champs requis
+  - **DOCX** : génération du document final
+- Ces icônes ouvrent des **modales d’aide spécifiques et contextualisées**
+
+---
+
+## Écran de gestion des modèles – Gestionnaire
+
+### Objectif de l’écran
+
+Permet aux utilisateurs ayant le rôle **Gestionnaire** d’ajouter, modifier ou archiver des modèles de conventions au format `.docx`.  
+C’est la seule interface ayant un contrôle complet sur le référentiel de modèles disponibles dans le système.
+
+---
+
+### Accès et rôles
+
+- **Rôle requis** : `Gestionnaire`
+- L'accès est contrôlé dans Angular via : `AuthService.isGestionnaire()`
+- Les rôles **Exploitant** et **Consultant** n’ont pas accès à cette page
+- Si un utilisateur non autorisé tente d’y accéder, il est redirigé
+
+---
+
+### Fonctionnement général
+
+L’écran se divise en **trois sous-onglets** :
+
+1. **Ajouter un modèle**  
+   Permet d’importer un nouveau modèle `.docx` :
+  - Champ obligatoire : année du modèle (format `YYYY`)
+  - Upload par glisser-déposer ou bouton “Choisir un fichier”
+  - Type accepté : `.docx` uniquement
+  - Taille maximale : 4 Mo
+  - Un champ facultatif permet de saisir le titre du modèle
+
+2. **Modifier un modèle**  
+   Permet de :
+  - Rechercher un modèle existant
+  - Modifier son titre
+  - Visualiser les métadonnées
+  - Mettre à jour la description ou l’année (si autorisé)
+
+3. **Archiver un modèle**  
+   Permet de désactiver un modèle existant :
+  - Le modèle archivé devient invisible aux autres rôles
+  - L’action est irréversible sauf réactivation manuelle via backend
+
+---
+
+### Aperçu de l’interface
+<div>
+  <img src="./assets/images/page-gerer-modeles.png" alt="Écran Gérer les modèles – Gestionnaire" width="600"/>
+</div>
+---
+
+### Exigences fonctionnelles
+
+- L’écran affiche dynamiquement les onglets selon le rôle
+- Les actions sont accessibles uniquement au **Gestionnaire**
+- Les champs de formulaire sont validés côté client
+- Un feedback clair est affiché :
+  - Message de succès si action réussie
+  - Message d’erreur si format ou fichier invalide
+- En cas d’import incorrect :
+  - Une modale s’ouvre avec le détail des erreurs
+  - Les erreurs de variable (manquante, malformée) sont explicitées
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composants** :
+  - `AjouterModeleComponent`
+  - `ModifierModeleComponent`
+  - `SupprimerModeleComponent`
+- **Services utilisés** :
+  - `AuthService` pour la gestion du rôle
+  - `HttpClient` pour les appels `/api/modeles`
+- **Sécurité** :
+  - Vérification du rôle côté frontend et backend
+  - Fichier `.docx` analysé pour détecter les variables attendues
+- **Accessibilité** :
+  - `aria-label`, `aria-live`, `aria-modal` sur toutes les zones interactives
+  - Focus clavier et navigation au `Tab` fonctionnels
+- **Responsive** :
+  - Design adapté desktop et tablette
+  - Affichage flexible selon taille de l’écran
+
+---
+
+### Aide intégrée
+
+- Un bouton ❔ d’aide est affiché dans chaque sous-onglet
+- Une modale explique les attentes de chaque section
+- Un encart de notification indique les demandes d’habilitation en attente
+
+---
+
+## Sous-onglet : Ajouter un modèle
+
+Ce sous-onglet permet à un **Gestionnaire** d’importer un nouveau modèle de convention au format `.docx`.  
+Le fichier est analysé automatiquement pour valider sa structure, l’année et les variables attendues.
+---
+
+### Aperçu de l’interface
+
+<div>
+  <img src="./assets/images/page-gerer-modeles.png" alt="Écran Gérer les modèles – Gestionnaire" width="600"/>
+</div>
+
+---
+
+### Fonctionnement
+
+1. **Année du modèle** :
+  - Champ obligatoire au format `YYYY`
+  - Validation stricte : entre `2020` et `{{currentYear + 5}}`
+  - Vérification d’unicité côté backend (`/check-nom-exists`)
+
+2. **Fichier modèle** :
+  - Accepté : `.docx` uniquement
+  - Taille max : `4 Mo`
+  - Upload par drag-and-drop ou bouton "Choisir un fichier"
+  - Validation :
+    - Analyse automatique via `/test-generation`
+    - Vérification des **variables attendues** (ex. `NOM_ETUDIANT`, `TUT_IUT`, etc.)
+    - Retour visuel ✔️ / ❌ par variable
+
+3. **Titre du modèle** :
+  - Auto-généré si vide
+  - Modifiable en double-cliquant ou via l’icône crayon 🖉
+
+4. **Soumission** :
+  - Bouton "Valider le modèle" activé seulement si tous les champs sont valides
+  - Appel à l’API `POST /conventionServices`
+
+---
+
+### Cas d’erreurs
+
+- **Année invalide** : modale explicative
+- **Modèle déjà existant pour l’année** : blocage
+- **Fichier sans variables** : erreur "Ce fichier ne semble pas être un modèle"
+- **Fichier partiel** : liste des variables manquantes affichée
+- **Autre erreur backend** : message générique ou message retourné affiché
+
+---
+
+### Exigences fonctionnelles
+
+- Tous les champs sont requis pour valider
+- Vérification dynamique de l’année et du fichier
+- Message clair en cas de succès ou d’erreur
+- Accessibilité :
+  - `aria-label`, `aria-invalid`, `aria-live`
+  - Comportement compatible clavier
+- Responsive sur tous formats d’écran
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Services utilisés** :
+  - `HttpClient` (`/test-generation`, `/conventionServices`, `/check-nom-exists`)
+- **Comportement modulaire** avec :
+  - Composant `AjouterModeleComponent`
+  - Fichiers CSS : `ajouter-modele.component.css`, `modal-box.css`
+- **Gestion d'état** :
+  - Propriétés : `isAnneeValid`, `isFileValid`, `titre`, `error`, `message`
+  - Contrôle de validité avant envoi avec `ngSubmit`
+
+---
+
+### Variables attendues analysées automatiquement
+
+Voici la liste complète des variables attendues (via `docxParser`) :
+annee, NOM_ORGANISME, ADR_ORGANISME, NOM_REPRESENTANT_ORG,
+QUAL_REPRESENTANT_ORG, NOM_DU_SERVICE, TEL_ORGANISME, MEL_ORGANISME,
+LIEU_DU_STAGE, NOM_ETUDIANT1, PRENOM_ETUDIANT, SEXE_ETUDIANT,
+DATE_NAIS_ETUDIANT, ADR_ETUDIANT, TEL_ETUDIANT, MEL_ETUDIANT,
+SUJET_DU_STAGE, DATE_DEBUT_STAGE, DATE_FIN_STAGE, STA_DUREE,
+_STA_JOURS_TOT, _STA_HEURES_TOT, TUT_IUT, TUT_IUT_MEL,
+PRENOM_ENCADRANT, NOM_ENCADRANT, FONCTION_ENCADRANT,
+TEL_ENCADRANT, MEL_ENCADRANT, NOM_CPAM, Stage_Professionnel, STA_REMU_HOR
+
+---
+
+### Astuce UX
+
+Un clic sur l’icône **❔** à côté des champs "Année" ou "Fichier" ouvre une **modale d’aide contextuelle**  
+pour expliquer les erreurs de validation ou les variables manquantes.
+
+---
+
+### Accès restreint
+
+- **Rôle requis** : GESTIONNAIRE uniquement
+- Ce sous-onglet est masqué pour les rôles EXPLOITANT ou CONSULTANT
+
+---
+
+## Sous-onglet : Modifier un modèle
+
+Ce sous-onglet permet au **Gestionnaire** de rechercher, visualiser et modifier un modèle existant.
+
+---
+
+### Aperçu de l’interface
+<div>
+  <img src="./assets/images/page-modifier-modele.png" alt="Modifier un modèle – GenioService" width="600"/>
+</div>
+
+
+---
+
+### Fonctionnement
+
+1. **Filtres de recherche** :
+  - Par **nom de modèle** (texte libre)
+  - Par **année** (champ numérique avec datalist des années existantes)
+
+
+2. **Affichage des modèles** :
+  - Tableau avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**
+  - Pagination : choix du nombre d’entrées par page (5, 10, 15)
+
+3. **Modification d’un modèle** :
+  - Clic sur l’icône pour ouvrir la **modale d’édition**
+  - Champs modifiables :
+    - **Titre** (double clic ou icône crayon)
+    - **Description de modification** (textarea facultatif)
+    - **Remplacement de fichier** (optionnel)
+  - Validation :
+    - Vérification du fichier `.docx` et des **variables attendues**
+    - Affichage d’un message d’erreur ou de succès après enregistrement
+
+4. **Enregistrement** :
+  - Requête `PUT /conventionServices/{id}` pour mettre à jour les métadonnées
+  - Si un nouveau fichier est sélectionné : `PUT /conventionServices/{id}/file` (FormData)
+
+---
+
+### Exigences fonctionnelles
+
+- Seul le rôle **GESTIONNAIRE** a accès à ce sous-onglet
+- Le tableau est mis à jour dynamiquement après modification
+- Le bouton "Réinitialiser" remet tous les filtres à zéro
+- La modale peut être fermée en cliquant à l'extérieur ou via le bouton "Annuler"
+- Le fichier remplacé doit être un `.docx` valide avec les variables attendues
+
+---
+
+### Exigences techniques
+
+- **Composant** : `ModifierModeleComponent` (Angular 17)
+- **Fichiers CSS** :
+  - `modifier-modele.component.css`
+  - `modal-box.css`
+  - `tables-common.css`
+- **Données** :
+  - Chargées depuis `GET /conventionServices`
+  - Enrichies avec parsing des dates de dernière modification
+- **Pagination** :
+  - `paginatedModeles` calculés à partir de `filteredModeles`
+- **Filtres** :
+  - Normalisation insensible à la casse et aux accents (`normalize()`)
+  - `applyFilters()` déclenchée à chaque saisie
+- **Accessibilité** :
+  - `aria-label`, `aria-current`, `aria-live`, navigation clavier
+  - Focus automatique sur début de tableau après changement de page
+- **UX** :
+  - Icône pour modifier
+  - Bouton "Réinitialiser"
+  - Message temporaire de confirmation ou erreur
+
+---
+
+### Analyse du fichier remplacé
+
+- Si un fichier est sélectionné :
+  - Il est envoyé à `/test-generation`
+  - Le backend renvoie les variables détectées
+  - Le composant compare avec les variables attendues :
+    ```ts
+    [
+      'annee', 'NOM_ORGANISME', 'ADR_ORGANISME', '...','STA_REMU_HOR'
+    ]
+    ```
+  - Si des variables sont manquantes, un message d’erreur s’affiche
+  - Si tout est bon : fichier accepté
+
+---
+
+### Exemple de message de succès
+
+> ✅ Modèle mis à jour avec succès !
+
+---
+
+### Exemple de message d’erreur
+
+> ⚠️ Le document est un modèle mais, il manque 2 variables : `TUT_IUT`, `MEL_ORGANISME`.
+
+---
+
+### Accès restreint
+
+- **Rôle requis** : GESTIONNAIRE
+- L’interface est désactivée/invisible pour les autres rôles
+
+---
+
+## Sous-onglet : Archiver un modèle
+
+Ce sous-onglet permet au **Gestionnaire** d’archiver définitivement un modèle de convention devenu obsolète.
+
+---
+
+### Aperçu de l’interface
+<div>
+  <img src="./assets/images/page-archiver-modele.png" alt="Archiver un modèle – GenioService" width="600"/>
+</div>
+
+
+---
+
+### Fonctionnement
+
+1. **Filtres de recherche** :
+  - Champ de texte pour rechercher un modèle par **nom**
+  - Champ numérique pour filtrer par **année**
+  - Bouton **Réinitialiser** pour rétablir tous les filtres
+
+2. **Affichage des modèles** :
+  - Tableau contenant : **Titre**, **Année**, **Format**, **Dernière modification**
+  - Choix du nombre d’entrées par page (5, 10, 15)
+  - Pagination avec navigation par page
+
+3. **Action : Archiver un modèle** :
+  - Icône dans la colonne "Action"
+  - Clic sur l’icône ouvre une **modale de confirmation**
+  - La modale affiche le **nom du modèle à archiver**
+  - Boutons :
+    - **Annuler** : fermeture sans action
+    - **Archiver** : suppression immédiate via appel API
+
+---
+
+### Exigences fonctionnelles
+
+- Seul le rôle **GESTIONNAIRE** a accès à ce sous-onglet
+- L'archivage supprime le modèle de la base visible côté interface
+- Confirmation obligatoire via modale
+- Affichage d’un message de succès ou d’erreur
+
+---
+
+### Exigences techniques
+
+- **Composant** : `SupprimerModeleComponent` (Angular)
+- **Fichier CSS** : `supprimer-modele.component.css` + `modal-box.css` + `tables-common.css`
+- **Données** :
+  - Chargées depuis `GET /conventionServices`
+  - Supprimées via `DELETE /conventionServices/{id}`
+- **Pagination** :
+  - Gérée via `paginatedModeles`
+  - Recalculée après suppression
+- **Accessibilité** :
+  - Focus sur tableau après navigation
+  - Modale avec `aria-modal="true"` et rôles accessibles
+- **UX** :
+  - Icône de suppression = (archive)
+  - Modale explicite
+  - Message de succès temporaire
+
+---
+
+### Exemple de message de succès
+
+> ✅ Le modèle `modeleConvention_2022` a bien été archivé.
+
+---
+
+### Exemple de message d’erreur
+
+> ⚠️ Une erreur est survenue lors de la suppression.
+
+---
+
+### Accès restreint
+
+- **Rôle requis** : GESTIONNAIRE
+- Fonctionnalité masquée pour les autres utilisateurs
+
+## Écran de gestion des utilisateurs – Gestionnaire
+
+### Objectif de l’écran
+
+Permet aux **Gestionnaires** d’administrer les comptes utilisateurs de la plateforme GenioService.  
+L’écran permet de visualiser, filtrer, activer/désactiver, modifier ou supprimer des comptes.
+
+C’est l’unique interface d’administration des rôles et statuts des utilisateurs.
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-gestion-utilisateur.png" alt="Écran de gestion des utilisateurs – Gestionnaire" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Liste paginée de tous les comptes utilisateurs enregistrés
+- Filtres disponibles :
+  - **Email** (champ texte)
+  - **Rôle** : Consultant, Gestionnaire, Exploitant, ou “NONE” pour les comptes en attente
+  - **Statut du compte** : Actif / Non actif
+- Colonnes affichées :
+  - Nom, Prénom, Email
+  - Statut (Actif / Inactif)
+  - Rôle attribué
+  - Date de création du compte
+- Pour chaque utilisateur :
+  -  **Modifier** : ouvre une modale pour éditer le rôle et le statut
+  - **Supprimer** : ouvre une modale de confirmation
+- Une **modale d’aide** ❔ en haut à droite explique le fonctionnement général de la page
+- Un fil d’Ariane dynamique indique depuis quel écran l’administration a été ouverte (`queryParams.source`)
+
+---
+
+### Exigences fonctionnelles
+
+- **Rôle requis** : Gestionnaire uniquement
+- Actions possibles :
+  -  Activer ou désactiver un compte
+  - Modifier le rôle de l’utilisateur (via menu déroulant)
+  - Supprimer un compte définitivement
+- La **modale de modification** permet :
+  - De voir les infos statiques (Nom, Prénom, Email)
+  - De basculer l’activation (toggle)
+  - De modifier le rôle via `select`
+- Un bouton **Réinitialiser** permet de vider tous les filtres
+
+---
+
+### Accessibilité
+
+- Icônes annotées (`aria-label`, `aria-hidden`)
+- Modales accessibles (`role="dialog"`, `aria-modal`, `aria-labelledby`)
+- Navigation clavier : `Tab`, `Enter`, `Esc`
+- Affichage dynamique du rôle connecté et de l'origine de navigation
+- Tous les boutons ont des alternatives textuelles `sr-only` pour les lecteurs d’écran
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant principal** : `GestionUtilisateursComponent`
+- **Requêtes API** :
+  - `GET /api/utilisateurs` (liste complète)
+  - `PUT /api/utilisateurs/:id/admin-update` (modification)
+  - `DELETE /api/utilisateurs/:id` (suppression)
+- **Filtrage local** en JS sur :
+  - Email
+  - Rôle (`CONSULTANT`, `EXPLOITANT`, etc.)
+  - Statut (`actif: true / false`)
+- **Pagination** configurable (5, 10, 15)
+- **Sécurité** :
+  - Contrôle strict du rôle Gestionnaire
+  - Backend vérifie les droits à chaque opération
+- **Modales** gérées dynamiquement :
+  - `showEditModal` pour la modification
+  - `userToDelete` pour la confirmation de suppression
+- **Design & UX** :
+  - Badge vert pour les comptes actifs
+  - Tri par date de création (du plus récent au plus ancien)
+  - Message de confirmation après modification ou suppression
+  - Réactivité immédiate de la table après chaque action
+
+---
+
+### Résumé des actions
+
+| Action       | Accessible | Modal ? | Requête API                    |
+|--------------|------------|---------|-------------------------------|
+| Modifier     | Oui        | Oui     | `PUT /api/utilisateurs/:id/admin-update` |
+| Supprimer    | Oui        | Oui     | `DELETE /api/utilisateurs/:id` |
+| Activer      | Oui        | Oui     | Incluse dans la requête PUT   |
+| Filtrer      | Oui        | Non     | Traitement local              |
+
+---
+
+### Éléments d’assistance
+
+- ❔ Bouton d’aide avec modale : fonctionnement général
+- Fichier breadcrumb (`breadcrumbItems`) généré dynamiquement selon `queryParams.source` :
+  - `?source=historique` → fil d’Ariane : Accueil > Historique > Gérer les utilisateurs
+  - `?source=consulter` → Accueil > Modèles disponibles > Gérer les utilisateurs
+  - `?source=gerer` → Accueil > Administration des modèles > Gérer les utilisateurs
 
 ---
 
