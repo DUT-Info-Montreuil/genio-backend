@@ -17,6 +17,8 @@ package com.genio.service.impl;
 import com.genio.exception.business.DocxGenerationException;
 import com.genio.exception.business.UnreplacedPlaceholderException;
 import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -25,28 +27,37 @@ import java.util.Map;
 @Component
 public class DocxGenerator {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(DocxGenerator.class);
     public String generateDocx(String conventionServicePath, Map<String, String> replacements, String outputPath)
             throws DocxGenerationException {
+        logger.info("Début de la génération du fichier DOCX depuis le modèle : {}", conventionServicePath);
         File outputFile = new File(outputPath);
         File outputDir = outputFile.getParentFile();
         if (outputDir != null && !outputDir.exists()) {
             outputDir.mkdirs();
+            logger.debug("Répertoire de sortie créé : {}", outputDir.getAbsolutePath());
         }
 
         try (InputStream fis = new FileInputStream(conventionServicePath);
              XWPFDocument document = new XWPFDocument(fis)) {
+            logger.debug("Fichier modèle chargé avec succès.");
+
 
             processDocument(document, replacements);
 
             try (FileOutputStream fos = new FileOutputStream(outputPath)) {
                 document.write(fos);
+                logger.info("Fichier DOCX généré avec succès à l'emplacement : {}", outputPath);
             }
 
             return outputPath;
 
         } catch (FileNotFoundException e) {
+            logger.error("Fichier source non trouvé : {}", conventionServicePath, e);
             throw new DocxGenerationException("Fichier source non trouvé : " + conventionServicePath, e);
         } catch (IOException e) {
+            logger.error("Erreur d'E/S lors de la génération du fichier DOCX", e);
             throw new DocxGenerationException("Erreur d'E/S lors de la génération du fichier DOCX depuis : "
                     + conventionServicePath + " vers " + outputPath, e);
         }
@@ -54,20 +65,27 @@ public class DocxGenerator {
 
     public byte[] generateDocxFromTemplate(byte[] templateBytes, Map<String, String> replacements)
             throws DocxGenerationException {
+        logger.info("Début de la génération du fichier DOCX depuis un modèle binaire...");
+
         try (InputStream is = new ByteArrayInputStream(templateBytes);
              XWPFDocument document = new XWPFDocument(is);
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
             processDocument(document, replacements);
             document.write(out);
+
+            logger.info("Fichier DOCX généré avec succès depuis modèle binaire.");
             return out.toByteArray();
 
         } catch (Exception e) {
+            logger.error("Erreur lors de la génération du fichier DOCX depuis le modèle binaire", e);
             throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template binaire", e);
         }
     }
 
     public void processDocument(XWPFDocument document, Map<String, String> replacements) {
+        logger.debug("Début du traitement du document : remplacement des variables...");
+
         for (XWPFParagraph paragraph : document.getParagraphs()) {
             replacePlaceholdersInParagraph(paragraph, replacements);
         }
@@ -81,6 +99,8 @@ public class DocxGenerator {
                 }
             }
         }
+
+        logger.debug("Traitement du document terminé.");
     }
 
     private void replacePlaceholdersInParagraph(XWPFParagraph paragraph, Map<String, String> replacements) {
@@ -101,6 +121,7 @@ public class DocxGenerator {
 
         if (updatedText.contains("${")) {
             String missing = updatedText.substring(updatedText.indexOf("${"));
+            logger.error("Placeholders non remplacés détectés : {}", missing);
             throw new UnreplacedPlaceholderException("Certains placeholders n'ont pas été remplacés : " + missing);
         }
 
@@ -109,5 +130,7 @@ public class DocxGenerator {
         } else {
             paragraph.createRun().setText(updatedText);
         }
+
+        logger.trace("Paragraphe traité : {}", updatedText);
     }
 }

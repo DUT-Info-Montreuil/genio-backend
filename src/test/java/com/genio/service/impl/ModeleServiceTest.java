@@ -14,6 +14,8 @@
 
 package com.genio.service.impl;
 
+
+
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
 import com.genio.exception.business.*;
@@ -29,6 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -329,6 +332,114 @@ class ModeleServiceTest {
         verify(mockPreparedStatement).setBytes(eq(3), argThat(bytes -> bytes != null && bytes.length > 0));
         verify(mockPreparedStatement).executeUpdate();
     }
+
+    @Test
+    void testCreateModelConvention_reactivatesArchivedModel() throws Exception {
+        // setup : un modèle existant archivé
+        Modele archived = new Modele();
+        archived.setNom("modeleConvention_2026.docx");
+        archived.setAnnee("2026");
+        archived.setArchived(true);
+        archived.setFichierHash("abc123");
+
+        when(modeleRepository.findFirstByNom("modeleConvention_2026.docx"))
+                .thenReturn(Optional.of(archived));
+
+        MultipartFile file = new MockMultipartFile("file", "modeleConvention_2026.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "data".getBytes());
+
+        ModeleDTO result = modeleService.createModelConvention(file, "2026", "Mon Modèle Réactivé");
+
+        assertEquals("Mon Modèle Réactivé", result.getTitre());
+        verify(modeleRepository).save(any(Modele.class));
+    }
+
+
+    @Test
+    void testReplaceModelFile_WithEmptyName() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+
+        MultipartFile file = new MockMultipartFile("file", "", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "test".getBytes());
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertDoesNotThrow(() -> modeleService.replaceModelFile(1L, file));
+        verify(modeleRepository).save(modele);
+    }
+
+    @Test
+    void testUpdateModelConvention_ChangeYear_ShouldThrow() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "nom", "2026", "docx", "2025-01-01", "Titre", "desc");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
+    }
+
+    @Test
+    void testUpdateModelConvention_EmptyTitle_ShouldThrow() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "nom", "2025", "docx", "2025-01-01", " ", "desc");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(ValidationException.class, () -> modeleService.updateModelConvention(1, dto));
+    }
+
+    @Test
+    void testUpdateModelConvention_InvalidDateFormat_ShouldThrow() {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setAnnee("2025");
+
+        ModeleDTO dto = new ModeleDTO(1L, "nom", "2025", "docx", null, "Titre", "desc");
+        dto.setDateDerniereModification("2025-13-99T99:99:99");
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertThrows(ValidationException.class, () ->
+                modeleService.updateModelConvention(1, dto)
+        );
+    }
+
+    @Test
+    void testReplaceModelFile_WithEmptyFilename_ShouldNotThrow() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+
+        MultipartFile file = new MockMultipartFile("file", "", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "test".getBytes());
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+
+        assertDoesNotThrow(() -> modeleService.replaceModelFile(1L, file));
+        verify(modeleRepository).save(modele);
+    }
+    @Test
+    void testCreateModelConvention_FileAlreadyExistsByHash() throws Exception {
+        byte[] content = "contenu test".getBytes();
+        String fakeHash = modeleService.generateFileHash(content);
+
+        MultipartFile file = new MockMultipartFile("file", "modeleConvention_2027.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", content);
+
+        Modele modele = new Modele();
+        modele.setArchived(false);
+        modele.setFichierHash(fakeHash);
+
+        when(modeleRepository.findFirstByNom("modeleConvention_2027.docx")).thenReturn(Optional.empty());
+        when(docxParser.extractVariables(any())).thenReturn(ModeleService.getExpectedVariables());
+        when(modeleRepository.findFirstByFichierHash(any())).thenReturn(Optional.of(modele));
+
+        assertThrows(ModelConventionAlreadyExistsException.class, () -> modeleService.createModelConvention(file, "2027", "Titre"));
+    }
+
+
 
 
 }

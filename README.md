@@ -18,7 +18,7 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 ## Audit qualité SonarQube
 
 <div>
-  <img src="docs/assets/sonar-audit.png" alt="Audit SonarCube" width="600"/>
+  <img src="docs/assets/images/sonar-audit.png" alt="Audit SonarCube" width="600"/>
 </div>
 
 

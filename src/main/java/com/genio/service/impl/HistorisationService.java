@@ -47,17 +47,22 @@ public class HistorisationService {
     @Transactional
     public void sauvegarderHistorisation(ConventionServiceDTO input, Convention convention, byte[] fichierBinaire, String status, List<ErreurDetaillee> erreurs) {
         try {
+            logger.info("Début de la sauvegarde de l'historisation. Statut = {}", status);
+
             Historisation historisation = new Historisation();
             historisation.setConvention(convention);
             historisation.setStatus(status);
             historisation.setFluxJsonBinaire(new ObjectMapper().writeValueAsBytes(input));
             historisation.setTimestamp();
+            logger.debug("Historisation initialisée avec le statut et le flux JSON.");
 
             if (fichierBinaire != null) {
                 historisation.setDocxBinaire(fichierBinaire);
+                logger.debug("Fichier binaire associé à l'historisation.");
             }
 
             if (erreurs != null && !erreurs.isEmpty()) {
+                logger.info("Erreurs détectées : {} erreur(s) à historiser.", erreurs.size());
                 String detailsConcat = erreurs.stream()
                         .map(ErreurDetaillee::getMessage)
                         .reduce((a, b) -> a + " ; " + b)
@@ -65,6 +70,7 @@ public class HistorisationService {
 
                 historisation.setDetails(detailsConcat);
                 historisationRepository.save(historisation);
+                logger.debug("Historisation enregistrée avec les erreurs concaténées.");
 
                 for (ErreurDetaillee err : erreurs) {
                     ErrorDetails errorDetails = new ErrorDetails();
@@ -72,15 +78,16 @@ public class HistorisationService {
                     errorDetails.setChampsManquants(err.getChamp());
                     errorDetails.setMessageErreur(err.getMessage());
                     errorDetailsRepository.save(errorDetails);
+                    logger.debug("Erreur enregistrée : champ='{}', message='{}'", err.getChamp(), err.getMessage());
                 }
             } else {
                 historisation.setDetails("Aucune erreur détectée.");
                 historisationRepository.save(historisation);
+                logger.info("Historisation enregistrée sans erreurs.");
             }
 
         } catch (Exception e) {
-            logger.error("Erreur lors de l'historisation : {}", e.getMessage());
+            logger.error("Erreur lors de l'historisation : {}", e.getMessage(), e);
         }
     }
-
 }

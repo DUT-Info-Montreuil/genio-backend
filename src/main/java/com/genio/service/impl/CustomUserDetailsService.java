@@ -29,15 +29,24 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UtilisateurRepository utilisateurRepository;
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.info("Tentative de chargement de l'utilisateur avec l'email : {}", email);
+
         Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+                .orElseThrow(() -> {
+                    logger.warn("Aucun utilisateur trouvé avec l'email : {}", email);
+                    return new UsernameNotFoundException("Utilisateur non trouvé");
+                });
 
         if (!utilisateur.isActif()) {
+            logger.warn("Compte inactif pour l'utilisateur : {}", email);
             throw new CompteInactifException("Votre compte est inactif. En attente d’activation par un gestionnaire.");
         }
+
+        logger.info("Utilisateur trouvé et actif : {}", email);
 
         return User.builder()
                 .username(utilisateur.getEmail())

@@ -18,14 +18,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
 public class MailService {
+    private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     private final JavaMailSender mailSender;
 
     public void sendResetPasswordEmail(String destinataire, String token) {
+        logger.info("Préparation de l'envoi de l'e-mail de réinitialisation de mot de passe à {}", destinataire);
         String resetLink = "http://localhost:4200/reset-password?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -39,6 +43,11 @@ public class MailService {
                         "Si vous n'avez pas effectué cette demande, veuillez ignorer cet e-mail.\n\n" +
                         "--\nGenioService");
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            logger.info("E-mail de réinitialisation envoyé avec succès à {}", destinataire);
+        } catch (Exception e) {
+            logger.error("Échec de l'envoi de l'e-mail à {} : {}", destinataire, e.getMessage(), e);
+        }
     }
 }

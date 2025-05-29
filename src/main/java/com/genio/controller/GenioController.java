@@ -82,17 +82,22 @@ public class GenioController {
 
     @GetMapping("/modele/annee/{annee}")
     public ResponseEntity<List<Modele>> getModelesParAnnee(@PathVariable String annee) {
+        logger.info("Récupération des modèles pour l'année : {}", annee);
         try {
             List<Modele> modeles = genioService.getModelesByAnnee(annee);
+            logger.info("{} modèle(s) trouvé(s) pour l'année {}", modeles.size(), annee);
             return ResponseEntity.ok(modeles);
         } catch (ModelNotFoundException e) {
+            logger.warn("Aucun modèle trouvé pour l'année : {}", annee);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @GetMapping("/historique")
     public ResponseEntity<List<Historisation>> getHistorique() {
+        logger.info("Récupération de l'historique des générations de conventions.");
         List<Historisation> historique = historisationRepository.findAll();
+        logger.info("Historique récupéré : {} élément(s)", historique.size());
         return ResponseEntity.ok(historique);
     }
 
@@ -100,17 +105,21 @@ public class GenioController {
 
     @GetMapping("/modele/{id}/download")
     public ResponseEntity<byte[]> downloadModele(@PathVariable Long id) {
+        logger.info("Demande de téléchargement du modèle avec ID : {}", id);
         Optional<Modele> opt = modeleRepository.findById(id);
+
         if (opt.isEmpty()) {
+            logger.warn("Modèle non trouvé avec ID : {}", id);
             return ResponseEntity.notFound().build();
         }
 
         Modele modele = opt.get();
+        logger.info("Modèle trouvé : {} - préparation du téléchargement.", modele.getNom());
+
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=" + modele.getNom())
                 .header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
                 .body(modele.getFichierBinaire());
     }
-
 
 }

@@ -33,4 +33,5 @@ public interface ModeleRepository extends JpaRepository<Modele, Long> {
     long countByAnnee(@Param("annee") String annee);
     Optional<Modele> findFirstByNom(String nom);
     Optional<Modele> findFirstByFichierHash(String fichierHash);
+    Optional<Modele> findFirstByNomAndArchivedFalse(String nom);
 }
