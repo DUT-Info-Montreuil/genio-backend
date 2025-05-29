@@ -15,11 +15,12 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 
 ---
 
-## Audit qualité SonarCube
+## Audit qualité SonarQube
 
-<div align="center">
+<div>
   <img src="docs/assets/sonar-audit.png" alt="Audit SonarCube" width="600"/>
 </div>
+
 
 **Résultat : Quality Gate – Passed  ✅**
 - Sécurité : 0 vulnérabilité
@@ -28,6 +29,7 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 - Couverture de tests : 81.6% (234 tests unitaires)
 - Duplication : 1% (3 blocs dupliqués)
 
+> OWASP Dependency-Check : 0 failles
 ---
 
 ## Sommaire
