@@ -18,7 +18,13 @@
   - [Sous-onglet : Modifier un modèle](#sous-onglet--modifier-un-modèle)
   - [Sous-onglet : Archiver un modèle](#sous-onglet--archiver-un-modèle)
 - [Écran de gestion des utilisateurs – Gestionnaire](#écran-de-gestion-des-utilisateurs--gestionnaire)
+- [Page – Plan du site](#page--plan-du-site)
 - [Pied de page (footer)](#pied-de-page-footer)
+- [Page – À propos de GenioService](#page--à-propos-de-genioservice)
+- [Page – Contact](#page--contact)
+- [Page – Données personnelles & cookies](#page--données-personnelles--cookies)
+- [Pages - Mentions légales](#page--mentions-légales)
+
 ## Page d’accueil
 
 ### Objectif de l’écran
@@ -1242,8 +1248,344 @@ C’est l’unique interface d’administration des rôles et statuts des utilis
 
 ---
 
-## Métadonnées
+## Page – Plan du site
+
+### Objectif de l’écran
+
+Permet aux utilisateurs (connectés ou non) d’avoir une **vue d’ensemble de la structure de l’application GenioService**, incluant :
+- L’ensemble des pages accessibles (accueil, connexion, inscription…)
+- Les actions spécifiques possibles selon les rôles
+- Les restrictions d’accès affichées clairement via une modale
+
+Cette page améliore la compréhension de l’architecture et des droits associés à chaque rôle (Consultant, Exploitant, Gestionnaire).
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-plan-du-site.png" alt="Page du plan du site – GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- La page affiche une arborescence complète de toutes les sections du site :
+  - **Accueil** : redirection vers les grandes sections
+  - **Authentification** : pages de connexion, inscription, mot de passe oublié, réinitialisation
+  - **Pages par rôle** :
+    - Consultant : uniquement “Consulter les modèles”
+    - Exploitant : consultation + visualisation de l’historique
+    - Gestionnaire : accès à toutes les fonctionnalités (consultation, historique, gestion des utilisateurs, modèles, notifications)
+  - **Bas de page** : liens vers les mentions légales, à propos, plan du site, etc.
+- Une **légende** en haut permet de comprendre les icônes :
+  - 🔵 lien vers une page
+  - ⬛ action utilisateur (clic, ouverture)
+  - 🔒 nécessite une authentification
+- Lorsqu’une action réservée à un rôle est cliquée par un utilisateur non autorisé, une **modale “Accès restreint”** s’affiche.
+- Le bouton “Fermer” referme la modale et remet l’utilisateur sur la même page.
+
+---
+
+### Exigences fonctionnelles
+
+- **Accès ouvert à tous** (même sans connexion)
+- Les actions accessibles dépendent du rôle utilisateur (simulées ici avec des boutons et une modale)
+- Les boutons de type `fake-link` déclenchent une modale expliquant l’absence de droit
+- L’affichage s’adapte automatiquement selon l’état de connexion via la propriété `userRole` (non connectée ou rôle défini)
+- L’ordre des sections suit l’architecture réelle du site
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant** : `PlanDuSiteComponent` (standalone)
+- **Imports** :
+  - `NgIf`, `RouterLink` pour la logique de rôle et navigation
+  - `BreadcrumbComponent` pour le fil d’Ariane
+- **Affichage conditionnel** :
+  - `modalVisible` : contrôle l'affichage de la modale d’accès restreint
+  - Méthodes `showModal()` et `closeModal()` déclenchent/ferment la modale
+- **Accessibilité** :
+  - Modale : `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+  - Icônes annotées via `aria-hidden`
+  - Texte lisible par lecteur d’écran (`sr-only`)
+- **Styles appliqués** :
+  - `plan-du-site.component.css`
+  - `header.css`, `auth-shared.css`, `modal-box.css`
+
+---
+
+### Éléments supplémentaires
+
+- Ce composant ne nécessite pas d’appel API.
+- Peut être affiché à tout moment, même sans connexion.
+- Aide les utilisateurs à comprendre **ce qu’ils peuvent faire selon leur rôle**.
+- Cette page sert aussi de **point de test UX** pour la navigation et l'accessibilité.
+
+---
+
+## Page – À propos de GenioService
+
+### Objectif de l’écran
+
+Présenter la **finalité globale** de l’application GenioService, ses **fonctionnalités principales** et les **bénéfices concrets** pour les utilisateurs. Cette page a pour but de familiariser les utilisateurs avec l’outil avant même la connexion, et de rassurer sur sa sécurité, sa simplicité et sa valeur ajoutée.
+
+---
+
+### Aperçu de la page
+
+<div>
+  <img src="./assets/images/page-a-propos.png" alt="Page À propos de GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Accessible sans authentification, directement depuis le **footer** ou l’URL `/a-propos`.
+- Le contenu est organisé en sections :
+  - **Présentation de GenioService** : définition de la plateforme
+  - **Fonctionnalités principales** : liste des actions disponibles (consulter, ajouter, modifier…)
+  - **Bénéfices** : sécurité, gain de temps, traçabilité
+  - **Équipe projet** : courte description de l’équipe derrière l’outil
+  - **Contact** : lien mailto pour écrire à l’équipe GenioService
+- Chaque fonctionnalité (comme "Archiver", "Historique") est décrite de manière claire et orientée utilisateur.
+- Les éléments visuels (icônes, balisage HTML) sont pensés pour une lecture fluide et accessible.
+
+---
+
+### Exigences fonctionnelles
+
+- Page publique (pas besoin d’être connecté)
+- Accessible depuis :
+  - Le **footer** de chaque page
+  - L'URL `/a-propos`
+- Texte informatif uniquement, sans formulaire ni action utilisateur
+- Lien fonctionnel vers l’adresse mail de contact
+- Intégration du **fil d’Ariane** en haut de page
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant** : `AboutComponent` (standalone)
+- **Imports** :
+  - `RouterLink` pour le breadcrumb
+  - `NgIf` pour affichage conditionnel
+  - `BreadcrumbComponent`
+- **Structure HTML** :
+  - `main.about-container`
+  - `section.about-section` pour chaque bloc thématique
+- **Accessibilité** :
+  - Balises sémantiques `h2`, `ul`, `p`
+  - Icônes marquées `aria-hidden="true"`
+  - `aria-labelledby` lié à l’identifiant `#page-title` pour contextualiser la navigation
+- **Contact mail** :
+  - Lien `mailto:genioservice3@gmail.com` intégré avec protection typographique (`&#64;`)
+
+---
+
+### Métadonnées
 
 - **Dernière mise à jour** : 29 mai 2025
 - **Rédactrice** : Elsa HADJADJ
 - **Version** : 1.0  
+
+## Page – Contact
+
+### Objectif de l’écran
+
+Permettre aux visiteurs du site, connectés ou non, de **contacter le développeur** du projet GenioService en cas de question, retour, ou simple message. La page donne aussi un **contexte clair sur le projet universitaire**, son cadre pédagogique et ses technologies.
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-contact.png" alt="Page Contact – GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Accessible **publiquement** via le footer ou `/contact`.
+- Deux sections principales :
+  1. **Me contacter** :
+    - Adresse email cliquable (mailto)
+    - Lien LinkedIn vers le profil du développeur
+    - Contexte : projet de 3e année du BUT Informatique, tutoré par M. Marcinkowski
+    - Texte d’introduction encourageant le contact (ton cordial et humain)
+  2. **À propos du projet** :
+    - Détail sur le stack technique (Angular + Spring Boot)
+    - Objectif purement pédagogique
+    - Application des bonnes pratiques de développement web
+
+---
+
+### Exigences fonctionnelles
+
+- Page disponible sans authentification
+- Lien mail : `mailto:genioservice3@gmail.com`
+- Lien LinkedIn sécurisé (avec `target="_blank"` et `rel="noopener"`)
+- Présence d’un fil d’Ariane (`Accueil > Contact`)
+- Aucun formulaire ou interaction utilisateur : **simple page informative**
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant** : `ContactComponent` (standalone)
+- **Imports** :
+  - `RouterLink` pour la navigation
+  - `NgIf` pour la logique conditionnelle éventuelle
+  - `BreadcrumbComponent`
+- **Accessibilité** :
+  - `aria-labelledby="page-title"` pour le `main`
+  - Icônes décoratives avec `aria-hidden="true"`
+  - Mail et lien LinkedIn balisés avec attributs d’accessibilité
+- **Email protégé** : `genioservice3&#64;gmail.com` (évite le scraping automatique)
+- **Responsive** : mise en page fluide en desktop et mobile
+- **Sécurité** :
+  - Ouverture du lien LinkedIn dans un nouvel onglet
+  - Aucune donnée utilisateur saisie ici (pas de backend requis)
+
+---
+
+## Page – Données personnelles & cookies
+
+### Objectif de l’écran
+
+Informer l’utilisateur des engagements de GenioService concernant la protection des données personnelles, les droits des utilisateurs, la nature des données collectées et l’usage des cookies. Cette page est obligatoire dans un cadre RGPD.
+
+---
+
+### Aperçu de la page
+
+<div>
+  <img src="./assets/images/page-donnees-personnelles.png" alt="Page Données personnelles et cookies – GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Accessible publiquement depuis le footer (lien "Données personnelles").
+- Structure en **6 sections explicites** :
+  1. **Engagement de GenioService** : conformité au RGPD, pas de collecte sans consentement.
+  2. **Vos droits** : suppression, opposition, limitation (droit à la vie privée).
+    - Coordonnées de la DPO (Elsa Hadjadj) fournies (email et adresse postale).
+    - Obligation de joindre une pièce d’identité pour toute demande.
+  3. **Données collectées** : uniquement celles nécessaires à l’authentification et gestion.
+    - Aucune donnée sensible stockée en clair.
+  4. **Utilisation des cookies** : uniquement cookies techniques (aucun traceur pub).
+  5. **Gérer vos préférences** : liens vers les paramètres de chaque navigateur.
+  6. **Liens utiles** : vers le site de la CNIL pour plus d’infos.
+
+---
+
+### Exigences fonctionnelles
+
+- Lien accessible dans le footer de toutes les pages.
+- Tous les liens extérieurs ouvrent un nouvel onglet (`target="_blank"`, `rel="noopener"`).
+- Mention claire de l’adresse du DPO avec deux canaux de contact (email + courrier postal).
+- Mention des types de données collectées pour chaque fonctionnalité.
+- Informations sur les droits de l’utilisateur (conformément à la CNIL).
+- Mention explicite de l’absence de traceurs publicitaires.
+
+---
+
+### Exigences techniques
+
+- **Framework** : Angular 17
+- **Composant** : `DpoComponent` ou `DonnéesPersonnellesComponent` (standalone)
+- **Imports** :
+  - `NgIf`, `RouterLink`, `NgFor` si nécessaires
+  - `BreadcrumbComponent`
+- **Accessibilité** :
+  - Utilisation de `aria-labelledby` pour le `<main>`
+  - Icônes décoratives en `aria-hidden="true"`
+  - Liens clairs et lisibles, sans pièges au clic
+- **Sécurité** :
+  - Pas de collecte de données actives (pas de formulaire)
+  - Protection de l’adresse email avec entité HTML : `elsa.simha.hadjadj&#64;gmail.com`
+- **Responsive** : contenu adapté aux tailles d’écran, bonne lisibilité mobile
+- **Respect du RGPD** :
+  - DPO nommément identifié
+  - Modalités d’exercice des droits clairement listées
+  - Liens vers la CNIL (source officielle)
+
+---
+
+### Complément
+
+Cette page est essentielle pour :
+- garantir la conformité **juridique** du site (RGPD),
+- rassurer les utilisateurs sur la **sécurité** de leurs données,
+- valoriser la **transparence** du projet GenioService.
+
+---
+
+## Page – Mentions légales
+
+### Objectif de l’écran
+
+Présenter les informations légales obligatoires liées à l'éditeur du site GenioService dans un cadre académique. Cette page garantit la transparence sur l’identité de l’auteur, les technologies utilisées, la propriété du code source, et les conditions d’usage du site.
+
+---
+
+### Aperçu de la page
+<div>
+  <img src="./assets/images/page-mentions-legales.png" alt="Page Mentions légales – GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de l’écran
+
+- Accessible depuis le **footer** sur toutes les pages via le lien « Mentions légales ».
+- Contenu réparti en **5 sections** :
+  1. **Éditrice du site** : identité de l’auteure (Elsa Hadjadj), encadrement (Jérémy Marcinkowski), et localisation de l’établissement (IUT de Montreuil).
+  2. **Technologies utilisées** : framework front-end (Angular), back-end (Spring Boot), responsive design, accessibilité.
+  3. **Dépôts GitHub** : liens directs vers les dépôts frontend et backend publics.
+  4. **Propriété intellectuelle** : licence Creative Commons **CC BY-NC-SA 4.0** (usage non commercial, attribution requise).
+  5. **Hébergement** : mention que le site est exécuté localement à des fins pédagogiques (pas d’hébergeur professionnel impliqué).
+
+---
+
+### Exigences fonctionnelles
+
+- Affichage clair et accessible des informations légales, à jour.
+- Liens extérieurs sécurisés (`target="_blank"` et `rel="noopener"`).
+- Mention explicite du cadre universitaire (BUT Informatique – IUT de Montreuil).
+- Mention de la licence de partage du code source.
+- Accès depuis toutes les pages via le pied de page.
+
+---
+
+### Exigences techniques
+
+- **Composant Angular** : `MentionsLegalesComponent` (standalone)
+- **Technos utilisées** :
+  - Frontend : Angular (HTML5, CSS3, TypeScript)
+  - Backend : Spring Boot (Java, REST API)
+- **Imports nécessaires** :
+  - `RouterLink`, `NgIf`, `BreadcrumbComponent`
+- **Accessibilité** :
+  - `<main>` avec `aria-labelledby`
+  - Icônes décoratives en `aria-hidden`
+- **Responsive** : lisibilité sur petit écran (mobile-first)
+- **Sécurité** :
+  - Aucun script ou fonctionnalité active sur cette page
+  - Liens vérifiés et protégés par `rel="noopener"`
+
+---
+
+### Complément
+
+Cette page est obligatoire en France, même dans un cadre académique, dès lors qu’un site est mis à disposition d’un public. Elle clarifie la responsabilité éditoriale et le périmètre d’utilisation du projet GenioService.
+
+---
