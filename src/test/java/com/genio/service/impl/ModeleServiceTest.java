@@ -422,6 +422,110 @@ class ModeleServiceTest {
         verify(modeleRepository).save(modele);
     }
 
+    @Test
+    void testReplaceModelFile_Success() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("ancienModele.docx");
+        modele.setArchived(false);
+
+        byte[] newContent = "nouveau contenu".getBytes();
+        MockMultipartFile newFile = new MockMultipartFile("file", "nouveauModele.docx",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", newContent);
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByFichierHash(anyString())).thenReturn(Optional.empty());
+        when(modeleRepository.findFirstByNomAndArchivedFalse("nouveauModele.docx")).thenReturn(Optional.empty());
+
+        modeleService.replaceModelFile(1L, newFile);
+
+        verify(modeleRepository).save(argThat(savedModel ->
+                savedModel.getNom().equals("nouveauModele.docx") &&
+                        savedModel.getFichierBinaire() != null &&
+                        savedModel.getFichierHash() != null
+        ));
+    }
+
+    @Test
+    void testReplaceModelFile_ThrowsIfHashExistsOnAnotherActiveModel() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("ancienModele.docx");
+        modele.setArchived(false);
+
+        byte[] newContent = "contenu".getBytes();
+        MockMultipartFile newFile = new MockMultipartFile("file", "nouveauModele.docx",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", newContent);
+
+        Modele autreModele = new Modele();
+        autreModele.setId(2L);
+        autreModele.setArchived(false);
+
+        String hashDuFichier = modeleService.generateFileHash(newContent);
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByFichierHash(hashDuFichier)).thenReturn(Optional.of(autreModele));
+
+        ModelConventionAlreadyExistsException ex = assertThrows(ModelConventionAlreadyExistsException.class,
+                () -> modeleService.replaceModelFile(1L, newFile));
+        assertTrue(ex.getMessage().contains("déjà utilisé"));
+    }
+
+    @Test
+    void testReplaceModelFile_ThrowsIfNameExistsOnAnotherActiveModel() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("ancienModele.docx");
+        modele.setArchived(false);
+
+        byte[] newContent = "contenu différent".getBytes();
+        MockMultipartFile newFile = new MockMultipartFile("file", "nomDejaUtilise.docx",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", newContent);
+
+        Modele autreModele = new Modele();
+        autreModele.setId(3L);
+        autreModele.setArchived(false);
+
+        String hashDuFichier = modeleService.generateFileHash(newContent);
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByFichierHash(hashDuFichier)).thenReturn(Optional.empty());
+        when(modeleRepository.findFirstByNomAndArchivedFalse("nomDejaUtilise.docx")).thenReturn(Optional.of(autreModele));
+
+        ModelConventionAlreadyExistsException ex = assertThrows(ModelConventionAlreadyExistsException.class,
+                () -> modeleService.replaceModelFile(1L, newFile));
+        assertTrue(ex.getMessage().contains("nom de fichier"));
+    }
+
+    @Test
+    void testReplaceModelFile_WithEmptyOrNullFilename_DoesNotChangeName() throws Exception {
+        Modele modele = new Modele();
+        modele.setId(1L);
+        modele.setNom("ancienModele.docx");
+        modele.setArchived(false);
+
+        byte[] newContent = "contenu".getBytes();
+        // Cas avec nom vide
+        MockMultipartFile fileEmptyName = new MockMultipartFile("file", "",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", newContent);
+        // Cas avec nom null (simulate MultipartFile sans nom)
+        MockMultipartFile fileNullName = new MockMultipartFile("file", null,
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", newContent);
+
+        when(modeleRepository.findById(1L)).thenReturn(Optional.of(modele));
+        when(modeleRepository.findFirstByFichierHash(anyString())).thenReturn(Optional.empty());
+
+        // Avec nom vide
+        modeleService.replaceModelFile(1L, fileEmptyName);
+        assertEquals("ancienModele.docx", modele.getNom());
+
+        // Avec nom null
+        modeleService.replaceModelFile(1L, fileNullName);
+        assertEquals("ancienModele.docx", modele.getNom());
+
+        verify(modeleRepository, times(2)).save(modele);
+    }
+
 
 
 
