@@ -74,7 +74,7 @@ public class GenioServiceImpl implements GenioService {
         this.historisationService = historisationService;
     }
 
-    private boolean isFormatValide(String format) {
+    public boolean isFormatValide(String format) {
         return "docx".equalsIgnoreCase(format) || "pdf".equalsIgnoreCase(format);
     }
 
@@ -94,7 +94,7 @@ public class GenioServiceImpl implements GenioService {
         return null;
     }
 
-    private boolean isTuteurIncomplet(TuteurDTO tuteur) {
+    public boolean isTuteurIncomplet(TuteurDTO tuteur) {
         return tuteur == null || tuteur.getNom() == null || tuteur.getPrenom() == null;
     }
 
@@ -270,7 +270,7 @@ public class GenioServiceImpl implements GenioService {
         return savedMaitreDeStage;
     }
 
-    private Tuteur sauvegarderTuteur(TuteurDTO tuteurDTO) {
+    public Tuteur sauvegarderTuteur(TuteurDTO tuteurDTO) {
         logger.info("Début de la sauvegarde de tuteur : {}", tuteurDTO.getNom());
         Tuteur tuteur = TuteurFactory.createTuteur(tuteurDTO);
         Tuteur savedTuteur = tuteurRepository.save(tuteur);
@@ -292,7 +292,7 @@ public class GenioServiceImpl implements GenioService {
         return modeles;
     }
 
-    private Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur) {
+    public Map<String, String> prepareReplacements(ConventionServiceDTO input, Etudiant etudiant, MaitreDeStage maitreDeStage, Tuteur tuteur) {
         logger.info("Début de la préparation des remplacements pour le fichier DOCX.");
         Map<String, String> replacements = new HashMap<>();
 

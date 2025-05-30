@@ -61,4 +61,20 @@ public class MaitreDeStageDTO {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+    public void setPrenom(@NotBlank(message = "Le prénom du tuteur est obligatoire.") String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setFonction(@NotBlank(message = "La fonction du tuteur est obligatoire.") String fonction) {
+        this.fonction = fonction;
+    }
+
+    public void setTelephone(@NotBlank(message = "Le téléphone du tuteur est obligatoire.") @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{2}$", message = "Le téléphone doit être au format XX.XX.XX.XX.XX.") String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setEmail(@NotBlank(message = "L'email du tuteur est obligatoire.") @Email(message = "L'email du tuteur doit être valide.") String email) {
+        this.email = email;
+    }
 }

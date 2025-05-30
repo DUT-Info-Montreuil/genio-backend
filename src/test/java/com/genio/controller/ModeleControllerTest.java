@@ -16,6 +16,10 @@ package com.genio.controller;
 
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
+import com.genio.exception.business.IntegrityCheckFailedException;
+import com.genio.exception.business.MissingVariableException;
+import com.genio.exception.business.ModelConventionAlreadyExistsException;
+import com.genio.exception.business.ModelConventionNotFoundException;
 import com.genio.mapper.DocxParser;
 import com.genio.model.*;
 import com.genio.repository.*;
@@ -43,6 +47,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -435,5 +441,7 @@ class ModeleControllerTest {
         ModeleDTOForList dto = response.getBody().get(0);
         assertTrue(dto.getTitre().toLowerCase().contains("web"));
     }
+
+
 
 }

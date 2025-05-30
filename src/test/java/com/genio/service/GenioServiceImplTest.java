@@ -21,6 +21,8 @@ import com.genio.dto.outputmodeles.ConventionBinaireRes;
 import com.genio.exception.GlobalExceptionHandler;
 import com.genio.exception.business.InvalidFileFormatException;
 import com.genio.exception.business.ModelNotFoundException;
+import com.genio.factory.EtudiantFactory;
+import com.genio.factory.MaitreDeStageFactory;
 import com.genio.model.Modele;
 import com.genio.model.Tuteur;
 import com.genio.repository.ModeleRepository;
@@ -35,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,6 +50,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,11 +81,15 @@ class GenioServiceImplTest {
     private GenioServiceImpl genioService;
 
 
+
+
     @Autowired
     private TuteurRepository tuteurRepository;
 
     @MockBean
     private HistorisationService historisationService;
+
+
 
     @BeforeEach
     void setup() {
@@ -630,4 +638,264 @@ class GenioServiceImplTest {
         assertFalse(result.isSuccess());
         assertEquals("Erreur simulée sur le modèle", result.getMessageErreur());
     }
+
+    @Test
+    void verifierModele_validModel_shouldReturnNull() {
+        Modele modele = new Modele();
+        modele.setNom("test.docx");
+        modele.setFichierBinaire("dummy".getBytes());
+
+        ConventionBinaireRes result = genioService.verifierModele(modele);
+
+        assertNull(result);
+    }
+    @Test
+    void isFormatValide_shouldReturnExpectedResults() {
+        assertTrue(genioService.isFormatValide("docx"));
+        assertTrue(genioService.isFormatValide("DOCX"));
+        assertTrue(genioService.isFormatValide("pdf"));
+        assertFalse(genioService.isFormatValide("txt"));
+        assertFalse(genioService.isFormatValide(null));
+        assertFalse(genioService.isFormatValide(""));
+    }
+
+    @Test
+    void isTuteurIncomplet_shouldDetectIncompleteTuteurs() {
+        assertTrue(genioService.isTuteurIncomplet(null));
+        assertTrue(genioService.isTuteurIncomplet(new TuteurDTO(null, "prenom", "email")));
+        assertTrue(genioService.isTuteurIncomplet(new TuteurDTO("nom", null, "email")));
+        assertFalse(genioService.isTuteurIncomplet(new TuteurDTO("nom", "prenom", "email")));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_modelArchived_shouldReturnError() {
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
+        modele.setArchived(true);
+        modele = modeleRepository.saveAndFlush(modele);
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
+        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertEquals("Erreur : le modèle demandé est archivé et ne peut pas être utilisé.", result.getMessageErreur());
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_exceptionFromDocxGenerator_shouldReturnError() throws Exception {
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
+
+        when(docxGenerator.generateDocxFromTemplate(any(), any()))
+                .thenThrow(new RuntimeException("Erreur technique simulée"));
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
+        input.setTuteur(new TuteurDTO("TuteurNom", "TuteurPrenom", "tuteur@example.com"));
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Organisme")
+                .adresse("Adresse")
+                .nomRepresentant("RepNom")
+                .qualiteRepresentant("RepQualite")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("organisme@example.com")
+                .lieuDuStage("Lieu")
+                .build());
+        input.setStage(StageDTO.builder()
+                .anneeStage("2022")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2022-01-01")
+                .dateFinStage("2022-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertEquals("Erreur inattendue : contacter l’administrateur.", result.getMessageErreur());
+    }
+
+
+
+    @Test
+    void verifierModele_binaireNullNomBlank_shouldReturnError() {
+        Modele modele = new Modele();
+        modele.setFichierBinaire(null);
+        modele.setNom("");
+
+        ConventionBinaireRes res = genioService.verifierModele(modele);
+
+        assertNotNull(res);
+        assertFalse(res.isSuccess());
+        assertEquals("Erreur : le modèle ne contient ni fichier binaire ni nom de fichier.", res.getMessageErreur());
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_tuteurIncomplet_shouldReturnError() throws Exception {
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
+
+        // Tuteur incomplet (nom null)
+        input.setTuteur(new TuteurDTO(null, "Prenom", "email@example.com"));
+
+        // Données minimales pour éviter autres erreurs (ex: maitreDeStage)
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Org")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Qual")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("org@example.com")
+                .lieuDuStage("Lieu")
+                .build());
+        input.setStage(StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2025-01-01")
+                .dateFinStage("2025-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessageErreur().contains("Le champ 'tuteur.nom'"));
+        assertTrue(result.getMessageErreur().contains("chaîne alphabétique"));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void generateConvention_tuteurPersistanceEchec_shouldReturnError() throws Exception {
+        Modele modele = TestUtils.createUniqueTestModele(modeleService, modeleRepository, "2025");
+
+        ConventionServiceDTO input = new ConventionServiceDTO();
+        input.setModeleId(modele.getId());
+        input.setEtudiant(EtudiantDTO.builder()
+                .nom("Doe")
+                .prenom("John")
+                .sexe("H")
+                .dateNaissance("2000-01-01")
+                .adresse("123 rue Exemple")
+                .telephone("01.23.45.67.89")
+                .email("johndoe@example.com")
+                .cpam("CPAM123")
+                .promotion("BUT2")
+                .build());
+
+        input.setTuteur(new TuteurDTO("Nom", "Prenom", "email@example.com"));
+        input.setMaitreDeStage(new MaitreDeStageDTO("Nom", "Prenom", "Fonction", "01.23.45.67.89", "mail@example.com"));
+        input.setOrganisme(OrganismeDTO.builder()
+                .nom("Org")
+                .adresse("Adresse")
+                .nomRepresentant("Rep")
+                .qualiteRepresentant("Qual")
+                .nomDuService("Service")
+                .telephone("01.23.45.67.89")
+                .email("org@example.com")
+                .lieuDuStage("Lieu")
+                .build());
+        input.setStage(StageDTO.builder()
+                .anneeStage("2025")
+                .sujetDuStage("Sujet")
+                .dateDebutStage("2025-01-01")
+                .dateFinStage("2025-06-30")
+                .duree("5 mois")
+                .joursTot(20)
+                .heuresTot(200)
+                .remunerationHoraire("10€")
+                .saeStageProfessionnel("professionnel")
+                .build());
+
+        // Simule que sauvegarderTuteur retourne null (persistance échoue)
+        doReturn(null).when(genioService).sauvegarderTuteur(any(TuteurDTO.class));
+
+        ConventionBinaireRes result = genioService.generateConvention(input, "DOCX");
+
+        assertFalse(result.isSuccess());
+        assertEquals("Erreur de persistance du tuteur.", result.getMessageErreur());
+    }
+
+
+
+
+
+
+
 }
