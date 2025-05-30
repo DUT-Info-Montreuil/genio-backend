@@ -26,6 +26,7 @@ public class ModeleDTOForList {
     private String description;
     private String format;
     private String titre;
+    private String annee;
 
     public ModeleDTOForList(Long id, String nom, String description, String format, String titre) {
         this.id = id;
@@ -45,6 +46,7 @@ public class ModeleDTOForList {
                 ", description='" + description + '\'' +
                 ", format='" + format + '\'' +
                 ", titre='" + titre + '\'' +
+                ", annee='" + annee + '\'' +
                 '}';
     }
 

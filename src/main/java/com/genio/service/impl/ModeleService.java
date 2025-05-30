@@ -177,6 +177,7 @@ public class ModeleService {
                             "docx",
                             modele.getTitre()
                     );
+                    dto.setAnnee(modele.getAnnee());
                     if (modele.getDateDerniereModification() != null) {
                         dto.setDateDerniereModification(modele.getDateDerniereModification().toString());
                     }
@@ -235,6 +236,11 @@ public class ModeleService {
             MissingVariableException, InvalidFileFormatException {
 
         String originalFilename = file.getOriginalFilename();
+        Optional<Modele> existingByNomExact = modeleRepository.findFirstByNomAndArchivedFalse(originalFilename);
+        if (existingByNomExact.isPresent()) {
+            log.warn("Un fichier du même nom '{}' est déjà actif.", originalFilename);
+            throw new ModelConventionAlreadyExistsException("Un fichier nommé '" + originalFilename + "' a déjà été ajouté et est encore actif.");
+        }
         log.info("Début de création d’un modèle de convention. Fichier reçu : '{}', année : '{}', titre : '{}'",
                 originalFilename, annee, titre);
 
@@ -246,6 +252,15 @@ public class ModeleService {
         if (annee == null || !annee.matches("^\\d{4}$")) {
             log.warn("Année invalide fournie : {}", annee);
             throw new InvalidFileFormatException("Année invalide. Format attendu : 4 chiffres (ex: 2025).");
+        }
+
+        byte[] fileBytes = file.getBytes();
+        String fileHash = generateFileHash(fileBytes);
+
+        Optional<Modele> existingByHash = modeleRepository.findFirstByFichierHash(fileHash);
+        if (existingByHash.isPresent() && !existingByHash.get().isArchived()) {
+            log.warn("Un modèle identique (hash) est déjà enregistré et actif.");
+            throw new ModelConventionAlreadyExistsException("Ce fichier a déjà été ajouté.");
         }
 
         String generatedFilename = "modeleConvention_" + annee + EXTENSION_DOCX;
@@ -266,7 +281,7 @@ public class ModeleService {
                 existing.setDateDerniereModification(LocalDateTime.now());
 
                 modeleRepository.save(existing);
-                saveFileToDirectory(file, generatedFilename);
+                saveFileToDirectory(file, originalFilename);
 
                 log.info("Modèle archivé réactivé et mis à jour. ID : {}", existing.getId());
                 return new ModeleDTO(
@@ -279,6 +294,13 @@ public class ModeleService {
                         null
                 );
             }
+        }
+
+        // Vérification supplémentaire : un modèle non archivé existe-t-il déjà pour la même année ?
+        Optional<Modele> existingByAnnee = modeleRepository.findFirstByAnneeAndArchivedFalse(annee);
+        if (existingByAnnee.isPresent()) {
+            log.warn("Un modèle non archivé pour l'année {} existe déjà (ID {}).", annee, existingByAnnee.get().getId());
+            throw new ModelConventionAlreadyExistsException("Un modèle non archivé existe déjà pour l’année " + annee + ".");
         }
 
         List<String> foundVariables = docxParser.extractVariables(file);
@@ -295,24 +317,15 @@ public class ModeleService {
             throw new MissingVariableException("Le fichier contient des erreurs de variables.");
         }
 
-        byte[] fileBytes = file.getBytes();
-        String fileHash = generateFileHash(fileBytes);
-
-        Optional<Modele> existingByHash = modeleRepository.findFirstByFichierHash(fileHash);
-        if (existingByHash.isPresent() && !existingByHash.get().isArchived()) {
-            log.warn("Un modèle identique (hash) est déjà enregistré et actif.");
-            throw new ModelConventionAlreadyExistsException("Ce fichier a déjà été ajouté.");
-        }
-
         Modele modele = new Modele();
-        modele.setNom(generatedFilename);
+        modele.setNom(originalFilename);
         modele.setAnnee(annee);
         modele.setFichierBinaire(fileBytes);
         modele.setFichierHash(fileHash);
         modele.setTitre((titre == null || titre.isBlank()) ? file.getOriginalFilename() : titre);
 
         modeleRepository.save(modele);
-        saveFileToDirectory(file, generatedFilename);
+        saveFileToDirectory(file, originalFilename);
 
         log.info("Nouveau modèle créé avec succès. ID : {}", modele.getId());
 
@@ -368,11 +381,6 @@ public class ModeleService {
 
         modele.setTitre(modeleDTO.getTitre());
         log.info("Titre mis à jour : '{}'", modeleDTO.getTitre());
-
-        if (modeleDTO.getNom() != null) {
-            modele.setNom(modeleDTO.getNom());
-            log.info("Nom mis à jour : '{}'", modeleDTO.getNom());
-        }
 
         if (modeleDTO.getDescriptionModification() != null) {
             modele.setDescriptionModification(modeleDTO.getDescriptionModification());
@@ -451,15 +459,37 @@ public class ModeleService {
         }
     }
 
-    public void replaceModelFile(Long id, MultipartFile file) throws IOException, ModelConventionNotFoundException {
+    public void replaceModelFile(Long id, MultipartFile file)
+            throws IOException, ModelConventionNotFoundException, ModelConventionAlreadyExistsException {
+
         Modele modele = modeleRepository.findById(id)
                 .orElseThrow(() -> new ModelConventionNotFoundException("Modèle introuvable"));
 
-        modele.setFichierBinaire(file.getBytes());
+        byte[] newFileBytes = file.getBytes();
+        String newHash = generateFileHash(newFileBytes);
+
+        // Vérifier si un autre modèle actif utilise déjà ce hash
+        Optional<Modele> existingWithSameHash = modeleRepository.findFirstByFichierHash(newHash);
+        if (existingWithSameHash.isPresent() && !existingWithSameHash.get().getId().equals(id)) {
+            if (!existingWithSameHash.get().isArchived()) {
+                throw new ModelConventionAlreadyExistsException("Ce fichier est déjà utilisé dans un autre modèle actif.");
+            }
+        }
+
         String newFileName = file.getOriginalFilename();
+
         if (newFileName != null && !newFileName.isBlank() && newFileName.endsWith(".docx")) {
+            Optional<Modele> existingWithSameName = modeleRepository.findFirstByNomAndArchivedFalse(newFileName);
+            if (existingWithSameName.isPresent() && !existingWithSameName.get().getId().equals(id)) {
+                throw new ModelConventionAlreadyExistsException("Un autre modèle actif utilise déjà le nom de fichier '" + newFileName + "'.");
+            }
             modele.setNom(newFileName);
         }
+
+
+        modele.setFichierBinaire(newFileBytes);
+        modele.setFichierHash(newHash);
+        modele.setDateDerniereModification(LocalDateTime.now());
 
         modeleRepository.save(modele);
     }

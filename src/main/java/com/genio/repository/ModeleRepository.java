@@ -34,4 +34,5 @@ public interface ModeleRepository extends JpaRepository<Modele, Long> {
     Optional<Modele> findFirstByNom(String nom);
     Optional<Modele> findFirstByFichierHash(String fichierHash);
     Optional<Modele> findFirstByNomAndArchivedFalse(String nom);
+    Optional<Modele> findFirstByAnneeAndArchivedFalse(String annee);
 }

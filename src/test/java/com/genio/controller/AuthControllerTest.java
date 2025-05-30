@@ -244,4 +244,5 @@ class AuthControllerTest {
         assertEquals("Token et nouveau mot de passe requis.", response3.getBody().get("message"));
     }
 
+
 }

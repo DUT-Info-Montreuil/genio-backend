@@ -171,9 +171,18 @@ public class ModeleController {
             modeleService.replaceModelFile(id, file);
             logger.info("Fichier remplacé avec succès pour le modèle ID {}", id);
             return ResponseEntity.ok(Map.of(KEY_MESSAGE, "Fichier remplacé avec succès"));
+        } catch (ModelConventionAlreadyExistsException e) {
+            logger.warn("Fichier déjà existant : {}", e.getMessage());
+            return ResponseEntity.status(400).body(Map.of(KEY_ERROR, "Ce fichier est déjà utilisé dans un autre modèle actif."));
+        } catch (ModelConventionNotFoundException e) {
+            logger.warn("Modèle introuvable : {}", e.getMessage());
+            return ResponseEntity.status(404).body(Map.of(KEY_ERROR, "Modèle introuvable."));
+        } catch (IOException e) {
+            logger.error("Erreur IO lors du remplacement du fichier", e);
+            return ResponseEntity.status(500).body(Map.of(KEY_ERROR, "Erreur lors de la lecture du fichier."));
         } catch (Exception e) {
-            logger.error("Erreur lors du remplacement de fichier pour le modèle ID {}", id, e);
-            return ResponseEntity.status(400).body(Map.of(KEY_ERROR, e.getMessage()));
+            logger.error("Erreur inattendue", e);
+            return ResponseEntity.status(500).body(Map.of(KEY_ERROR, "Erreur serveur inattendue."));
         }
     }
 
