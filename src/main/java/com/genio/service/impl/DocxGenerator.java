@@ -136,8 +136,6 @@ public class DocxGenerator {
             logger.trace("Paragraphe traité : {}", updatedText);
 
         } catch (Exception e) {
-            logger.error("Erreur lors de la mise à jour d’un paragraphe avec le texte modifié '{}'. Replacements fournis : {}",
-                    updatedText, replacements.keySet(), e);
             throw new DocxGenerationException("Impossible d’écrire le texte modifié dans un paragraphe : " + updatedText, e);
         }
     }

@@ -132,7 +132,6 @@ public class ModeleService {
 
             log.info("Modèle inséré avec succès : {}, année {}", modelName, modelYear);
         } catch (SQLException e) {
-            log.error("Erreur SQL lors de l'insertion du modèle '{}': {}", modelName, e.getMessage(), e);
             throw new DatabaseInsertionException("Erreur SQL lors de l'insertion du modèle '" + modelName + "' pour l'année " + modelYear, e);
         }
     }
@@ -194,7 +193,6 @@ public class ModeleService {
 
         Modele modele = modeleRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Modèle de convention introuvable pour l'ID {}", id);
                     return new ConventionServiceNotFoundException(MODEL_NOT_FOUND + id);
                 });
 
@@ -483,7 +481,6 @@ public class ModeleService {
             byte[] hashBytes = digest.digest(fileBytes);
             return Base64.getEncoder().encodeToString(hashBytes);
         } catch (Exception e) {
-        log.error("Erreur lors du calcul du hash SHA-256 pour un fichier de taille {} octets.", fileBytes.length, e);
         throw new FileHashGenerationException("Erreur lors du calcul du hash SHA-256 pour un fichier de taille " + fileBytes.length + " octets.", e);
     }
     }
