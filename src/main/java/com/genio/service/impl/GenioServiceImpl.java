@@ -127,6 +127,19 @@ public class GenioServiceImpl implements GenioService {
                     .orElseThrow(() -> new ModelNotFoundException("Erreur : modèle introuvable avec l'ID " + input.getModeleId()));
             logger.info("Modèle récupéré avec ID: {}", modele.getId());
 
+            if (modele.isArchived()) {
+                String message = "Erreur : le modèle demandé est archivé et ne peut pas être utilisé.";
+                logger.warn(message);
+                historisationService.sauvegarderHistorisation(
+                        input,
+                        null,
+                        null,
+                        STATUS_ECHEC,
+                        List.of(new ErreurDetaillee("modele", message, ErreurType.FLUX))
+                );
+                return new ConventionBinaireRes(false, null, message);
+            }
+
             ConventionBinaireRes erreurModele = verifierModele(modele);
             if (erreurModele != null) {
                 return erreurModele;
