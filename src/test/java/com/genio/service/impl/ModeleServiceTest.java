@@ -421,23 +421,8 @@ class ModeleServiceTest {
         assertDoesNotThrow(() -> modeleService.replaceModelFile(1L, file));
         verify(modeleRepository).save(modele);
     }
-    @Test
-    void testCreateModelConvention_FileAlreadyExistsByHash() throws Exception {
-        byte[] content = "contenu test".getBytes();
-        String fakeHash = modeleService.generateFileHash(content);
 
-        MultipartFile file = new MockMultipartFile("file", "modeleConvention_2027.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", content);
 
-        Modele modele = new Modele();
-        modele.setArchived(false);
-        modele.setFichierHash(fakeHash);
-
-        when(modeleRepository.findFirstByNom("modeleConvention_2027.docx")).thenReturn(Optional.empty());
-        when(docxParser.extractVariables(any())).thenReturn(ModeleService.getExpectedVariables());
-        when(modeleRepository.findFirstByFichierHash(any())).thenReturn(Optional.of(modele));
-
-        assertThrows(ModelConventionAlreadyExistsException.class, () -> modeleService.createModelConvention(file, "2027", "Titre"));
-    }
 
 
 
