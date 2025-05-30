@@ -53,15 +53,10 @@ public class DocxGenerator {
             return outputPath;
 
         } catch (UnreplacedPlaceholderException e) {
-            logger.error("Erreur de génération : placeholder non remplacé dans {}", conventionServicePath, e);
             throw new DocxGenerationException("Placeholder non remplacé dans " + conventionServicePath, e);
-
         } catch (FileNotFoundException e) {
-            logger.error("Fichier source introuvable lors de la lecture du modèle : {}", conventionServicePath, e);
             throw new DocxGenerationException("Fichier modèle introuvable : " + conventionServicePath, e);
-
         } catch (IOException e) {
-            logger.error("Erreur d'entrée/sortie lors de la lecture du modèle '{}' ou de l'écriture du fichier généré vers '{}'", conventionServicePath, outputPath, e);
             throw new DocxGenerationException("Erreur d'E/S entre le modèle '" + conventionServicePath + "' et le fichier de sortie '" + outputPath + "'", e);
         }
     }
@@ -80,17 +75,11 @@ public class DocxGenerator {
             logger.info("Fichier DOCX généré avec succès depuis modèle binaire.");
             return out.toByteArray();
         } catch (UnreplacedPlaceholderException e) {
-            logger.error("Échec : certaines variables n'ont pas été remplacées dans le modèle binaire", e);
             throw new DocxGenerationException("Échec lors du remplacement des variables dans le modèle DOCX binaire", e);
-
         } catch (IOException e) {
-            logger.error("Erreur d'entrée/sortie pendant la lecture/écriture du modèle binaire", e);
             throw new DocxGenerationException("Erreur d'E/S : lecture ou écriture du modèle binaire échouée (longueur = "
-        + (templateBytes != null ? templateBytes.length : "null") + " octets)", e);
-
+                    + (templateBytes != null ? templateBytes.length : "null") + " octets)", e);
         } catch (Exception e) {
-            logger.error("Erreur inattendue lors de la génération depuis un modèle DOCX binaire ({} octets)",
-                    templateBytes != null ? templateBytes.length : "null", e);
             throw new DocxGenerationException("Erreur imprévue durant la génération depuis modèle DOCX binaire (longueur = "
                     + (templateBytes != null ? templateBytes.length : "null") + ")", e);
         }
