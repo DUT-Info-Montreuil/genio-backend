@@ -454,9 +454,10 @@ public class ModeleService {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(fileBytes);
             return Base64.getEncoder().encodeToString(hashBytes);
-        }catch (Exception e) {
-            throw new FileHashGenerationException("Erreur lors du calcul du hash du fichier.", e);
-        }
+        } catch (Exception e) {
+        log.error("Erreur lors du calcul du hash SHA-256 pour un fichier de taille {} octets.", fileBytes.length, e);
+        throw new FileHashGenerationException("Erreur lors du calcul du hash SHA-256 pour un fichier de taille " + fileBytes.length + " octets.", e);
+    }
     }
 
     public void replaceModelFile(Long id, MultipartFile file)
@@ -470,8 +471,10 @@ public class ModeleService {
 
         // Vérifier si un autre modèle actif utilise déjà ce hash
         Optional<Modele> existingWithSameHash = modeleRepository.findFirstByFichierHash(newHash);
-        if (existingWithSameHash.isPresent() && !existingWithSameHash.get().getId().equals(id)) {
-            if (!existingWithSameHash.get().isArchived()) {
+        if (existingWithSameHash.isPresent()) {
+            Modele existing = existingWithSameHash.get();
+            if (!existing.getId().equals(id) && !existing.isArchived()) {
+                log.warn("Tentative de réutilisation du fichier (hash identique) dans un autre modèle actif ID {}.", existing.getId());
                 throw new ModelConventionAlreadyExistsException("Ce fichier est déjà utilisé dans un autre modèle actif.");
             }
         }

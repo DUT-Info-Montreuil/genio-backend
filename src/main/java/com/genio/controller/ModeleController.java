@@ -148,7 +148,9 @@ public class ModeleController {
                 return ResponseEntity.status(400).body("Aucun contenu exploitable détecté.");
             }
 
-            logger.info("Variables détectées : {}", String.join(", ", variables));
+            if (logger.isInfoEnabled()) {
+                 logger.info("Variables détectées : {}", String.join(", ", variables));
+            }
             return ResponseEntity.ok("Variables détectées : " + String.join(", ", variables));
         } catch (Exception e) {
             logger.error("Erreur lors de l'extraction des variables du modèle", e);
@@ -194,7 +196,9 @@ public class ModeleController {
                 .filter(Modele::isArchived)
                 .toList();
 
-        logger.info("{} modèle(s) archivé(s) récupéré(s).", archives.size());
+        if (logger.isInfoEnabled()) {
+            logger.info("{} modèle(s) archivé(s) récupéré(s).", archives.size());
+        }
 
         List<ModeleDTOForList> result = archives.stream()
                 .map(m -> new ModeleDTOForList(
@@ -222,7 +226,9 @@ public class ModeleController {
                 .filter(m -> titre == null || m.getTitre().toLowerCase().contains(titre.toLowerCase()))
                 .toList();
 
-        logger.info("Nombre de modèles trouvés correspondant aux critères : {}", found.size());
+        if (logger.isInfoEnabled()) {
+            logger.info("Nombre de modèles trouvés correspondant aux critères : {}", found.size());
+        }
 
         List<ModeleDTOForList> result = found.stream()
                 .map(m -> new ModeleDTOForList(

@@ -19,6 +19,7 @@ import com.genio.exception.business.CompteInactifException;
 import com.genio.repository.UtilisateurRepository;
 import com.genio.service.impl.MailService;
 import com.genio.service.impl.TokenService;
+import org.apache.commons.lang3.StringUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -107,9 +108,7 @@ public class AuthController {
             String token = tokenService.generateResetToken(utilisateur.getEmail());
             mailService.sendResetPasswordEmail(utilisateur.getEmail(), token);
             log.info("Email de réinitialisation envoyé à : {}", utilisateur.getEmail());
-        }, () -> {
-            log.warn("Email non trouvé dans la base : {}", email.trim());
-        });
+        }, () -> log.warn("Email non trouvé dans la base : {}", email.trim()));
 
         return ResponseEntity.ok(Collections.singletonMap(MESSAGE_KEY,
                 "Si cet email est enregistré, un e-mail a été envoyé."));
@@ -121,7 +120,7 @@ public class AuthController {
         String token = request.get("token");
         String nouveauMotDePasse = request.get("nouveauMotDePasse");
 
-        if (token == null || token.isEmpty() || nouveauMotDePasse == null || nouveauMotDePasse.isEmpty()) {
+        if (StringUtils.isBlank(token) || StringUtils.isBlank(nouveauMotDePasse)) {
             log.warn("Requête incomplète pour réinitialisation du mot de passe.");
             return ResponseEntity.badRequest()
                     .body(Collections.singletonMap(MESSAGE_KEY, "Token et nouveau mot de passe requis."));

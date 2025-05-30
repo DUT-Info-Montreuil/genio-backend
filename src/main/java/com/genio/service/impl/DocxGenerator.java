@@ -43,7 +43,6 @@ public class DocxGenerator {
              XWPFDocument document = new XWPFDocument(fis)) {
             logger.debug("Fichier modèle chargé avec succès.");
 
-
             processDocument(document, replacements);
 
             try (FileOutputStream fos = new FileOutputStream(outputPath)) {
@@ -53,9 +52,14 @@ public class DocxGenerator {
 
             return outputPath;
 
+        } catch (UnreplacedPlaceholderException e) {
+            logger.error("Erreur de génération : placeholder non remplacé dans {}", conventionServicePath, e);
+            throw new DocxGenerationException("Placeholder non remplacé dans " + conventionServicePath, e);
+
         } catch (FileNotFoundException e) {
             logger.error("Fichier source non trouvé : {}", conventionServicePath, e);
             throw new DocxGenerationException("Fichier source non trouvé : " + conventionServicePath, e);
+
         } catch (IOException e) {
             logger.error("Erreur d'E/S lors de la génération du fichier DOCX", e);
             throw new DocxGenerationException("Erreur d'E/S lors de la génération du fichier DOCX depuis : "
@@ -76,6 +80,10 @@ public class DocxGenerator {
 
             logger.info("Fichier DOCX généré avec succès depuis modèle binaire.");
             return out.toByteArray();
+
+        } catch (UnreplacedPlaceholderException e) {
+            logger.error("Erreur : placeholder non remplacé dans le modèle binaire", e);
+            throw new DocxGenerationException("Placeholder non remplacé dans le modèle binaire", e);
 
         } catch (Exception e) {
             logger.error("Erreur lors de la génération du fichier DOCX depuis le modèle binaire", e);

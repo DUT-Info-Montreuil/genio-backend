@@ -175,8 +175,8 @@
             <groupId>jakarta.mail</groupId>
             <artifactId>jakarta.mail-api</artifactId>
             <version>${jakarta.mail-api.version}</version>
-
         </dependency>
+
 
         <!-- Gestion des journaux et des traces -->
         <dependency>
