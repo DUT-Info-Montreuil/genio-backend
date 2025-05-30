@@ -192,9 +192,7 @@ public class ModeleService {
         log.info("Recherche du modèle de convention avec l'ID {}", id);
 
         Modele modele = modeleRepository.findById(id)
-                .orElseThrow(() -> {
-                    return new ConventionServiceNotFoundException(MODEL_NOT_FOUND + id);
-                });
+                .orElseThrow(() -> new ConventionServiceNotFoundException(MODEL_NOT_FOUND + id));
 
         log.info("Modèle trouvé : nom='{}', année='{}'", modele.getNom(), modele.getAnnee());
 
