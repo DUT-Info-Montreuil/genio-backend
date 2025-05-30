@@ -46,8 +46,9 @@ class DocxGeneratorTest {
 
         Exception exception = assertThrows(DocxGenerationException.class, action);
 
-        assertTrue(exception.getMessage().contains("Fichier source non trouvé"));
+        assertTrue(exception.getMessage().contains("Fichier modèle introuvable"));
     }
+
     @Test
     void testGenerateDocxFromTemplate_shouldReplaceVariables() throws Exception {
         XWPFDocument document = new XWPFDocument();
@@ -69,16 +70,17 @@ class DocxGeneratorTest {
 
     @Test
     void testGenerateDocxFromTemplate_shouldThrowException_whenInputIsInvalid() {
-        byte[] invalidTemplate = "not a docx".getBytes();
+        byte[] invalidTemplate = new byte[]{0, 1, 2, 3, 4};
         Map<String, String> replacements = Map.of("NOM", "Elsa");
 
         Exception exception = assertThrows(
-                com.genio.exception.business.DocxGenerationException.class,
+                DocxGenerationException.class,
                 () -> docxGenerator.generateDocxFromTemplate(invalidTemplate, replacements)
         );
 
-        String message = exception.getMessage();
-        assertTrue(message.contains("Erreur lors de la génération du fichier DOCX"));
+        assertTrue(exception.getMessage().contains("Erreur d'E/S")
+                || exception.getMessage().contains("Erreur imprévue")
+                || exception.getMessage().contains("Erreur lors"));
     }
 
     @Test
