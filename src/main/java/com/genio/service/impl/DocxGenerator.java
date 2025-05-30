@@ -61,7 +61,7 @@ public class DocxGenerator {
             throw new DocxGenerationException("Fichier modèle introuvable : " + conventionServicePath, e);
 
         } catch (IOException e) {
-            logger.error("Erreur d'entrée/sortie lors de l'écriture du fichier généré vers {}", outputPath, e);
+            logger.error("Erreur d'entrée/sortie lors de la lecture du modèle '{}' ou de l'écriture du fichier généré vers '{}'", conventionServicePath, outputPath, e);
             throw new DocxGenerationException("Erreur d'E/S entre le modèle '" + conventionServicePath + "' et le fichier de sortie '" + outputPath + "'", e);
         }
     }
@@ -85,11 +85,14 @@ public class DocxGenerator {
 
         } catch (IOException e) {
             logger.error("Erreur d'entrée/sortie pendant la lecture/écriture du modèle binaire", e);
-            throw new DocxGenerationException("Erreur d'E/S durant le traitement du modèle DOCX binaire", e);
+            throw new DocxGenerationException("Erreur d'E/S : lecture ou écriture du modèle binaire échouée (longueur = "
+        + (templateBytes != null ? templateBytes.length : "null") + " octets)", e);
 
         } catch (Exception e) {
-            logger.error("Erreur inattendue lors de la génération depuis un modèle binaire", e);
-            throw new DocxGenerationException("Erreur imprévue durant la génération depuis modèle DOCX binaire", e);
+            logger.error("Erreur inattendue lors de la génération depuis un modèle DOCX binaire ({} octets)",
+                    templateBytes != null ? templateBytes.length : "null", e);
+            throw new DocxGenerationException("Erreur imprévue durant la génération depuis modèle DOCX binaire (longueur = "
+                    + (templateBytes != null ? templateBytes.length : "null") + ")", e);
         }
     }
 
@@ -144,8 +147,9 @@ public class DocxGenerator {
             logger.trace("Paragraphe traité : {}", updatedText);
 
         } catch (Exception e) {
-            logger.error("Erreur inattendue lors de la mise à jour du paragraphe avec le texte : {}", updatedText, e);
-            throw new DocxGenerationException("Erreur lors de l'écriture du texte modifié dans un paragraphe", e);
+            logger.error("Erreur lors de la mise à jour d’un paragraphe avec le texte modifié '{}'. Replacements fournis : {}",
+                    updatedText, replacements.keySet(), e);
+            throw new DocxGenerationException("Impossible d’écrire le texte modifié dans un paragraphe : " + updatedText, e);
         }
     }
 }

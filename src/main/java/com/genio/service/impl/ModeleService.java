@@ -51,7 +51,7 @@ public class ModeleService {
     private static final String EXTENSION_DOCX = ".docx";
 
     private static final String MODEL_NOT_FOUND = "Modèle introuvable avec l'ID : ";
-    private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\.docx$";
+    private static final String FILENAME_REGEX = "^modeleConvention_\\d{4}\\" + EXTENSION_DOCX + "$";
 
 
     private final ConventionRepository conventionRepository;
@@ -509,7 +509,7 @@ public class ModeleService {
 
         String newFileName = file.getOriginalFilename();
 
-        if (newFileName != null && !newFileName.isBlank() && newFileName.endsWith(".docx")) {
+        if (newFileName != null && !newFileName.isBlank() && newFileName.endsWith(EXTENSION_DOCX)) {
             Optional<Modele> existingWithSameName = modeleRepository.findFirstByNomAndArchivedFalse(newFileName);
             if (existingWithSameName.isPresent() && !existingWithSameName.get().getId().equals(id)) {
                 throw new ModelConventionAlreadyExistsException("Un autre modèle actif utilise déjà le nom de fichier '" + newFileName + "'.");
