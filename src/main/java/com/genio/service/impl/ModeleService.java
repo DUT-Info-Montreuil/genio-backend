@@ -231,37 +231,78 @@ public class ModeleService {
         return malformed;
     }
 
-    public ModeleDTO createModelConvention(MultipartFile file, String annee, String titre)
-            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException,
-            MissingVariableException, InvalidFileFormatException {
+    private void validateFileAndYear(String filename, String year) {
+        if (filename == null || !filename.toLowerCase().endsWith(EXTENSION_DOCX)) {
+            log.warn("Fichier non valide : extension incorrecte ou nom null.");
+            throw new InvalidFileFormatException("Format non supporté, uniquement .docx accepté.");
+        }
 
-        String originalFilename = file.getOriginalFilename();
+        if (year == null || !year.matches("^\\d{4}$")) {
+            log.warn("Année invalide fournie : {}", year);
+            throw new InvalidFileFormatException("Année invalide. Format attendu : 4 chiffres (ex: 2025).");
+        }
+    }
+
+    private void checkForDuplicateNomHashAndAnnee(String originalFilename, String fileHash, String annee) throws ModelConventionAlreadyExistsException {
         Optional<Modele> existingByNomExact = modeleRepository.findFirstByNomAndArchivedFalse(originalFilename);
         if (existingByNomExact.isPresent()) {
             log.warn("Un fichier du même nom '{}' est déjà actif.", originalFilename);
             throw new ModelConventionAlreadyExistsException("Un fichier nommé '" + originalFilename + "' a déjà été ajouté et est encore actif.");
         }
-        log.info("Début de création d’un modèle de convention. Fichier reçu : '{}', année : '{}', titre : '{}'",
-                originalFilename, annee, titre);
-
-        if (originalFilename == null || !originalFilename.toLowerCase().endsWith(EXTENSION_DOCX)) {
-            log.warn("Fichier non valide : extension incorrecte ou nom null.");
-            throw new InvalidFileFormatException("Format non supporté, uniquement .docx accepté.");
-        }
-
-        if (annee == null || !annee.matches("^\\d{4}$")) {
-            log.warn("Année invalide fournie : {}", annee);
-            throw new InvalidFileFormatException("Année invalide. Format attendu : 4 chiffres (ex: 2025).");
-        }
-
-        byte[] fileBytes = file.getBytes();
-        String fileHash = generateFileHash(fileBytes);
 
         Optional<Modele> existingByHash = modeleRepository.findFirstByFichierHash(fileHash);
         if (existingByHash.isPresent() && !existingByHash.get().isArchived()) {
             log.warn("Un modèle identique (hash) est déjà enregistré et actif.");
             throw new ModelConventionAlreadyExistsException("Ce fichier a déjà été ajouté.");
         }
+
+        Optional<Modele> existingByAnnee = modeleRepository.findFirstByAnneeAndArchivedFalse(annee);
+        if (existingByAnnee.isPresent()) {
+            log.warn("Un modèle non archivé pour l'année {} existe déjà (ID {}).", annee, existingByAnnee.get().getId());
+            throw new ModelConventionAlreadyExistsException("Un modèle non archivé existe déjà pour l’année " + annee + ".");
+        }
+    }
+
+    private ModeleDTO reactivateArchivedModel(Modele existing, MultipartFile file, String titre, String originalFilename)
+            throws IOException {
+
+        log.info("Un modèle archivé a été trouvé. Réactivation en cours...");
+        existing.setArchived(false);
+        existing.setArchivedAt(null);
+        existing.setFichierBinaire(file.getBytes());
+        existing.setTitre((titre == null || titre.isBlank()) ? file.getOriginalFilename() : titre);
+        existing.setDateDerniereModification(LocalDateTime.now());
+
+        modeleRepository.save(existing);
+        saveFileToDirectory(file, originalFilename);
+
+        log.info("Modèle archivé réactivé et mis à jour. ID : {}", existing.getId());
+        return new ModeleDTO(
+                existing.getId(),
+                existing.getNom(),
+                existing.getAnnee(),
+                "docx",
+                existing.getDateDerniereModification().toString(),
+                titre,
+                null
+        );
+    }
+
+    public ModeleDTO createModelConvention(MultipartFile file, String annee, String titre)
+            throws ModelConventionAlreadyExistsException, DatabaseInsertionException, IOException,
+            MissingVariableException, InvalidFileFormatException {
+
+        String originalFilename = file.getOriginalFilename();
+
+        log.info("Début de création d’un modèle de convention. Fichier reçu : '{}', année : '{}', titre : '{}'",
+                originalFilename, annee, titre);
+
+        validateFileAndYear(originalFilename, annee);
+
+        byte[] fileBytes = file.getBytes();
+        String fileHash = generateFileHash(fileBytes);
+
+        checkForDuplicateNomHashAndAnnee(originalFilename, fileHash, annee);
 
         String generatedFilename = "modeleConvention_" + annee + EXTENSION_DOCX;
 
@@ -272,50 +313,11 @@ public class ModeleService {
                 log.warn("Un modèle pour l'année {} existe déjà et n’est pas archivé.", annee);
                 throw new ModelConventionAlreadyExistsException("Un modèle pour l'année " + annee + " existe déjà.");
             } else {
-                // Réactiver un modèle archivé
-                log.info("Un modèle archivé pour l'année {} a été trouvé. Réactivation en cours...", annee);
-                existing.setArchived(false);
-                existing.setArchivedAt(null);
-                existing.setFichierBinaire(file.getBytes());
-                existing.setTitre((titre == null || titre.isBlank()) ? file.getOriginalFilename() : titre);
-                existing.setDateDerniereModification(LocalDateTime.now());
-
-                modeleRepository.save(existing);
-                saveFileToDirectory(file, originalFilename);
-
-                log.info("Modèle archivé réactivé et mis à jour. ID : {}", existing.getId());
-                return new ModeleDTO(
-                        existing.getId(),
-                        existing.getNom(),
-                        existing.getAnnee(),
-                        "docx",
-                        existing.getDateDerniereModification().toString(),
-                        titre,
-                        null
-                );
+                return reactivateArchivedModel(existing, file, titre, originalFilename);
             }
         }
 
-        // Vérification supplémentaire : un modèle non archivé existe-t-il déjà pour la même année ?
-        Optional<Modele> existingByAnnee = modeleRepository.findFirstByAnneeAndArchivedFalse(annee);
-        if (existingByAnnee.isPresent()) {
-            log.warn("Un modèle non archivé pour l'année {} existe déjà (ID {}).", annee, existingByAnnee.get().getId());
-            throw new ModelConventionAlreadyExistsException("Un modèle non archivé existe déjà pour l’année " + annee + ".");
-        }
-
-        List<String> foundVariables = docxParser.extractVariables(file);
-        if (foundVariables == null || foundVariables.isEmpty()) {
-            log.error("Aucune variable trouvée dans le fichier, possiblement non valide.");
-            throw new InvalidFileFormatException("Le fichier ne semble pas être un modèle valide.");
-        }
-
-        List<String> missingVariables = findMissingVariables(foundVariables);
-        List<String> malformedVariables = findMalformedVariables(foundVariables);
-
-        if (!missingVariables.isEmpty() || !malformedVariables.isEmpty()) {
-            log.warn("Variables manquantes ou mal formées détectées dans le modèle.");
-            throw new MissingVariableException("Le fichier contient des erreurs de variables.");
-        }
+        validateDocxVariables(file);
 
         Modele modele = new Modele();
         modele.setNom(originalFilename);
@@ -354,6 +356,32 @@ public class ModeleService {
         }
 
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void validateDocxVariables(MultipartFile file) throws IOException, MissingVariableException {
+        List<String> foundVariables = docxParser.extractVariables(file);
+
+        if (foundVariables == null || foundVariables.isEmpty()) {
+            log.error("Aucune variable trouvée dans le fichier, possiblement non valide.");
+            throw new InvalidFileFormatException("Le fichier ne semble pas être un modèle valide.");
+        }
+
+        List<String> missingVariables = findMissingVariables(foundVariables);
+        List<String> malformedVariables = findMalformedVariables(foundVariables);
+
+        if (!missingVariables.isEmpty()) {
+            log.warn("Variables manquantes : {}", missingVariables);
+        }
+
+        if (!malformedVariables.isEmpty()) {
+            log.warn("Variables mal formées : {}", malformedVariables);
+        }
+
+        if (!missingVariables.isEmpty() || !malformedVariables.isEmpty()) {
+            throw new MissingVariableException("Le fichier contient des erreurs de variables.");
+        }
+
+        log.debug("Toutes les variables nécessaires sont présentes et bien formées.");
     }
 
     public void updateModelConvention(Integer id, ModeleDTO modeleDTO)

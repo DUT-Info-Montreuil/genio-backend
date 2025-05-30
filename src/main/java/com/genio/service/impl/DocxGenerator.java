@@ -57,13 +57,12 @@ public class DocxGenerator {
             throw new DocxGenerationException("Placeholder non remplacé dans " + conventionServicePath, e);
 
         } catch (FileNotFoundException e) {
-            logger.error("Fichier source non trouvé : {}", conventionServicePath, e);
-            throw new DocxGenerationException("Fichier source non trouvé : " + conventionServicePath, e);
+            logger.error("Fichier source introuvable lors de la lecture du modèle : {}", conventionServicePath, e);
+            throw new DocxGenerationException("Fichier modèle introuvable : " + conventionServicePath, e);
 
         } catch (IOException e) {
-            logger.error("Erreur d'E/S lors de la génération du fichier DOCX", e);
-            throw new DocxGenerationException("Erreur d'E/S lors de la génération du fichier DOCX depuis : "
-                    + conventionServicePath + " vers " + outputPath, e);
+            logger.error("Erreur d'entrée/sortie lors de l'écriture du fichier généré vers {}", outputPath, e);
+            throw new DocxGenerationException("Erreur d'E/S entre le modèle '" + conventionServicePath + "' et le fichier de sortie '" + outputPath + "'", e);
         }
     }
 
@@ -80,14 +79,17 @@ public class DocxGenerator {
 
             logger.info("Fichier DOCX généré avec succès depuis modèle binaire.");
             return out.toByteArray();
-
         } catch (UnreplacedPlaceholderException e) {
-            logger.error("Erreur : placeholder non remplacé dans le modèle binaire", e);
-            throw new DocxGenerationException("Placeholder non remplacé dans le modèle binaire", e);
+            logger.error("Échec : certaines variables n'ont pas été remplacées dans le modèle binaire", e);
+            throw new DocxGenerationException("Échec lors du remplacement des variables dans le modèle DOCX binaire", e);
+
+        } catch (IOException e) {
+            logger.error("Erreur d'entrée/sortie pendant la lecture/écriture du modèle binaire", e);
+            throw new DocxGenerationException("Erreur d'E/S durant le traitement du modèle DOCX binaire", e);
 
         } catch (Exception e) {
-            logger.error("Erreur lors de la génération du fichier DOCX depuis le modèle binaire", e);
-            throw new DocxGenerationException("Erreur lors de la génération du fichier DOCX à partir du template binaire", e);
+            logger.error("Erreur inattendue lors de la génération depuis un modèle binaire", e);
+            throw new DocxGenerationException("Erreur imprévue durant la génération depuis modèle DOCX binaire", e);
         }
     }
 
@@ -130,15 +132,20 @@ public class DocxGenerator {
         if (updatedText.contains("${")) {
             String missing = updatedText.substring(updatedText.indexOf("${"));
             logger.error("Placeholders non remplacés détectés : {}", missing);
-            throw new UnreplacedPlaceholderException("Certains placeholders n'ont pas été remplacés : " + missing);
+            throw new UnreplacedPlaceholderException("Placeholders non remplacés dans un paragraphe : " + missing);
         }
 
-        if (!paragraph.getRuns().isEmpty()) {
-            paragraph.getRuns().get(0).setText(updatedText, 0);
-        } else {
-            paragraph.createRun().setText(updatedText);
-        }
+        try {
+            if (!paragraph.getRuns().isEmpty()) {
+                paragraph.getRuns().get(0).setText(updatedText, 0);
+            } else {
+                paragraph.createRun().setText(updatedText);
+            }
+            logger.trace("Paragraphe traité : {}", updatedText);
 
-        logger.trace("Paragraphe traité : {}", updatedText);
+        } catch (Exception e) {
+            logger.error("Erreur inattendue lors de la mise à jour du paragraphe avec le texte : {}", updatedText, e);
+            throw new DocxGenerationException("Erreur lors de l'écriture du texte modifié dans un paragraphe", e);
+        }
     }
 }

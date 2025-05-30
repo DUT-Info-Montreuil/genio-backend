@@ -96,22 +96,35 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> motDePasseOublie(@RequestBody Map<String, String> request) {
         String email = request.get("email");
 
-        if (email == null || email.trim().isEmpty()) {
+        if (StringUtils.isBlank(email)) {
             log.warn("Requête de mot de passe oublié sans email fourni.");
             return ResponseEntity.badRequest()
                     .body(Collections.singletonMap(MESSAGE_KEY, "Email requis."));
         }
 
-        log.info("Requête de mot de passe oublié reçue pour : {}", email.trim());
+        String emailTrimmed = email.trim();
+        log.info("Requête de mot de passe oublié reçue pour : {}", emailTrimmed);
 
-        utilisateurRepository.findByEmail(email.trim()).ifPresentOrElse(utilisateur -> {
-            String token = tokenService.generateResetToken(utilisateur.getEmail());
-            mailService.sendResetPasswordEmail(utilisateur.getEmail(), token);
-            log.info("Email de réinitialisation envoyé à : {}", utilisateur.getEmail());
-        }, () -> log.warn("Email non trouvé dans la base : {}", email.trim()));
+        return utilisateurRepository.findByEmail(emailTrimmed)
+                .map(utilisateur -> {
+                    String token = tokenService.generateResetToken(utilisateur.getEmail());
 
-        return ResponseEntity.ok(Collections.singletonMap(MESSAGE_KEY,
-                "Si cet email est enregistré, un e-mail a été envoyé."));
+                    // ✅ Protection explicite autour de l'envoi de l'email
+                    if (StringUtils.isNotBlank(token)) {
+                        mailService.sendResetPasswordEmail(utilisateur.getEmail(), token);
+                        log.info("Email de réinitialisation envoyé à : {}", utilisateur.getEmail());
+                    } else {
+                        log.warn("Échec de génération de token pour : {}", utilisateur.getEmail());
+                    }
+
+                    return ResponseEntity.ok(Collections.singletonMap(MESSAGE_KEY,
+                            "Si cet email est enregistré, un e-mail a été envoyé."));
+                })
+                .orElseGet(() -> {
+                    log.warn("Email non trouvé dans la base : {}", emailTrimmed);
+                    return ResponseEntity.ok(Collections.singletonMap(MESSAGE_KEY,
+                            "Si cet email est enregistré, un e-mail a été envoyé."));
+                });
     }
 
 
