@@ -16,10 +16,6 @@ package com.genio.controller;
 
 import com.genio.dto.outputmodeles.ModeleDTO;
 import com.genio.dto.outputmodeles.ModeleDTOForList;
-import com.genio.exception.business.IntegrityCheckFailedException;
-import com.genio.exception.business.MissingVariableException;
-import com.genio.exception.business.ModelConventionAlreadyExistsException;
-import com.genio.exception.business.ModelConventionNotFoundException;
 import com.genio.mapper.DocxParser;
 import com.genio.model.*;
 import com.genio.repository.*;
@@ -28,9 +24,6 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,15 +43,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class ModeleControllerTest {
+public class ModeleControllerTest {
 
     @Autowired
     private ModeleController modeleController;
