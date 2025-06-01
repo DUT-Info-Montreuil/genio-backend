@@ -9,7 +9,7 @@
 
 ## Projet académique
 
-Ce projet a été développé dans le cadre de la troisième année du Bachelor Universitaire de Technologie (BUT Informatique) à l’IUT de Montreuil.  
+Ce projet a été développé dans le cadre de la troisième année du Bachelor Universitaire de Technologie (BUT Informatique) à l’IUT de Montreuil.
 
 **GenioService** est une application de gestion de conventions de stage permettant la génération, l’historisation, la validation et le suivi documentaire.
 
@@ -39,7 +39,7 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 - [02 - Installation & prérequis](docs/02-installation.md)
 - [03 - Déploiement (dev & prod)](docs/03-deploiement.md)
 - [04 - Documentation fonctionnelle](docs/04-doc-fonctionnelle.md)
-- [05 - Design UX & Parcours utilisateur](docs/05-ux)
-- [06 - Sécurité & RGPD](docs/06-rgpd)
+- [05 - Design UX & Parcours utilisateur](docs/05-ux.md)
+- [06 - Sécurité & RGPD](docs/06-rgpd.md)
 - [Changelog](CHANGELOG.md)
 - [Licence (CC BY-NC-SA 4.0)](licence.md)
