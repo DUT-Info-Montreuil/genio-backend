@@ -7,6 +7,8 @@
     <groupId>com.genio.service</groupId>
     <artifactId>GenioService</artifactId>
     <version>1.0.0-RELEASE</version>
+    <!--Attention on génére un WAR donc il faut lancer un mvn spring-boot:run pour lancer -->
+    <packaging>war</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -242,6 +244,13 @@
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
             <version>${byte-buddy.version}</version>
+        </dependency>
+
+        <!-- tomcat pour springboot -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+          <scope>provided</scope>
         </dependency>
     </dependencies>
 
