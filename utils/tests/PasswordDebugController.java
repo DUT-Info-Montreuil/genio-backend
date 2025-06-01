@@ -1,4 +1,4 @@
-package com.genio.utils;
+package com.genio;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

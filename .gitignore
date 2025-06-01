@@ -55,3 +55,6 @@ output/
 ### Fichiers de configuration Spring Boot ###
 src/main/resources/application.properties
 !src/test/resources/application.properties
+
+# Ignorer le vrai fichier de config externe dans utils
+/utils/application-external.properties
