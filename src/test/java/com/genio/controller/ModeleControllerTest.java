@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ModeleControllerTest {
+class ModeleControllerTest {
 
     @Autowired
     private ModeleController modeleController;

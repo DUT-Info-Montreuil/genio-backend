@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WithMockUser
 @WebMvcTest(controllers = UtilisateurController.class)
-public class UtilisateurControllerTest {
+class UtilisateurControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

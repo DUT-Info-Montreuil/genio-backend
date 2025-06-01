@@ -40,7 +40,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class AuthControllerTest {
+class AuthControllerTest {
 
     private AuthenticationManager authenticationManager;
     private UtilisateurRepository utilisateurRepository;

@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-public class GenioControllerTest {
+class GenioControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

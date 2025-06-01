@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ModeleControllerCatchTest {
+class ModeleControllerCatchTest {
     @MockBean
     private ModeleService modeleService;
 

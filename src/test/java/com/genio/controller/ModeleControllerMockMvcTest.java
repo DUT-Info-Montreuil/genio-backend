@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ModeleController.class)
-public class ModeleControllerMockMvcTest {
+class ModeleControllerMockMvcTest {
 
     @Autowired
     private MockMvc mockMvc;
