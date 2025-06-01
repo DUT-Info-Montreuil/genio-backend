@@ -45,3 +45,24 @@ le port de l'application, ainsi que les options Hibernate et le chemin des modè
 Pour déployer ou exécuter l'application, copiez ce fichier en `application-external.properties` et adaptez-le  
 avec vos paramètres locaux (hôte, utilisateur, mot de passe, etc.).  
 Cela permet de séparer la configuration sensible ou variable du code source.
+
+## Fichiers SQL d'initialisation
+
+Deux fichiers SQL sont disponibles dans le dossier `utils/tests` pour faciliter la préparation de la base de données en environnement de développement :
+
+- **`create-db.sql`**  
+  Ce fichier contient :
+    - La création de la base `genioservice_db` si elle n’existe pas.
+    - La suppression de la table `utilisateur` si elle existe (utile pour réinitialiser).
+    - La création de la table `utilisateur` avec les champs requis (email, rôle, mot de passe hashé, etc.).
+
+- **`init.sql`**  
+  Ce fichier insère trois utilisateurs de test avec des mots de passe déjà hashés :
+
+  | Email                     | Rôle         | Mot de passe en clair    |
+    |---------------------------|--------------|---------------------------|
+  | alice.martin@genio.com    | GESTIONNAIRE | `Genio2025!@A`            |
+  | bruno.leroy@genio.com     | EXPLOITANT   | `StrongPass#22`           |
+  | clara.dubois@genio.com    | CONSULTANT   | `Cl@raSecure99`           |
+
+> Ces fichiers peuvent être exécutés manuellement via un client MySQL ou automatiquement montés dans un conteneur Docker via le dossier `docker-entrypoint-initdb.d`.
