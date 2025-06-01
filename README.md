@@ -34,13 +34,12 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 
 ## Sommaire
 
-- [📖 00 - Introduction](docs/00-introduction.md)
-- [🔧 01 - Architecture technique](docs/01-architecture.md)
-- [⚙️ 02 - Installation & prérequis](docs/02-installation.md)
-- [🚀 03 - Déploiement (dev & prod)](docs/03-deploiement.md)
-- [📝 04 - Documentation fonctionnelle](docs/04-doc-fonctionnelle.md)
-- [♿ 05 - Accessibilité (WCAG)](docs/05-accessibilite.md)
-- [🎯 06 - Design UX & Parcours utilisateur](docs/06-ux.md)
-- [🔐 07 - Sécurité & RGPD](docs/07-rgpd.md)
-- [📝 Changelog](CHANGELOG.md)
-- [📄 Licence (CC BY-NC-SA 4.0)](licence.md)
+- [00 - Introduction](docs/00-introduction.md)
+- [01 - Architecture technique](docs/01-architecture.md)
+- [02 - Installation & prérequis](docs/02-installation.md)
+- [03 - Déploiement (dev & prod)](docs/03-deploiement.md)
+- [04 - Documentation fonctionnelle](docs/04-doc-fonctionnelle.md)
+- [05 - Design UX & Parcours utilisateur](docs/05-ux)
+- [06 - Sécurité & RGPD](docs/06-rgpd)
+- [Changelog](CHANGELOG.md)
+- [Licence (CC BY-NC-SA 4.0)](licence.md)
