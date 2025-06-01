@@ -26,7 +26,7 @@ Le projet utilise Maven pour la gestion des dépendances, le cycle de vie de con
 - **Hibernate Validator 8.0.2** : validation des données via annotations (`@NotBlank`, `@Pattern`, etc.).
 - **Jakarta Mail (version 2.0.x - 2.1.x)** : gestion de l’envoi d’emails.
 - **Apache POI 5.4.0** : manipulation des fichiers Microsoft Office (extraction et génération de fichiers DOCX).
-- **MySQL Connector/J 9.0.0** : connecteur JDBC pour la base de données MySQL.
+- **MySQL Connector/J 9.0.0** : connecteur JDBC pour la base de données MySQL **9.0.1**.
 - **Lombok 1.18.38** : réduction du code boilerplate grâce aux annotations (`@Getter`, `@Setter`, etc.).
 - **Spring Security** : gestion de la sécurité, authentification et autorisation.
 - **Spring Data JPA** : abstraction pour accès base de données avec Hibernate.

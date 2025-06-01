@@ -242,9 +242,8 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 - En cliquant sur le bouton **"Réinitialiser"**, une requête `POST /auth/mot-de-passe-oublie` est envoyée.
 - Si l’email est associé à un compte existant :
   - Un email de réinitialisation est envoyé.
-  - Un **message de succès** est affiché : _"Un e-mail de réinitialisation a été envoyé si votre adresse est enregistrée."_
-- En cas d’erreur :
-  - Un **message d’erreur** s’affiche dynamiquement.
+  - Un **message de succès** s’affiche : _"Un e-mail de réinitialisation a été envoyé si votre adresse est enregistrée."_
+- En cas d’erreur (problème réseau ou format invalide), un **message d’erreur clair** s’affiche dynamiquement.
 - Un lien **"Se connecter"** permet de revenir à la page de connexion.
 
 ---
@@ -255,10 +254,12 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 - Envoi sécurisé de la requête au backend (`POST`)
 - Affichage :
   - D’un **message d’erreur** en cas d’échec
-  - D’un **message de confirmation** même si l’email n’existe pas (pour éviter l’exploitation)
+  - D’un **message de confirmation** identique que l’email existe ou non
 - Accessibilité :
   - `aria-label`, `aria-describedby`, `aria-invalid`, `aria-live`
   - Navigation **clavier** et **lecteurs d’écran** supportés
+- Focus automatique sur le champ e-mail à l’ouverture
+- Message **neutre** pour éviter les attaques par énumération
 - Bouton désactivé pendant la soumission
 - Redirection manuelle possible vers la page de connexion
 
@@ -267,19 +268,21 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 ### Exigences techniques
 
 - **Framework** : Angular 17
-- Composants : `FormsModule`, `NgIf`, `NgClass`, `RouterLink`
-- API :
+- **Composants Angular** : `FormsModule`, `NgIf`, `NgClass`, `RouterLink`
+- **API** :
   - `POST /auth/mot-de-passe-oublie` avec `Content-Type: application/json`
-- Accessibilité & UX :
-  - `aria-labelledby="reset-title"` pour le formulaire
+- **Accessibilité & UX** :
+  - Formulaire avec `aria-labelledby="reset-title"`
   - `aria-describedby` dynamique selon l’état d’erreur
   - Bouton avec `aria-busy` pendant l’envoi
-- Sécurité :
-  - Message neutre, identique que l’email existe ou non
-  - Aucune information sensible révélée côté frontend
-- Design :
-  - Interface centrée
-  - Message temporaire (5 secondes pour erreur, 2 secondes pour succès)
+  - Messages intégrés dans `aria-live="polite"` pour lecteurs d’écran
+- **Sécurité** :
+  - Message neutre, même si l’e-mail n’est pas enregistré
+  - Aucune donnée sensible affichée côté frontend
+- **Design** :
+  - Interface centrée, responsive
+  - Message de succès temporaire (2 secondes)
+  - Message d’erreur temporaire (5 secondes)
 
 ---
 
