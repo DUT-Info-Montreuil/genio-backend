@@ -15,7 +15,7 @@ RUN npm install && npm run build
 FROM tomcat:9-jdk17
 LABEL maintainer="Elsa Hadjadj <elsa.simha.hadjadj@gmail.com>"
 RUN rm -rf /usr/local/tomcat/webapps/*
-COPY --from=builder-backend /app/backend/target/*.war /usr/local/tomcat/webapps/genioservice.war
+COPY --from=builder-backend /app/backend/target/GenioService-1.0.0-RELEASE.war /usr/local/tomcat/webapps/genioservice.war
 COPY --from=builder-frontend /app/frontend/dist /usr/local/tomcat/webapps/ROOT
 COPY ./config/application-external.properties /usr/local/tomcat/conf/
 EXPOSE 8080
