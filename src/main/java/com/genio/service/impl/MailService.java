@@ -39,7 +39,7 @@ public class MailService {
         message.setText(
                 "Bonjour,\n\n" +
                         "Vous avez demandé la réinitialisation de votre mot de passe.\n\n" +
-                        "Voici votre lien sécurisé :\n" + resetLink + "\n\n" +
+                         "Voici votre lien sécurisé :\n" + resetLink + "\n\n" +
                         "Si vous n'avez pas effectué cette demande, veuillez ignorer cet e-mail.\n\n" +
                         "--\nGenioService");
 

@@ -3,17 +3,17 @@
 USE genioservice_db;
 
 INSERT IGNORE INTO utilisateur (id, actif, created_at, email, mot_de_passe, nom, prenom, role, updated_at) VALUES
--- GESTIONNAIRE
-(1001, 1, NOW(), 'jean.dupond@example.com',
- '$2a$10$90yfR7/5dcRZQJJ76CU1du3f5fyaeKDX41TVLJO1czaMb30A2O3lO',
- 'Dupont', 'Jean', 'GESTIONNAIRE', NOW()),
+-- GESTIONNAIRE : mot de pase en clair : Genio2025!@A
+(1001, 1, NOW(), 'alice.martin@genio.com',
+ '$2a$10$nlIpNm4gyHWI/sEqjAifSe512IVY2UWM1AxcyNT//D.efM/XHUPRC',
+ 'Martin', 'Alice', 'GESTIONNAIRE', NOW()),
 
--- EXPLOITANT
-(1002, 1, NOW(), 'elsa.simha.hadjadj@gmail.com',
- '$2a$10$2PzyRey0QtfOCaxvUo9BZOPRDVZF.jx4ErzxzhNQAwT/adG1iFxF2',
- 'Martin', 'Clara', 'EXPLOITANT', NOW()),
+-- EXPLOITANT : mot de passe en clair : StrongPass#22
+(1002, 1, NOW(), 'bruno.leroy@genio.com',
+ '$2a$10$RLB6.caGKci0oTCLqalfb.iiw7CLv5q4BUUAca3zUV0v58Y8gWo/a',
+ 'Leroy', 'Bruno', 'EXPLOITANT', NOW()),
 
--- CONSULTANT
-(1003, 1, NOW(), 'jean.dupont@example.com',
- '$2a$10$90yfR7/5dcRZQJJ76CU1du3f5fyaeKDX41TVLJO1czaMb30A2O3lO',
- 'Leroy', 'Thomas', 'CONSULTANT', NOW());
+-- CONSULTANT : mot de passe en clair : Cl@raSecure99
+(1003, 1, NOW(), 'clara.dubois@genio.com',
+ '$2a$10$PubCOI.vsAm.1zkymcuHOOJaM8g/IlKQNO61vWeHCVqMSNgNCF7dO',
+ 'Dubois', 'Clara', 'CONSULTANT', NOW());

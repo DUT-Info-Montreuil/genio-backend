@@ -98,7 +98,7 @@ modele.conventionServices.directory=src/main/resources/conventionServices
 Utilisez cette commande Maven depuis la racine du backend :
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.location=file:utils/application-external.properties"
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.config.location=file:utils/application-external.properties"
 ```
 
 ### 6.2 Depuis IntelliJ avec la flèche verte ("chillish")
