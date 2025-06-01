@@ -51,12 +51,11 @@ class MaitreDeStageDTOTest {
         assertTrue(result.contains("email@example.com"));
     }
 
-    // Test validation constraints on setters
 
     @Test
     void testPrenomNotBlankValidation() {
         MaitreDeStageDTO dto = new MaitreDeStageDTO();
-        dto.setPrenom(""); // empty string
+        dto.setPrenom("");
 
         Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
         boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("prenom") &&
@@ -67,7 +66,7 @@ class MaitreDeStageDTOTest {
     @Test
     void testFonctionNotBlankValidation() {
         MaitreDeStageDTO dto = new MaitreDeStageDTO();
-        dto.setFonction(" "); // blank string
+        dto.setFonction(" ");
 
         Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
         boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("fonction") &&
@@ -78,7 +77,7 @@ class MaitreDeStageDTOTest {
     @Test
     void testTelephonePatternValidation() {
         MaitreDeStageDTO dto = new MaitreDeStageDTO();
-        dto.setTelephone("1234567890"); // invalid format
+        dto.setTelephone("1234567890");
 
         Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
         boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("telephone") &&
@@ -89,7 +88,7 @@ class MaitreDeStageDTOTest {
     @Test
     void testEmailValidation() {
         MaitreDeStageDTO dto = new MaitreDeStageDTO();
-        dto.setEmail("not-an-email"); // invalid email
+        dto.setEmail("not-an-email");
 
         Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
         boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email") &&
@@ -100,7 +99,7 @@ class MaitreDeStageDTOTest {
     @Test
     void testValidTelephone() {
         MaitreDeStageDTO dto = new MaitreDeStageDTO();
-        dto.setTelephone("01.23.45.67.89"); // valid format
+        dto.setTelephone("01.23.45.67.89");
 
         Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
         boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("telephone"));

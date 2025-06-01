@@ -133,10 +133,8 @@ class UtilisateurUpdateDTOTest {
         dto.setRole("ROLE");
         dto.setActif(true);
 
-        // Comparaison avec null doit être false
         assertNotEquals(null, dto);
 
-        // Comparaison avec objet d’une autre classe doit être false
         assertNotEquals(dto, new Object());
     }
 
