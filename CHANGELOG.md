@@ -65,7 +65,7 @@
 * [Docs] Fichiers `docs/*.md` : architecture, sécurité, accessibilité, RGPD, UX, tests, etc. ;
 * [Audit_SonarCube] Image du Quality Gate et détails :
   * ✅ 0 bug, 0 vulnérabilité, 0 code smell ;
-  * ✅ 234 tests unitaires ;
-  * ✅ 1% duplication de code ;
+  * ✅ 295 tests unitaires ;
+  * ✅ 0.7% duplication de code ;
 
 ---
