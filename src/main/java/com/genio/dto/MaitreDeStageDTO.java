@@ -18,10 +18,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class MaitreDeStageDTO {
 
+    @Setter
     @NotBlank(message = "Le nom du tuteur est obligatoire.")
     private String nom;
 
@@ -47,8 +49,7 @@ public class MaitreDeStageDTO {
         this.email = email;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public MaitreDeStageDTO() {
     }
 
     @Override

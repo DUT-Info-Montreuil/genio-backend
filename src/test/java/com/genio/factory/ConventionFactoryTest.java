@@ -18,6 +18,9 @@ import com.genio.dto.input.ConventionServiceDTO;
 import com.genio.model.*;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConventionFactoryTest {
@@ -60,5 +63,19 @@ class ConventionFactoryTest {
         assertThrows(IllegalArgumentException.class, () -> ConventionFactory.createConvention(input, etudiant, null, tuteur, modele));
         assertThrows(IllegalArgumentException.class, () -> ConventionFactory.createConvention(input, etudiant, maitre, null, modele));
         assertThrows(IllegalArgumentException.class, () -> ConventionFactory.createConvention(input, etudiant, maitre, tuteur, null));
+    }
+
+    @Test
+    void testPrivateConstructor_shouldThrowUnsupportedOperationException() throws Exception {
+        Constructor<ConventionFactory> constructor = ConventionFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        InvocationTargetException thrown = assertThrows(InvocationTargetException.class, () -> {
+            constructor.newInstance();
+        });
+
+        Throwable cause = thrown.getCause();
+        assertTrue(cause instanceof UnsupportedOperationException);
+        assertEquals("Cette classe ne doit pas être instanciée.", cause.getMessage());
     }
 }

@@ -151,7 +151,7 @@ public class GenioServiceImpl implements GenioService {
                         .map(e -> "Le champ '" + e.getChamp() + "' : " + e.getMessage())
                         .collect(Collectors.joining(", "));
 
-                historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, erreurs); // 👈 c’est maintenant une List
+                historisationService.sauvegarderHistorisation(input, null, null, STATUS_ECHEC, erreurs);
 
                 return new ConventionBinaireRes(false, null, "Les erreurs suivantes ont été détectées : " + messageGlobal);
             }

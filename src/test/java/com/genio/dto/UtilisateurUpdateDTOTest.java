@@ -124,4 +124,94 @@ class UtilisateurUpdateDTOTest {
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertNotEquals(dto1.hashCode(), dto3.hashCode());
     }
+
+    @Test
+    void testEqualsWithNullAndDifferentClass() {
+        UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();
+        dto.setNom("Nom");
+        dto.setPrenom("Prenom");
+        dto.setRole("ROLE");
+        dto.setActif(true);
+
+        // Comparaison avec null doit être false
+        assertNotEquals(null, dto);
+
+        // Comparaison avec objet d’une autre classe doit être false
+        assertNotEquals(dto, new Object());
+    }
+
+    @Test
+    void testEqualsWithPartialDifferences() {
+        UtilisateurUpdateDTO dto1 = new UtilisateurUpdateDTO();
+        dto1.setNom("Nom");
+        dto1.setPrenom("Prenom");
+        dto1.setRole("ROLE");
+        dto1.setActif(true);
+
+        // Changement d’un seul champ à la fois
+
+        UtilisateurUpdateDTO dto2 = new UtilisateurUpdateDTO();
+        dto2.setNom("NomDiff");
+        dto2.setPrenom("Prenom");
+        dto2.setRole("ROLE");
+        dto2.setActif(true);
+        assertNotEquals(dto1, dto2);
+
+        dto2.setNom("Nom");
+        dto2.setPrenom("PrenomDiff");
+        assertNotEquals(dto1, dto2);
+
+        dto2.setPrenom("Prenom");
+        dto2.setRole("ROLE_DIFF");
+        assertNotEquals(dto1, dto2);
+
+        dto2.setRole("ROLE");
+        dto2.setActif(false);
+        assertNotEquals(dto1, dto2);
+    }
+
+    @Test
+    void testEqualsWithNullFields() {
+        UtilisateurUpdateDTO dto1 = new UtilisateurUpdateDTO();
+        dto1.setNom(null);
+        dto1.setPrenom(null);
+        dto1.setRole(null);
+        dto1.setActif(null);
+
+        UtilisateurUpdateDTO dto2 = new UtilisateurUpdateDTO();
+        dto2.setNom(null);
+        dto2.setPrenom(null);
+        dto2.setRole(null);
+        dto2.setActif(null);
+
+        assertEquals(dto1, dto2);
+        assertEquals(dto1.hashCode(), dto2.hashCode());
+
+        dto2.setNom("NonNull");
+        assertNotEquals(dto1, dto2);
+    }
+
+    @Test
+    void testHashCodeConsistency() {
+        UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();
+        dto.setNom("Nom");
+        dto.setPrenom("Prenom");
+        dto.setRole("ROLE");
+        dto.setActif(true);
+
+        int hash1 = dto.hashCode();
+        int hash2 = dto.hashCode();
+
+        assertEquals(hash1, hash2, "hashCode doit être consistent entre appels");
+    }
+
+    @Test
+    void testEquals_SameObjectReturnsTrue() {
+        UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();
+        dto.setNom("Nom");
+        dto.setPrenom("Prenom");
+        dto.setRole("ROLE");
+        dto.setActif(true);
+        assertTrue(dto.equals(dto));
+    }
 }

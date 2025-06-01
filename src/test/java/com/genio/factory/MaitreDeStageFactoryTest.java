@@ -18,6 +18,9 @@ import com.genio.dto.MaitreDeStageDTO;
 import com.genio.model.MaitreDeStage;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaitreDeStageFactoryTest {
@@ -42,5 +45,19 @@ class MaitreDeStageFactoryTest {
     @Test
     void testCreateMaitreDeStage_shouldThrowException_whenDTOIsNull() {
         assertThrows(IllegalArgumentException.class, () -> MaitreDeStageFactory.createMaitreDeStage(null));
+    }
+
+    @Test
+    void testPrivateConstructor_shouldThrowUnsupportedOperationException() throws Exception {
+        Constructor<MaitreDeStageFactory> constructor = MaitreDeStageFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        InvocationTargetException thrown = assertThrows(InvocationTargetException.class, () -> {
+            constructor.newInstance();
+        });
+
+        Throwable cause = thrown.getCause();
+        assertTrue(cause instanceof UnsupportedOperationException);
+        assertEquals("Cette classe utilitaire ne doit pas être instanciée.", cause.getMessage());
     }
 }

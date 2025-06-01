@@ -18,6 +18,9 @@ import com.genio.dto.EtudiantDTO;
 import com.genio.model.Etudiant;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EtudiantFactoryTest {
@@ -46,5 +49,20 @@ class EtudiantFactoryTest {
     @Test
     void testCreateEtudiant_shouldThrowException_whenDTOIsNull() {
         assertThrows(IllegalArgumentException.class, () -> EtudiantFactory.createEtudiant(null));
+    }
+
+
+    @Test
+    void testPrivateConstructor_shouldThrowUnsupportedOperationException() throws Exception {
+        Constructor<EtudiantFactory> constructor = EtudiantFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        InvocationTargetException thrown = assertThrows(InvocationTargetException.class, () -> {
+            constructor.newInstance();
+        });
+
+        Throwable cause = thrown.getCause();
+        assertTrue(cause instanceof UnsupportedOperationException);
+        assertEquals("Cette classe ne doit pas être instanciée.", cause.getMessage());
     }
 }

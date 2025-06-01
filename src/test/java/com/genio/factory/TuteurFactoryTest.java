@@ -18,6 +18,9 @@ import com.genio.dto.TuteurDTO;
 import com.genio.model.Tuteur;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TuteurFactoryTest {
@@ -51,6 +54,21 @@ class TuteurFactoryTest {
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> TuteurFactory.createTuteur(dto));
         assertEquals("L'email du tuteur est invalide.", exception.getMessage());
+    }
+
+    @Test
+    void testPrivateConstructor_shouldThrowUnsupportedOperationException() throws Exception {
+        Constructor<TuteurFactory> constructor = TuteurFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        InvocationTargetException thrown = assertThrows(InvocationTargetException.class, () -> {
+            constructor.newInstance();
+        });
+
+        // Vérifie que la cause est UnsupportedOperationException avec le bon message
+        Throwable cause = thrown.getCause();
+        assertTrue(cause instanceof UnsupportedOperationException);
+        assertEquals("Cette classe utilitaire ne doit pas être instanciée.", cause.getMessage());
     }
 
 

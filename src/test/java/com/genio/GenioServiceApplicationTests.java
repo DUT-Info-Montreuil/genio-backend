@@ -15,6 +15,7 @@
 package com.genio;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.genio.service.impl.HistorisationService;
 import org.junit.jupiter.api.Test;
@@ -40,5 +41,8 @@ class GenioServiceApplicationTests {
         assertThat(context).isNotNull();
     }
 
-
+    @Test
+    void testInitializeLogging() {
+        assertDoesNotThrow(() -> GenioServiceApplication.initializeLogging());
+    }
 }

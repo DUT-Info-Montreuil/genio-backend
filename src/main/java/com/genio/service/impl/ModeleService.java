@@ -391,13 +391,11 @@ public class ModeleService {
                     return new ModelConventionNotFoundException("Modèle introuvable");
                 });
 
-        // Vérification de la cohérence de l’année
         if (modeleDTO.getAnnee() != null && !modeleDTO.getAnnee().equals(modele.getAnnee())) {
             log.warn("Tentative de modification de l’année pour le modèle ID {} — non autorisé.", id);
             throw new ValidationException("La modification de l'année d'un modèle existant n'est pas autorisée.");
         }
 
-        // Validation du titre
         if (modeleDTO.getTitre() == null || modeleDTO.getTitre().trim().isEmpty()) {
             log.warn("Titre vide ou null fourni pour le modèle ID {}", id);
             throw new ValidationException("Le titre ne peut pas être vide.");
@@ -492,7 +490,6 @@ public class ModeleService {
         byte[] newFileBytes = file.getBytes();
         String newHash = generateFileHash(newFileBytes);
 
-        // Vérifier si un autre modèle actif utilise déjà ce hash
         Optional<Modele> existingWithSameHash = modeleRepository.findFirstByFichierHash(newHash);
         if (existingWithSameHash.isPresent()) {
             Modele existing = existingWithSameHash.get();

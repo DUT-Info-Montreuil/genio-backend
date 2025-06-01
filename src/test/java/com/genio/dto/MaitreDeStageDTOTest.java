@@ -1,23 +1,26 @@
-/*
- *  GenioService
- *  ------------
- *  Copyright (c) 2025
- *  Elsa HADJADJ <elsa.simha.hadjadj@gmail.com>
- *
- *  Licence sous Creative Commons CC-BY-NC-SA 4.0.
- *  Vous pouvez obtenir une copie de la licence à l'adresse suivante :
- *  https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- *  Dépôt GitHub (Back) :
- *  https://github.com/DUT-Info-Montreuil/GenioService
- */
-
 package com.genio.dto;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+
+import jakarta.validation.Validator;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaitreDeStageDTOTest {
+
+    private static Validator validator;
+
+    @BeforeAll
+    static void setUpValidator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = (Validator) factory.getValidator();
+    }
 
     @Test
     void testConstructorAndGetters() {
@@ -46,5 +49,71 @@ class MaitreDeStageDTOTest {
         assertTrue(result.contains("Fonction"));
         assertTrue(result.contains("02.03.04.05.06"));
         assertTrue(result.contains("email@example.com"));
+    }
+
+    // Test validation constraints on setters
+
+    @Test
+    void testPrenomNotBlankValidation() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setPrenom(""); // empty string
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("prenom") &&
+                v.getMessage().contains("Le prénom du tuteur est obligatoire"));
+        assertTrue(found);
+    }
+
+    @Test
+    void testFonctionNotBlankValidation() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setFonction(" "); // blank string
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("fonction") &&
+                v.getMessage().contains("La fonction du tuteur est obligatoire"));
+        assertTrue(found);
+    }
+
+    @Test
+    void testTelephonePatternValidation() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setTelephone("1234567890"); // invalid format
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("telephone") &&
+                v.getMessage().contains("Le téléphone doit être au format XX.XX.XX.XX.XX"));
+        assertTrue(found);
+    }
+
+    @Test
+    void testEmailValidation() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setEmail("not-an-email"); // invalid email
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email") &&
+                v.getMessage().contains("doit être valide"));
+        assertTrue(found);
+    }
+
+    @Test
+    void testValidTelephone() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setTelephone("01.23.45.67.89"); // valid format
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("telephone"));
+        assertFalse(found);
+    }
+
+    @Test
+    void testValidEmail() {
+        MaitreDeStageDTO dto = new MaitreDeStageDTO();
+        dto.setEmail("valid.email@example.com");
+
+        Set<ConstraintViolation<MaitreDeStageDTO>> violations = validator.validate(dto);
+        boolean found = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email"));
+        assertFalse(found);
     }
 }

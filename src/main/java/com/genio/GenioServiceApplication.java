@@ -26,7 +26,7 @@ public class GenioServiceApplication {
 
     private static final Logger logger = LogManager.getLogger(GenioServiceApplication.class);
 
-    public static void main(String[] args) {
+    public static void initializeLogging() {
         URL log4jConfigFile = GenioServiceApplication.class.getClassLoader().getResource("log4j2.xml");
         if (log4jConfigFile == null) {
             logger.error("Fichier log4j2.xml introuvable !");
@@ -36,6 +36,10 @@ public class GenioServiceApplication {
         }
 
         logger.info("Application démarrée avec Log4J2 !");
+    }
+
+    public static void main(String[] args) {
+        initializeLogging();
         SpringApplication.run(GenioServiceApplication.class, args);
     }
 }
