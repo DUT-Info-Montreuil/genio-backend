@@ -1,0 +1,33 @@
+# Version du template docker-compose
+version: "3.9"
+
+# Definition du service npm
+services:
+  mysql:
+    container_name: genio_mysql
+    image: mysql:${MYSQL_VERSION}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Europe/Paris
+      LANG: fr_FR.UTF-8
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  tomcat:
+    build:
+      context: .
+      dockerfile: tomcat.dockerfile
+    container_name: genio_tomcat
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/application-external.properties:/usr/local/tomcat/conf/application-external.properties
