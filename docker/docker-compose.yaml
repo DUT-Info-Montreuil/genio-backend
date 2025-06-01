@@ -1,6 +1,3 @@
-# Version du template docker-compose
-version: "3.9"
-
 # Definition du service npm
 services:
   mysql:
@@ -18,8 +15,9 @@ services:
       - "3306:3306"
     volumes:
       - ./data:/var/lib/mysql
-      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
-
+      - /opt/DOCKER/genio-service/config/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - /opt/DOCKER/genio-service/config/02_init.sql:/docker-entrypoint-initdb.d/02_init.sql
+  
   tomcat:
     build:
       context: .
