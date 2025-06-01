@@ -63,3 +63,5 @@ src/main/resources/application.properties
 .test-output
 .data
 .mvn
+/docker/.env
+/docker/config/application-external.properties
