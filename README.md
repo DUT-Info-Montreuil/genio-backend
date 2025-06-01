@@ -26,8 +26,8 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 - Sécurité : 0 vulnérabilité
 - Fiabilité : 0 bug
 - Maintenabilité : 0 code smell
-- Couverture de tests : 81.6% (234 tests unitaires)
-- Duplication : 1% (3 blocs dupliqués)
+- Couverture de tests : 87.8% (295 tests unitaires)
+- Duplication : 0.7% (3 blocs dupliqués)
 
 > OWASP Dependency-Check : 0 failles
 ---
