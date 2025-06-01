@@ -846,7 +846,8 @@ L’écran se divise en **trois sous-onglets** :
 ## Sous-onglet : Ajouter un modèle
 
 Ce sous-onglet permet à un **Gestionnaire** d’importer un nouveau modèle de convention au format `.docx`.  
-Le fichier est analysé automatiquement pour valider sa structure, l’année et les variables attendues.
+Le fichier est automatiquement analysé pour valider sa structure, l’année et la présence des variables attendues.
+
 ---
 
 ### Aperçu de l’interface
@@ -861,91 +862,89 @@ Le fichier est analysé automatiquement pour valider sa structure, l’année et
 
 1. **Année du modèle** :
   - Champ obligatoire au format `YYYY`
-  - Validation stricte : entre `2020` et `{{currentYear + 5}}`
-  - Vérification d’unicité côté backend (`/check-nom-exists`)
+  - Validation stricte : comprise entre `2020` et `{{ currentYear + 5 }}`
+  - Vérification d’unicité via l’API `GET /check-nom-exists`
 
 2. **Fichier modèle** :
-  - Accepté : `.docx` uniquement
-  - Taille max : `4 Mo`
-  - Upload par drag-and-drop ou bouton "Choisir un fichier"
-  - Validation :
-    - Analyse automatique via `/test-generation`
-    - Vérification des **variables attendues** (ex. `NOM_ETUDIANT`, `TUT_IUT`, etc.)
-    - Retour visuel ✔️ / ❌ par variable
+  - Accepté : `.docx` uniquement – Taille maximale : `4 Mo`
+  - Téléversement par **drag-and-drop** ou bouton "Choisir un fichier"
+  - Analyse automatique via `POST /test-generation` :
+    - Vérifie que le document contient des **variables de champs attendues** (ex. `NOM_ETUDIANT`, `TUT_IUT`, etc.)
+    - Retour visuel ✔️ / ❌ pour chaque variable détectée
 
 3. **Titre du modèle** :
-  - Auto-généré si vide
-  - Modifiable en double-cliquant ou via l’icône crayon 🖉
+  - Auto-généré à partir du nom du fichier si vide
+  - Modifiable manuellement : double-clic ou clic sur l’icône 🖉
 
 4. **Soumission** :
-  - Bouton "Valider le modèle" activé seulement si tous les champs sont valides
-  - Appel à l’API `POST /conventionServices`
+  - Le bouton "Valider le modèle" est activé uniquement si tous les champs sont valides
+  - Envoie des données via `POST /conventionServices` (multipart)
 
 ---
 
 ### Cas d’erreurs
 
-- **Année invalide** : modale explicative
-- **Modèle déjà existant pour l’année** : blocage
-- **Fichier sans variables** : erreur "Ce fichier ne semble pas être un modèle"
-- **Fichier partiel** : liste des variables manquantes affichée
-- **Autre erreur backend** : message générique ou message retourné affiché
+- **Année invalide** : modale explicative avec message d’aide
+- **Modèle déjà existant pour l’année** : blocage automatique et message clair
+- **Fichier sans variable** : message "Ce fichier ne semble pas être un modèle"
+- **Fichier partiel** : affichage des variables manquantes avec bouton "Voir plus"
+- **Autre erreur backend** : message d’erreur retourné ou générique affiché
 
 ---
 
 ### Exigences fonctionnelles
 
-- Tous les champs sont requis pour valider
-- Vérification dynamique de l’année et du fichier
-- Message clair en cas de succès ou d’erreur
-- Accessibilité :
-  - `aria-label`, `aria-invalid`, `aria-live`
-  - Comportement compatible clavier
-- Responsive sur tous formats d’écran
+- Tous les champs sont requis pour soumettre
+- Vérification dynamique de l’année et du fichier à chaque modification
+- Affichage clair des messages de succès ou d’erreur
+- Accessibilité complète :
+  - Attributs `aria-label`, `aria-invalid`, `aria-live`
+  - Comportement compatible avec la navigation au clavier
+- Interface responsive adaptée aux écrans mobiles
 
 ---
 
 ### Exigences techniques
 
 - **Framework** : Angular 17
-- **Services utilisés** :
-  - `HttpClient` (`/test-generation`, `/conventionServices`, `/check-nom-exists`)
-- **Comportement modulaire** avec :
-  - Composant `AjouterModeleComponent`
-  - Fichiers CSS : `ajouter-modele.component.css`, `modal-box.css`
-- **Gestion d'état** :
-  - Propriétés : `isAnneeValid`, `isFileValid`, `titre`, `error`, `message`
-  - Contrôle de validité avant envoi avec `ngSubmit`
+- **Composant utilisé** : `AjouterModeleComponent`
+- **Services API** :
+  - `GET /check-nom-exists`
+  - `POST /test-generation`
+  - `POST /conventionServices`
+- **Gestion d’état locale** :
+  - Propriétés : `annee`, `isAnneeValid`, `selectedFile`, `isFileValid`, `titre`, `titreEditable`, `message`, `error`
+  - Comportement réactif sur tous les champs avec déclenchement de modales en cas d’erreur
 
 ---
 
 ### Variables attendues analysées automatiquement
 
-Voici la liste complète des variables attendues (via `docxParser`) :
-annee, NOM_ORGANISME, ADR_ORGANISME, NOM_REPRESENTANT_ORG,
-QUAL_REPRESENTANT_ORG, NOM_DU_SERVICE, TEL_ORGANISME, MEL_ORGANISME,
-LIEU_DU_STAGE, NOM_ETUDIANT1, PRENOM_ETUDIANT, SEXE_ETUDIANT,
-DATE_NAIS_ETUDIANT, ADR_ETUDIANT, TEL_ETUDIANT, MEL_ETUDIANT,
-SUJET_DU_STAGE, DATE_DEBUT_STAGE, DATE_FIN_STAGE, STA_DUREE,
-_STA_JOURS_TOT, _STA_HEURES_TOT, TUT_IUT, TUT_IUT_MEL,
-PRENOM_ENCADRANT, NOM_ENCADRANT, FONCTION_ENCADRANT,
-TEL_ENCADRANT, MEL_ENCADRANT, NOM_CPAM, Stage_Professionnel, STA_REMU_HOR
+Voici la liste complète des variables attendues analysées par `docxParser` :
+
+```
+annee, NOM_ORGANISME, ADR_ORGANISME, NOM_REPRESENTANT_ORG, QUAL_REPRESENTANT_ORG,
+NOM_DU_SERVICE, TEL_ORGANISME, MEL_ORGANISME, LIEU_DU_STAGE, NOM_ETUDIANT1,
+PRENOM_ETUDIANT, SEXE_ETUDIANT, DATE_NAIS_ETUDIANT, ADR_ETUDIANT,
+TEL_ETUDIANT, MEL_ETUDIANT, SUJET_DU_STAGE, DATE_DEBUT_STAGE, DATE_FIN_STAGE,
+STA_DUREE, _STA_JOURS_TOT, _STA_HEURES_TOT, TUT_IUT, TUT_IUT_MEL,
+PRENOM_ENCADRANT, NOM_ENCADRANT, FONCTION_ENCADRANT, TEL_ENCADRANT,
+MEL_ENCADRANT, NOM_CPAM, Stage_Professionnel, STA_REMU_HOR
+```
 
 ---
 
 ### Astuce UX
 
-Un clic sur l’icône **❔** à côté des champs "Année" ou "Fichier" ouvre une **modale d’aide contextuelle**  
-pour expliquer les erreurs de validation ou les variables manquantes.
+- Un clic sur l’icône **❔** à côté du champ "Année" ou "Fichier" ouvre une **modale d’aide contextuelle** avec les détails d’erreurs ou les variables attendues non détectées.
+- En cas de fichier partiel, un bouton "Afficher toutes les variables" permet de voir les champs manquants ou incorrects.
 
 ---
 
 ### Accès restreint
 
-- **Rôle requis** : GESTIONNAIRE uniquement
-- Ce sous-onglet est masqué pour les rôles EXPLOITANT ou CONSULTANT
-
----
+- **Rôle requis** : uniquement **GESTIONNAIRE**
+- Ce sous-onglet est invisible pour les rôles **Exploitant** ou **Consultant**
 
 ## Sous-onglet : Modifier un modèle
 
@@ -958,109 +957,115 @@ Ce sous-onglet permet au **Gestionnaire** de rechercher, visualiser et modifier 
   <img src="./assets/images/page-modifier-modele.png" alt="Modifier un modèle – GenioService" width="600"/>
 </div>
 
-
 ---
 
 ### Fonctionnement
 
 1. **Filtres de recherche** :
-  - Par **nom de modèle** (texte libre)
-  - Par **année** (champ numérique avec datalist des années existantes)
-
+  - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
+  - Par **année** (champ numérique avec datalist dynamique)
+  - Recherche avancée possible sur la description et les statuts
 
 2. **Affichage des modèles** :
-  - Tableau avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**
-  - Pagination : choix du nombre d’entrées par page (5, 10, 15)
+  - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
+  - Pagination ajustable (5, 10, 15 entrées par page)
 
 3. **Modification d’un modèle** :
-  - Clic sur l’icône pour ouvrir la **modale d’édition**
-  - Champs modifiables :
-    - **Titre** (double clic ou icône crayon)
+  - Icône ✏️ pour ouvrir la modale d’édition
+  - Champs modifiables dans la modale :
+    - **Titre** : modifiable (double-clic ou clic sur icône crayon)
     - **Description de modification** (textarea facultatif)
-    - **Remplacement de fichier** (optionnel)
-  - Validation :
-    - Vérification du fichier `.docx` et des **variables attendues**
-    - Affichage d’un message d’erreur ou de succès après enregistrement
+    - **Remplacement du fichier .docx** (optionnel, avec vérification automatique)
+  - Vérifications appliquées :
+    - Le titre est modifiable uniquement si l’utilisateur le déverrouille
+    - Le fichier `.docx` est validé par `/test-generation` : variables manquantes signalées
 
-4. **Enregistrement** :
-  - Requête `PUT /conventionServices/{id}` pour mettre à jour les métadonnées
-  - Si un nouveau fichier est sélectionné : `PUT /conventionServices/{id}/file` (FormData)
+4. **Sauvegarde** :
+  - Si un nouveau fichier est sélectionné :
+    - Upload via `PUT /conventionServices/{id}/file` avec FormData
+    - Puis mise à jour du modèle via `PUT /conventionServices/{id}` avec les métadonnées
+  - Si aucun fichier : seul le `PUT` principal est appelé
+  - Affichage d’un message de succès ou d’erreur
+  - Fermeture automatique de la modale après succès
 
 ---
 
 ### Exigences fonctionnelles
 
-- Seul le rôle **GESTIONNAIRE** a accès à ce sous-onglet
-- Le tableau est mis à jour dynamiquement après modification
-- Le bouton "Réinitialiser" remet tous les filtres à zéro
-- La modale peut être fermée en cliquant à l'extérieur ou via le bouton "Annuler"
-- Le fichier remplacé doit être un `.docx` valide avec les variables attendues
+- Accès restreint au **rôle GESTIONNAIRE**
+- Le bouton **Réinitialiser** remet tous les filtres à zéro
+- La table est réactualisée dynamiquement après chaque mise à jour
+- Le fichier `.docx` doit contenir toutes les variables attendues pour être accepté
+- Message d’erreur si fichier invalide, format incorrect ou contenu non exploitable
+- Messages d’état visibles en haut de page (`aria-live="polite"`)
 
 ---
 
 ### Exigences techniques
 
-- **Composant** : `ModifierModeleComponent` (Angular 17)
+- **Composant Angular** : `ModifierModeleComponent`
 - **Fichiers CSS** :
   - `modifier-modele.component.css`
-  - `modal-box.css`
-  - `tables-common.css`
-- **Données** :
-  - Chargées depuis `GET /conventionServices`
-  - Enrichies avec parsing des dates de dernière modification
-- **Pagination** :
-  - `paginatedModeles` calculés à partir de `filteredModeles`
-- **Filtres** :
-  - Normalisation insensible à la casse et aux accents (`normalize()`)
-  - `applyFilters()` déclenchée à chaque saisie
+  - `modal-box.css`, `tables-common.css`, etc.
+- **Fonctionnalités Angular** :
+  - `ngModel` pour le binding
+  - `@ViewChild` pour le focus clavier
+  - `ChangeDetectorRef` pour les détections manuelles après traitement asynchrone
+  - `normalize()` utilisé pour rendre les filtres plus robustes
 - **Accessibilité** :
-  - `aria-label`, `aria-current`, `aria-live`, navigation clavier
-  - Focus automatique sur début de tableau après changement de page
-- **UX** :
-  - Icône pour modifier
-  - Bouton "Réinitialiser"
-  - Message temporaire de confirmation ou erreur
+  - Navigation clavier, rôles ARIA (`aria-label`, `aria-modal`, `aria-live`...)
+  - Focus placé automatiquement au début du tableau après changement de page
+- **Messages et UX** :
+  - Message temporaire en cas de succès ou d’erreur (callouts avec styles dédiés)
+  - Icônes explicites pour chaque action (modification, réinitialisation...)
 
 ---
 
 ### Analyse du fichier remplacé
 
-- Si un fichier est sélectionné :
-  - Il est envoyé à `/test-generation`
-  - Le backend renvoie les variables détectées
-  - Le composant compare avec les variables attendues :
-    ```ts
-    [
-      'annee', 'NOM_ORGANISME', 'ADR_ORGANISME', '...','STA_REMU_HOR'
-    ]
-    ```
-  - Si des variables sont manquantes, un message d’erreur s’affiche
-  - Si tout est bon : fichier accepté
+- Lorsqu’un fichier est sélectionné, il est envoyé à `/test-generation`
+- Le backend renvoie les variables détectées dans le `.docx`
+- Comparaison locale avec la liste attendue :
+
+```ts
+[
+  'annee', 'NOM_ORGANISME', 'ADR_ORGANISME', 'NOM_REPRESENTANT_ORG',
+  'QUAL_REPRESENTANT_ORG', 'NOM_DU_SERVICE', 'TEL_ORGANISME', 'MEL_ORGANISME',
+  'LIEU_DU_STAGE', 'NOM_ETUDIANT1', 'PRENOM_ETUDIANT', 'SEXE_ETUDIANT',
+  'DATE_NAIS_ETUDIANT', 'ADR_ETUDIANT', 'TEL_ETUDIANT', 'MEL_ETUDIANT',
+  'SUJET_DU_STAGE', 'DATE_DEBUT_STAGE', 'DATE_FIN_STAGE', 'STA_DUREE',
+  '_STA_JOURS_TOT', '_STA_HEURES_TOT', 'TUT_IUT', 'TUT_IUT_MEL',
+  'PRENOM_ENCADRANT', 'NOM_ENCADRANT', 'FONCTION_ENCADRANT',
+  'TEL_ENCADRANT', 'MEL_ENCADRANT', 'NOM_CPAM', 'Stage_Professionnel', 'STA_REMU_HOR'
+]
+```
+
+- Si des variables sont manquantes ou si aucune n’est détectée, un message clair s’affiche
+- Le fichier n’est accepté que s’il contient **toutes** les variables attendues
 
 ---
 
-### Exemple de message de succès
+### Exemples
 
-> ✅ Modèle mis à jour avec succès !
+✅ **Succès** :
+> Modèle mis à jour avec succès !
 
----
+⚠️ **Erreur** :
+> Le document est un modèle mais il manque 2 variables : `TUT_IUT`, `MEL_ORGANISME`.
 
-### Exemple de message d’erreur
-
-> ⚠️ Le document est un modèle mais, il manque 2 variables : `TUT_IUT`, `MEL_ORGANISME`.
+❌ **Fichier non exploitable** :
+> Ce fichier ne semble pas être un modèle de convention (aucun champ détecté).
 
 ---
 
 ### Accès restreint
 
 - **Rôle requis** : GESTIONNAIRE
-- L’interface est désactivée/invisible pour les autres rôles
-
----
+- Le composant et ses boutons ne sont pas affichés aux autres rôles (désactivation complète)
 
 ## Sous-onglet : Archiver un modèle
 
-Ce sous-onglet permet au **Gestionnaire** d’archiver définitivement un modèle de convention devenu obsolète.
+Ce sous-onglet permet au **Gestionnaire** d’archiver un modèle de convention devenu obsolète.
 
 ---
 
@@ -1069,57 +1074,64 @@ Ce sous-onglet permet au **Gestionnaire** d’archiver définitivement un modèl
   <img src="./assets/images/page-archiver-modele.png" alt="Archiver un modèle – GenioService" width="600"/>
 </div>
 
-
 ---
 
 ### Fonctionnement
 
 1. **Filtres de recherche** :
-  - Champ de texte pour rechercher un modèle par **nom**
-  - Champ numérique pour filtrer par **année**
+  - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
+  - Par **année** (champ numérique avec datalist dynamique)
   - Bouton **Réinitialiser** pour rétablir tous les filtres
 
 2. **Affichage des modèles** :
-  - Tableau contenant : **Titre**, **Année**, **Format**, **Dernière modification**
+  - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
   - Choix du nombre d’entrées par page (5, 10, 15)
-  - Pagination avec navigation par page
+  - Pagination dynamique
 
-3. **Action : Archiver un modèle** :
-  - Icône dans la colonne "Action"
-  - Clic sur l’icône ouvre une **modale de confirmation**
-  - La modale affiche le **nom du modèle à archiver**
+3. **Archivage d’un modèle** :
+  - Icône 🗃️ dans la colonne "Action" (archive)
+  - Clic ouvre une **modale de confirmation** affichant le **nom du modèle à archiver**
   - Boutons :
     - **Annuler** : fermeture sans action
-    - **Archiver** : suppression immédiate via appel API
+    - **Archiver** : vérification d’usage, puis suppression (si non utilisé)
+
+4. **Suppression conditionnelle** :
+  - Avant la suppression, appel à `/conventionServices/{id}/isUsed`
+  - Si le modèle est utilisé dans une convention, l’archivage est bloqué
+  - Sinon, suppression via `DELETE /conventionServices/{id}`
+
+5. **Retour utilisateur** :
+  - Affichage d’un message temporaire de succès ou d’erreur
+  - Rafraîchissement de la liste sans rechargement de page
 
 ---
 
 ### Exigences fonctionnelles
 
-- Seul le rôle **GESTIONNAIRE** a accès à ce sous-onglet
-- L'archivage supprime le modèle de la base visible côté interface
-- Confirmation obligatoire via modale
-- Affichage d’un message de succès ou d’erreur
+- Accès restreint au **rôle GESTIONNAIRE**
+- Confirmation obligatoire via **modale**
+- Un modèle archivé est retiré de la liste active (filtrage `!m.archived`)
+- Blocage si le modèle est encore utilisé dans une convention
 
 ---
 
 ### Exigences techniques
 
-- **Composant** : `SupprimerModeleComponent` (Angular)
-- **Fichier CSS** : `supprimer-modele.component.css` + `modal-box.css` + `tables-common.css`
-- **Données** :
-  - Chargées depuis `GET /conventionServices`
-  - Supprimées via `DELETE /conventionServices/{id}`
+- **Composant Angular** : `SupprimerModeleComponent`
+- **CSS** :
+  - `supprimer-modele.component.css`
+  - `modal-box.css`, `tables-common.css`, `header.css`, etc.
+- **APIs** :
+  - `GET /conventionServices` (chargement)
+  - `GET /conventionServices/{id}/isUsed` (vérification d’usage)
+  - `DELETE /conventionServices/{id}` (suppression réelle)
 - **Pagination** :
-  - Gérée via `paginatedModeles`
-  - Recalculée après suppression
+  - Calculée dynamiquement avec `paginatedModeles`
 - **Accessibilité** :
-  - Focus sur tableau après navigation
-  - Modale avec `aria-modal="true"` et rôles accessibles
-- **UX** :
-  - Icône de suppression = (archive)
-  - Modale explicite
-  - Message de succès temporaire
+  - `aria-modal`, `aria-label`, `aria-live`, navigation clavier, focus automatique
+- **Messages & UX** :
+  - Composants `callout-success` ou `callout-error` en haut de page
+  - Icône archive explicite, modale claire, focus géré après action
 
 ---
 
@@ -1131,14 +1143,14 @@ Ce sous-onglet permet au **Gestionnaire** d’archiver définitivement un modèl
 
 ### Exemple de message d’erreur
 
-> ⚠️ Une erreur est survenue lors de la suppression.
+> ⚠️ Ce modèle est actuellement utilisé dans une convention. Il ne peut pas être archivé.
 
 ---
 
 ### Accès restreint
 
 - **Rôle requis** : GESTIONNAIRE
-- Fonctionnalité masquée pour les autres utilisateurs
+- Fonctionnalité totalement masquée pour les autres rôles
 
 ## Écran de gestion des utilisateurs – Gestionnaire
 
