@@ -241,4 +241,5 @@ public class ModeleController {
 
         return ResponseEntity.ok(result);
     }
+
 }
