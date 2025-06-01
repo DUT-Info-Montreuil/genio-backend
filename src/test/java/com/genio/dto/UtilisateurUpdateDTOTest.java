@@ -148,8 +148,6 @@ class UtilisateurUpdateDTOTest {
         dto1.setRole("ROLE");
         dto1.setActif(true);
 
-        // Changement d’un seul champ à la fois
-
         UtilisateurUpdateDTO dto2 = new UtilisateurUpdateDTO();
         dto2.setNom("NomDiff");
         dto2.setPrenom("Prenom");
