@@ -58,3 +58,8 @@ src/main/resources/application.properties
 
 # Ignorer le vrai fichier de config externe dans utils
 /utils/application-external.properties
+
+# vrac
+.test-output
+.data
+.mvn
