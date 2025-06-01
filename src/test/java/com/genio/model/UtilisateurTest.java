@@ -9,7 +9,7 @@
  *  https://creativecommons.org/licenses/by-nc-sa/4.0/
  *
  *  Dépôt GitHub (Back) :
- *  https://github.com/DUT-Info-Montreuil/GenioService
+ *  https://github.com/DUT-Info-Montreuil/genio-backend
  */
 
 package com.genio.model;

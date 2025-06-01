@@ -53,7 +53,7 @@ mkdir frontend
 
 ```bash
 cd backend
-git clone https://github.com/DUT-Info-Montreuil/GenioService.git
+git clone https://github.com/DUT-Info-Montreuil/genio-backend.git
 ```
 
 ---

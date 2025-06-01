@@ -65,9 +65,9 @@
 
     <!-- ***** Github ***** -->
     <scm>
-        <url>https://github.com/DUT-Info-Montreuil/GenioService.git</url>
-        <connection>scm:git:https://github.com/DUT-Info-Montreuil/GenioService.git</connection>
-        <developerConnection>scm:git:https://github.com/DUT-Info-Montreuil/GenioService.git</developerConnection>
+        <url>https://github.com/DUT-Info-Montreuil/genio-backend.git</url>
+        <connection>scm:git:https://github.com/DUT-Info-Montreuil/genio-backend.git</connection>
+        <developerConnection>scm:git:https://github.com/DUT-Info-Montreuil/genio-backend.git</developerConnection>
         <tag>develop</tag>
     </scm>
 

@@ -3,7 +3,7 @@
 > **Version :** 1.0.0-release  
 > **Auteur :** Elsa HADJADJ  
 > **Email :** elsa.simha.hadjadj@gmail.com  
-> **GitHub Repository :** [https://github.com/DUT-Info-Montreuil/GenioService](https://github.com/DUT-Info-Montreuil/GenioService)
+> **GitHub Repository :** [https://github.com/DUT-Info-Montreuil/genio-backend](https://github.com/DUT-Info-Montreuil/genio-backend)
 
 ---
 
