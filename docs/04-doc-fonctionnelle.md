@@ -4,7 +4,7 @@
 
 ## Sommaire
 
-- [Page d’accueil](#page-daccueil)
+- [Page d’Accueil](#page-daccueil)
 - [Écran de connexion](#écran-de-connexion)
 - [Écran d’inscription](#écran-dinscription)
 - [Écran de réinitialisation du mot de passe](#écran-de-réinitialisation-du-mot-de-passe)
@@ -22,10 +22,11 @@
 - [Page – Plan du site](#page--plan-du-site)
 - [Page – À propos de GenioService](#page--à-propos-de-genioservice)
 - [Page – Contact](#page--contact)
-- [Page – Politique de confidentialité](#page--politique-de-confidentiakité)
+- [Page – Politique de confidentialité](#page--politique-de-confidentialité)
 - [Pages - Mentions légales](#page--mentions-légales)
+- [Conditions Générales d’Utilisation (CGU)](#page--conditions-générales-dutilisation-cgu)
 
-## Page d’accueil
+## Page d’Accueil
 
 ### Objectif de page d'accueil
 
@@ -42,14 +43,14 @@ Il permet à l’utilisateur d’accéder aux trois grandes fonctionnalités du 
 
 <!-- markdownlint-disable MD033 -->
 <div>
-  <img src="./assets/images/page-accueil.png" alt="Page d’accueil GenioService" width="600"/>
+  <img src="./assets/images/page-accueil.png" alt="Page d’Accueil GenioService" width="600"/>
 </div>
 
 ---
 
 ### Fonctionnement de page d'accueil
 
-- La page d’accueil est composée de **trois cartes interactives**.
+- La Page d’Accueil est composée de **trois cartes interactives**.
 - Chaque carte redirige vers la page de **connexion** (/connexion) si l’utilisateur n’est pas encore connecté.
 - Une fois connecté, l’utilisateur accède à la fonctionnalité selon ses droits.
 
@@ -181,33 +182,40 @@ C’est l’étape préalable à toute utilisation du service.
   - **Adresse e-mail**
   - **Mot de passe**
   - **Confirmation du mot de passe**
+  - **Case à cocher obligatoire** :  
+    _Je déclare avoir pris connaissance et accepte les [Conditions Générales d’Utilisation](/cgu) et la [Politique de confidentialité](/confidentialite)._
 
 - Une fois tous les champs valides :
-  - Le bouton **S’enregistrer** envoie les données via POST /api/utilisateurs
-  - L’adresse e-mail est vérifiée pour **unicité** en temps réel (appel GET /exists)
+  - Le bouton **S’enregistrer** envoie les données via `POST /api/utilisateurs`
+  - L’adresse e-mail est vérifiée pour **unicité** en temps réel (`GET /api/utilisateurs/exists`)
   - Si inscription réussie, l’utilisateur est redirigé vers la page de **connexion**
   - En cas d’erreur, un message clair est affiché en haut du formulaire
 
 - Le formulaire inclut une **vérification dynamique du mot de passe** :
-  - La liste des règles non respectées est affichée en badges rouges sous le champ
+  - Les règles non respectées s’affichent en **badges rouges** sous le champ
+  - Elles disparaissent une à une dès qu’elles sont respectées
 
 ---
 
 ### Exigences fonctionnelles de page d'inscription
 
 - Tous les champs sont **obligatoires** (required)
-- Le mot de passe doit **respecter toutes les règles suivantes** :
+- Le mot de passe doit respecter **toutes les règles suivantes** :
   - Minimum **12 caractères**
   - Contenir **au moins 1 majuscule**
   - Contenir **au moins 1 chiffre**
   - Contenir **au moins 1 caractère spécial**
-- Les mots de passe et confirmation doivent **être identiques**
-- Si l’adresse e-mail existe déjà, un message s’affiche : Cet e-mail est déjà utilisé.
-- En cas d’erreur, le message disparaît automatiquement après quelques secondes
-- Accessibilité :
-  - aria-label, aria-live, aria-describedby intégrés
-  - Navigation clavier et lecteurs d’écran prise en charge
-- Comportement responsive (PC et mobile)
+- Les mots de passe et la confirmation doivent être **identiques**
+- L’adresse e-mail doit être **unique** dans la base de données
+- La **case à cocher RGPD est obligatoire** :
+  - Elle doit être cochée pour permettre l’envoi du formulaire
+  - En cas d’absence de consentement, un message d’erreur s’affiche :  
+    _Vous devez accepter les conditions pour vous inscrire._
+- En cas d’erreur, un message s’affiche en haut du formulaire, puis disparaît automatiquement après quelques secondes
+- **Accessibilité** :
+  - `aria-label`, `aria-live`, `aria-describedby` intégrés
+  - Compatible avec la **navigation clavier** et les **lecteurs d’écran**
+- **Responsive** : fonctionne sur PC et mobile
 
 ---
 
@@ -1515,7 +1523,7 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 ---
 
 ### Aperçu de la page Politique de confidentialité
-
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-confidentialite.png" alt="Page Politique de confidentialité – GenioService" width="600"/>
 </div>
@@ -1524,17 +1532,27 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 
 ### Fonctionnement de l’écran de la page Politique de confidentialité
 
-- Accessible publiquement depuis le footer (lien "Politique de confidentialité").
+- Accessible publiquement depuis le footer (lien « Politique de confidentialité »).
+- Lien également présent dans le formulaire d’inscription (via la case à cocher obligatoire) :
+  > « Je déclare avoir pris connaissance et accepte la [Politique de confidentialité](/confidentialite) »
 - Structure en **6 sections explicites** :
-  1. **Engagement de GenioService** : conformité au RGPD, pas de collecte sans consentement.
-  2. **Vos droits** : suppression, opposition, limitation (droit à la vie privée).
-       - Coordonnées de la DPO (Elsa Hadjadj) fournies (email et adresse postale).
-       - Obligation de joindre une pièce d’identité pour toute demande.
-  3. **Données collectées** : uniquement celles nécessaires à l’authentification et gestion.
-       - Aucune donnée sensible stockée en clair.
-  4. **Utilisation des cookies** : uniquement cookies techniques (aucun traceur pub).
-  5. **Gérer vos préférences** : liens vers les paramètres de chaque navigateur.
-  6. **Liens utiles** : vers le site de la CNIL pour plus d’infos.
+  1. **Engagement de GenioService** : conformité stricte au RGPD, aucune collecte sans consentement.
+  2. **Vos droits** : possibilité de demander l’accès, la rectification, l’effacement ou la limitation des données.
+  - Coordonnées de la DPO (Elsa Hadjadj) fournies.
+  - Justificatif d’identité exigé pour valider la demande.
+  3. **Données collectées** : uniquement les données nécessaires à l’inscription et à l’authentification.
+  - Aucune donnée sensible stockée en clair ni utilisée à d'autres fins.
+  4. **Utilisation des cookies** :
+  - Uniquement des cookies techniques nécessaires à la session (pas de cookies publicitaires).
+  5. **Gérer vos préférences** :
+  - Instructions pour configurer les cookies via les navigateurs (Chrome, Firefox, Safari…).
+  6. **Liens utiles** :
+  - Renvoi vers le site de la CNIL pour approfondir ses droits et démarches.
+
+- Les données personnelles sont conservées pendant une durée maximale de **1 an après la dernière activité** sur le compte. Passé ce délai, le compte est automatiquement désactivé.
+- Si aucune demande de suppression n’est formulée, les données sont conservées pendant encore **5 ans à des fins d’archivage pédagogique**, puis automatiquement supprimées ou anonymisées de manière irréversible.
+- À tout moment, l’utilisateur peut **demander la suppression immédiate de ses données** en contactant la Déléguée à la Protection des Données (DPO) à l’adresse suivante : <a href="mailto:elsa.simha.hadjadj@gmail.com">elsa.simha.hadjadj@gmail.com</a>.
+- Conformément au principe de **minimisation** du RGPD, GenioService ne collecte que les données strictement nécessaires au fonctionnement de la plateforme.
 
 ---
 
@@ -1601,12 +1619,13 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
 ### Fonctionnement de la page Mentions légales
 
 - Accessible depuis le **footer** sur toutes les pages via le lien « Mentions légales ».
-- Contenu réparti en **5 sections** :
+- Contenu réparti en **6 sections** principales :
   1. **Éditrice du site** : identité de l’auteure (Elsa Hadjadj), encadrement (Jérémy Marcinkowski), et localisation de l’établissement (IUT de Montreuil).
   2. **Technologies utilisées** : framework front-end (Angular), back-end (Spring Boot), responsive design, accessibilité.
   3. **Dépôts GitHub** : liens directs vers les dépôts frontend et backend publics.
   4. **Propriété intellectuelle** : licence Creative Commons **CC BY-NC-SA 4.0** (usage non commercial, attribution requise).
-  5. **Hébergement** : mention que le site est exécuté localement à des fins pédagogiques (pas d’hébergeur professionnel impliqué).
+  5. **Hébergement** : site hébergé en France sur un serveur local à des fins pédagogiques, conforme RGPD.
+  6. **Green IT** : principes d’éco-conception numérique appliqués au projet.
 
 ---
 
@@ -1630,7 +1649,7 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
   - `RouterLink`, `NgIf`, `BreadcrumbComponent`
 - **Accessibilité** :
   - `<main>` avec `aria-labelledby`
-  - Icônes décoratives en `aria-hidden`
+  - Icônes décoratives en `aria-hidden="true"`
 - **Responsive** : lisibilité sur petit écran (mobile-first)
 - **Sécurité** :
   - Aucun script ou fonctionnalité active sur cette page
@@ -1643,3 +1662,70 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
 Cette page est obligatoire en France, même dans un cadre académique, dès lors qu’un site est mis à disposition d’un public. Elle clarifie la responsabilité éditoriale et le périmètre d’utilisation du projet GenioService.
 
 ---
+
+## Page – Conditions Générales d’Utilisation (CGU)
+
+### Objectif de la page Conditions Générales d’Utilisation (CGU)
+
+Présenter les règles d’utilisation du site GenioService et les engagements réciproques entre l’utilisateur et l’éditeur.  
+Cette page précise les droits, responsabilités, et modalités d’accès au service, conformément aux bonnes pratiques juridiques en matière de services en ligne.
+
+---
+
+### Aperçu de la page Conditions Générales d’Utilisation (CGU)
+
+<!-- markdownlint-disable MD033 -->
+<div>
+  <img src="./assets/images/page-cgu.png" alt="Page Conditions Générales d’Utilisation (CGU) – GenioService" width="600"/>
+</div>
+
+---
+
+### Fonctionnement de la page Conditions Générales d’Utilisation (CGU)
+
+- Lien permanent dans le footer (`<footer>`) de toutes les pages.
+- Lien également présent dans le formulaire d’inscription (case à cocher obligatoire) :
+  > « Je déclare avoir pris connaissance et accepte les [Conditions Générales d’Utilisation](/cgu) »
+- Contenu structuré en 6 sections :
+  1. **Objet** : but et portée des CGU, acceptation des conditions.
+  2. **Accès au service** : nécessité d’un compte (email + mot de passe), confidentialité des identifiants.
+  3. **Responsabilités** : cas d’exonération (panne, mauvaise utilisation, accès frauduleux).
+  4. **Politique de confidentialité** : renvoi vers la page dédiée à la politique de confidentialité.
+  5. **Modifications** : possibilité de modification des CGU à tout moment.
+  6. **Droit applicable** : droit français, juridiction compétente = Paris.
+
+### Exigences de la page Mentions légales et Conditions Générales d’Utilisation (CGU)
+
+- Texte **clair, synthétique et accessible**, lisible pour tout utilisateur.
+- **Lien vers cette page affiché dans le footer**, à côté des mentions légales et politique de confidentialité.
+- Lien direct vers la politique de confidentialité dans la section "Politique de confidentialité".
+- Page **statique** sans interaction, pour garantir accessibilité et sécurité.
+- Mention claire de l’acceptation implicite des CGU lors de l’utilisation du service.
+
+---
+
+### Exigences techniques de la page Conditions Générales d’Utilisation (CGU)
+
+- **Composant Angular** : `ConditionsUtilisationComponent` (`standalone`)
+- **Technos utilisées** :
+  - Frontend : Angular (HTML5, CSS3, TypeScript)
+  - Backend : Spring Boot (Java, REST API)
+- **Imports nécessaires** :
+  - `RouterLink`, `NgIf`, `BreadcrumbComponent`
+- **Accessibilité** :
+  - `<main>` avec `aria-labelledby`
+  - Icônes décoratives avec `aria-hidden="true"`
+- **Responsive design** : texte lisible sur mobile/tablette
+- **Sécurité** :
+  - Aucun script actif
+  - Liens protégés par `rel="noopener"`
+
+---
+
+### Complément pour la page Conditions Générales d’Utilisation (CGU)
+
+Bien que non strictement obligatoire dans un cadre académique, une page CGU est **fortement recommandée** pour tout site qui implique une **création de compte** ou un **service d’authentification**.
+Elle permet de définir un cadre clair pour les utilisateurs et de **limiter la responsabilité de l’éditeur** en cas d’usage abusif, d’indisponibilité ou d’erreurs techniques.
+
+---
+
