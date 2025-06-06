@@ -2,7 +2,12 @@
 # Configuration externe GenioService
 # =========================
 
+# URL FRONTEND
+# TODO : a modifier
+frontend.url=https://genioservice.xxxxx.fr
+
 # Base de données MySQL
+# TODO : a modifier
 spring.datasource.url=jdbc:mysql://localhost:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
@@ -21,6 +26,7 @@ logging.level.org.hibernate.SQL=INFO
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 
 # Configuration mail (SMTP)
+# TODO : a modifier
 spring.mail.host=${SMTP_HOST}
 spring.mail.port=${SMTP_PORT}
 spring.mail.username=${SMTP_USERNAME}

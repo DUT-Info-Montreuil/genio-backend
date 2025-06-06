@@ -47,7 +47,8 @@ project-root/
 - [x] Copier à la racine du projet docker, ie. project-root le fichier `frontend.dockerfile`
 - [x] Copier à la racine du projet docker, ie. project-root le fichier `backend.dockerfile`
 - [ ] Modifier si besoin le fichier `docker-compose.yml` pour changer les informations d'authentification pour la base de données.
-- [x] Les repos clonnés doivent avoir comme nom de dossier : genio-backend et genio-frontend
+- [x] Les repos clonnés doivent avoir comme nom de dossier : `genio-backend` et `genio-frontend`
+- [ ] Mettre à jour le fichier `backend.dockerfile` avec la version du JAR de l'application. Par exemple : `GenioService-1.0.1-RELEASE.jar`
 - [x] Le dossier `config` contient les fichiers initialisation de la base de données et de configuration pour le serveur web et l'application JAVA
 - [x] Le fichier `application-external.properties.template` doit être renommé et mis à jour avec les informations de production
 
