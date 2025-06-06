@@ -1,5 +1,35 @@
 # Liste des évolutions et défauts corrigés
 
+## v1.0.1 - 06/06/2025 - Mise à jour environnement & RGPD
+
+### Front-End
+
+* [Configuration] Ajout d’une barrière d’environnement pour personnaliser l’URL backend (remplacement de l’URL en dur `http://localhost:8080` par une variable d’environnement configurable).
+* [RGPD] Ajout de la case à cocher obligatoire RGPD dans le formulaire d’inscription.
+* [Green IT] Intégration de bonnes pratiques d’éco-conception numérique (optimisation des images, chargement paresseux, réduction des requêtes).
+* [Gestion_Erreurs] Messages d’erreur améliorés et gestion esthétique avec croix ✘ pour fermeture manuelle.
+* [Tests locaux] Validation en local avant commit pour garantir que la branche main reste stable.
+* [Changelog] Mise à jour du changelog pour documenter ces évolutions.
+* [UX] Ajustements mineurs pour la cohérence des messages et feedback utilisateurs.
+
+### Back-End
+
+* [API] Adaptation pour prendre en compte la configuration dynamique de l’URL backend via profils d’environnement.
+* [Sécurité] Validation RGPD côté backend des consentements utilisateurs.
+* [Logs] Amélioration des logs pour tracer les accès et modifications liées à la RGPD.
+
+### Technique
+
+* [Docker] Préparation pour déploiement avec configuration dynamique (reverse proxy, variables d’environnement).
+* [Compilation] Modification locale et compilation Angular avec prise en compte des variables d’environnement.
+
+### Tests Unitaires
+
+* [Couverture] Tests sur les nouvelles fonctionnalités d’environnement et RGPD.
+* [Stabilité] Aucune régression détectée lors des tests locaux.
+
+---
+
 ## v1.0.0 - 29/05/2025 - Release
 
 ### Front-End
@@ -67,5 +97,3 @@
   * ✅ 0 bug, 0 vulnérabilité, 0 code smell ;
   * ✅ 295 tests unitaires ;
   * ✅ 0.7% duplication de code ;
-
----
