@@ -31,8 +31,9 @@ project-root/
 ├── config/
 │   ├── 01_schema.sql
 │   ├── 02_init.sql
+│   ├── log4j2.xml
 │   ├── nginx.conf
-│   └── application-external.properties
+│   └── application-external.properties.template
 ├── docker-compose.yml
 ├── frontend.dockefile
 ├── backend.dockefile
@@ -48,7 +49,7 @@ project-root/
 - [ ] Modifier si besoin le fichier `docker-compose.yml` pour changer les informations d'authentification pour la base de données.
 - [x] Les repos clonnés doivent avoir comme nom de dossier : genio-backend et genio-frontend
 - [x] Le dossier `config` contient les fichiers initialisation de la base de données et de configuration pour le serveur web et l'application JAVA
-- [x] Le fichier application-external.properties doit être mise à jour avec les informations de production
+- [x] Le fichier `application-external.properties.template` doit être renommé et mis à jour avec les informations de production
 
 Lancer la commande de démmarege et de construiction de l'image dockerfile
 
