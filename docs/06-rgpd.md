@@ -1,36 +1,35 @@
 # Conformité RGPD de GenioService
 
-GenioService respecte pleinement les exigences du **Règlement Général sur la Protection des Données (RGPD)** ainsi que la loi française « Informatique et Libertés ».
+GenioService est conçu pour être **pleinement conforme au Règlement Général sur la Protection des Données (RGPD)** et à la loi Informatique et Libertés.
 
-## Principaux points de conformité
+## Principes de protection des données
 
-- **Collecte limitée et transparente**
-  Seules les données strictement nécessaires au fonctionnement du service sont collectées (nom, prénom, email, mot de passe chiffré, rôles pour la gestion). La finalité de la collecte est clairement expliquée et légitime.
+- **Collecte minimale et justifiée**  
+  Seules les données strictement nécessaires sont collectées : prénom, nom, email, mot de passe (chiffré), rôle utilisateur. La finalité est claire (accès et gestion du compte).
 
-- **Consentement explicite et information claire**
-  Les utilisateurs sont informés sur l’utilisation de leurs données et doivent fournir un consentement clair, notamment lors de l’inscription.
+- **Consentement explicite et traçable**  
+  L’utilisateur donne son accord via une case à cocher obligatoire à l’inscription. Le lien vers la politique de confidentialité et les CGU est affiché directement dans le formulaire.
 
-- **Sécurité renforcée des données**
-  Les mots de passe sont stockés sous forme chiffrée sécurisée. L’accès aux données est protégé par authentification et autorisation. Les échanges sont sécurisés via HTTPS.
+- **Sécurisation des données**  
+  Les mots de passe sont chiffrés. L’accès est protégé par authentification, avec des règles de mot de passe sécurisées. Toutes les communications passent par HTTPS.
 
-- **Gestion des cookies conforme**
-  Seuls les cookies essentiels au fonctionnement sont utilisés, sans traceurs publicitaires ou tiers. L’utilisateur peut gérer ses préférences de cookies via son navigateur.
+- **Cookies limités et transparents**  
+  Aucun cookie publicitaire. Seuls les cookies essentiels à la session sont utilisés. L’utilisateur peut gérer ses préférences via son navigateur.
 
-- **Durée de conservation maîtrisée**
-  Les données sont conservées uniquement pour la durée nécessaire à la fourniture du service ou conformément aux obligations légales. Elles sont supprimées à la demande ou à la fin de la relation contractuelle.
+- **Durée de conservation encadrée**
+  - Désactivation automatique **1 an après la dernière activité**.
+  - Suppression (ou anonymisation) **après 5 ans**, sauf demande explicite.
+  - L’utilisateur peut **demander la suppression immédiate** de ses données à tout moment.
 
-- **Respect des droits des utilisateurs**
-  Les utilisateurs disposent des droits d’accès, rectification, suppression, opposition et limitation du traitement de leurs données, ainsi que du droit de retirer leur consentement à tout moment.
+- **Respect des droits utilisateurs**  
+  Accès, rectification, suppression, opposition, limitation… Tous les droits sont garantis. Une procédure de contact (email ou courrier) est clairement indiquée.
 
-- **Délégué à la Protection des Données (DPO)**
-  Un DPO est nommé (Mme Elsa HADJADJ) et est disponible pour répondre à toutes questions ou demandes concernant les données personnelles.
+- **DPO identifié**  
+  Mme Elsa HADJADJ est désignée Déléguée à la Protection des Données. Elle peut être contactée directement pour toute demande.
 
-- **Aucune transmission à des tiers**
-  Aucune donnée personnelle n’est communiquée à des partenaires externes sans consentement.
-
-- **Transparence et réactivité**
-  En cas de non-respect ou de litige, les utilisateurs peuvent contacter la CNIL.
+- **Aucune transmission externe**  
+  Aucune donnée personnelle n’est partagée avec des tiers sans consentement explicite.
 
 ---
 
-Cette démarche rigoureuse garantit que GenioService protège les données personnelles de ses utilisateurs en conformité avec le RGPD, assurant ainsi la confidentialité, l’intégrité et la sécurité des informations collectées.
+Cette démarche garantit que **GenioService protège les données personnelles de ses utilisateurs**, en assurant leur **confidentialité**, leur **intégrité** et leur **sécurité**.

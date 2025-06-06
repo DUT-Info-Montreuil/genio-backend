@@ -22,7 +22,7 @@
 - [Page – Plan du site](#page--plan-du-site)
 - [Page – À propos de GenioService](#page--à-propos-de-genioservice)
 - [Page – Contact](#page--contact)
-- [Page – Données personnelles & cookies](#page--données-personnelles--cookies)
+- [Page – Politique de confidentialité](#page--politique-de-confidentiakité)
 - [Pages - Mentions légales](#page--mentions-légales)
 
 ## Page d’accueil
@@ -1506,25 +1506,25 @@ Permettre aux visiteurs du site, connectés ou non, de **contacter le développe
 
 ---
 
-## Page – Données personnelles & cookies
+## Page – Politique de confidentialité
 
-### Objectif de la page Données personnelles & cookies
+### Objectif de la page Politique de confidentialité
 
 Informer l’utilisateur des engagements de GenioService concernant la protection des données personnelles, les droits des utilisateurs, la nature des données collectées et l’usage des cookies. Cette page est obligatoire dans un cadre RGPD.
 
 ---
 
-### Aperçu de la page Données personnelles & cookies
+### Aperçu de la page Politique de confidentialité
 
 <div>
-  <img src="./assets/images/page-donnees-personnelles.png" alt="Page Données personnelles et cookies – GenioService" width="600"/>
+  <img src="./assets/images/page-confidentialite.png" alt="Page Politique de confidentialité – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran de la page Données personnelles & cookies
+### Fonctionnement de l’écran de la page Politique de confidentialité
 
-- Accessible publiquement depuis le footer (lien "Données personnelles").
+- Accessible publiquement depuis le footer (lien "Politique de confidentialité").
 - Structure en **6 sections explicites** :
   1. **Engagement de GenioService** : conformité au RGPD, pas de collecte sans consentement.
   2. **Vos droits** : suppression, opposition, limitation (droit à la vie privée).
@@ -1538,7 +1538,7 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 
 ---
 
-### Exigences fonctionnelles de la page Données personnelles & cookies
+### Exigences fonctionnelles de la page Politique de confidentialité
 
 - Lien accessible dans le footer de toutes les pages.
 - Tous les liens extérieurs ouvrent un nouvel onglet (`target="_blank"`, `rel="noopener"`).
@@ -1549,7 +1549,7 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 
 ---
 
-### Exigences techniques de la page Données personnelles & cookies
+### Exigences techniques de la page Politique de confidentialité
 
 - **Framework** : Angular 17
 - **Composant** : `DpoComponent` ou `DonnéesPersonnellesComponent` (standalone)
