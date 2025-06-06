@@ -9,11 +9,12 @@ L’objectif principal de **GenioService** est double :
 
 ---
 
-##  Deux volets fonctionnels complémentaires
+## Deux volets fonctionnels complémentaires
 
 ### 1. Un service de génération de conventions `.docx`
 
 GenioService propose un **service REST autonome**, qui :
+
 - reçoit des **données structurées** (nom de l’étudiant, dates de stage, entreprise, etc.),
 - les injecte dans un **modèle de convention au format `.docx`**,
 - génère dynamiquement le document,
@@ -64,6 +65,7 @@ Chaque rôle est identifié en haut de l’interface, et les fonctionnalités so
 ## Projet universitaire à fort enjeu technique
 
 Ce projet m’a permis de :
+
 - concevoir un **service de génération de documents automatisé**,
 - développer une **interface complète de gestion d’utilisateurs et de modèles**,
 - mettre en œuvre une **séparation claire des rôles** et des droits,

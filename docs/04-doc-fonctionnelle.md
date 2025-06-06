@@ -3,6 +3,7 @@
 ---
 
 ## Sommaire
+
 - [Page d’accueil](#page-daccueil)
 - [Écran de connexion](#écran-de-connexion)
 - [Écran d’inscription](#écran-dinscription)
@@ -19,7 +20,6 @@
   - [Sous-onglet : Archiver un modèle](#sous-onglet--archiver-un-modèle)
 - [Écran de gestion des utilisateurs – Gestionnaire](#écran-de-gestion-des-utilisateurs--gestionnaire)
 - [Page – Plan du site](#page--plan-du-site)
-- [Pied de page (footer)](#pied-de-page-footer)
 - [Page – À propos de GenioService](#page--à-propos-de-genioservice)
 - [Page – Contact](#page--contact)
 - [Page – Données personnelles & cookies](#page--données-personnelles--cookies)
@@ -27,43 +27,46 @@
 
 ## Page d’accueil
 
-### Objectif de l’écran
+### Objectif de page d'accueil
 
-L’écran d’accueil de GenioService est la porte d’entrée principale de l’application.  
+L’écran d’accueil de GenioService est la porte d’entrée principale de l’application.
 Il permet à l’utilisateur d’accéder aux trois grandes fonctionnalités du service :
+
 - Consulter des modèles prêts à l’emploi
 - Gérer les modèles existants
 - Consulter l’historique des conventions
 
 ---
 
-### Aperçu de la page
+### Aperçu de page d'accueil
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-accueil.png" alt="Page d’accueil GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de page d'accueil
 
 - La page d’accueil est composée de **trois cartes interactives**.
 - Chaque carte redirige vers la page de **connexion** (/connexion) si l’utilisateur n’est pas encore connecté.
 - Une fois connecté, l’utilisateur accède à la fonctionnalité selon ses droits.
 
 **Les trois cartes affichées :**
-1. **Consulter les modèles**  
+
+1. **Consulter les modèles**
    Permet d’accéder à des modèles de conventions prêts à l’emploi.
 
-2. **Gérer les modèles**  
+2. **Gérer les modèles**
    Permet d’ajouter, modifier ou supprimer des modèles.
 
-3. **Historique des conventions**  
+3. **Historique des conventions**
    Permet de visualiser les conventions déjà générées.
-
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de page d'accueil
 
 - L’écran est **accessible sans authentification**.
 - Les liens mènent tous vers la **page de connexion**.
@@ -73,7 +76,7 @@ Il permet à l’utilisateur d’accéder aux trois grandes fonctionnalités du 
 
 ---
 
-### Exigences techniques
+### Exigences techniques de page d'accueil
 
 - Application Angular 17
 - routerLink vers /connexion utilisé sur chaque carte
@@ -87,21 +90,24 @@ Il permet à l’utilisateur d’accéder aux trois grandes fonctionnalités du 
 
 ## Écran de connexion
 
-### Objectif de l’écran
+### Objectif de page de connexion
 
-Permet à l’utilisateur de s’authentifier pour accéder à son espace GenioService.  
+Permet à l’utilisateur de s’authentifier pour accéder à son espace GenioService.
 Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-### Aperçu de la page
+### Aperçu de page de connexion
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-connexion.png" alt="Page de connexion GenioService" width="500"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de page de connexion
+
 - L’utilisateur saisit son **email** et son **mot de passe**.
 - Le bouton **“Se connecter”** déclenche une requête d’authentification (POST /auth/login).
 - En cas d’échec, un **message d’erreur** s’affiche dynamiquement (401 ou 403).
@@ -113,7 +119,8 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de page de connexion
+
 - Tous les champs sont **obligatoires** (required HTML).
 - Le champ **email** doit respecter un format valide.
 - L’utilisateur est informé en cas d'erreur (email ou mot de passe incorrect / compte non activé).
@@ -124,7 +131,8 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ---
 
-### Exigences techniques
+### Exigences techniques de page de connexion
+
 - **Framework** : Angular 17
 - **Composants utilisés** : FormsModule, NgIf, RouterLink
 - **Services utilisés** :
@@ -149,21 +157,23 @@ Obligatoire pour consulter, gérer ou visualiser des conventions.
 
 ## Écran d’inscription
 
-### Objectif de l’écran
+### Objectif de page d'inscription
 
-Permet à un nouvel utilisateur de créer un compte GenioService.  
+Permet à un nouvel utilisateur de créer un compte GenioService.
 C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page d'inscription
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-inscription.png" alt="Page d’inscription GenioService" width="500"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de page d'inscription
 
 - L’utilisateur doit renseigner :
   - **Prénom**
@@ -183,7 +193,7 @@ C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de page d'inscription
 
 - Tous les champs sont **obligatoires** (required)
 - Le mot de passe doit **respecter toutes les règles suivantes** :
@@ -201,7 +211,7 @@ C’est l’étape préalable à toute utilisation du service.
 
 ---
 
-### Exigences techniques
+### Exigences techniques de page d'inscription
 
 - **Framework** : Angular 17
 - **Composants** : FormsModule, NgIf, NgForOf, RouterLink
@@ -222,21 +232,23 @@ C’est l’étape préalable à toute utilisation du service.
 
 ## Écran de réinitialisation du mot de passe
 
-### Objectif de l’écran
+### Objectif de la page de réinitialisation du mot de passe
 
-Permet à l’utilisateur de demander un lien de réinitialisation de mot de passe par email.  
+Permet à l’utilisateur de demander un lien de réinitialisation de mot de passe par email.
 Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de passe.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de réinitialisation du mot de passe
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-mot-de-passe-oublie.png" alt="Page de réinitialisation du mot de passe GenioService" width="500"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de réinitialisation du mot de passe
 
 - L’utilisateur saisit son **adresse e-mail** dans le champ prévu.
 - En cliquant sur le bouton **"Réinitialiser"**, une requête `POST /auth/mot-de-passe-oublie` est envoyée.
@@ -248,7 +260,7 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de réinitialisation du mot de passe
 
 - Champ **e-mail obligatoire** et validé (`required` + format email)
 - Envoi sécurisé de la requête au backend (`POST`)
@@ -265,7 +277,7 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de réinitialisation du mot de passe
 
 - **Framework** : Angular 17
 - **Composants Angular** : `FormsModule`, `NgIf`, `NgClass`, `RouterLink`
@@ -288,21 +300,23 @@ Cette fonctionnalité est destinée aux utilisateurs ayant oublié leur mot de p
 
 ## Écran de réinitialisation du mot de passe - nouveau mot de passe
 
-### Objectif de l’écran
+### Objectif de la page de réinitialisation du mot de passe - nouveau mot de passe
 
-Cet écran permet à l’utilisateur de définir un **nouveau mot de passe** après avoir cliqué sur le lien reçu par email.  
+Cet écran permet à l’utilisateur de définir un **nouveau mot de passe** après avoir cliqué sur le lien reçu par email.
 C’est la dernière étape de la procédure “Mot de passe oublié”.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de réinitialisation du mot de passe - nouveau mot de passe
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-reset-password.png" alt="Page de réinitialisation du mot de passe GenioService" width="500"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de réinitialisation du mot de passe - nouveau mot de passe
 
 - L’utilisateur saisit :
   - Un **nouveau mot de passe**
@@ -319,7 +333,7 @@ C’est la dernière étape de la procédure “Mot de passe oublié”.
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de réinitialisation du mot de passe - nouveau mot de passe
 
 - Champs obligatoires : **nouveau mot de passe** et **confirmation**
 - Le mot de passe doit respecter toutes les **règles de sécurité** :
@@ -337,7 +351,7 @@ C’est la dernière étape de la procédure “Mot de passe oublié”.
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de réinitialisation du mot de passe - nouveau mot de passe
 
 - **Framework** : Angular 17
 - **Composants Angular** : `FormsModule`, `NgIf`, `NgForOf`
@@ -353,27 +367,27 @@ C’est la dernière étape de la procédure “Mot de passe oublié”.
 
 ---
 
-
 ## Écran de consultation des modèles – Consultant
 
-### Objectif de l’écran
+### Objectif de la page de consultation des modèles – Consultant
 
 Permet aux utilisateurs ayant le rôle **Consultant** de consulter les modèles de conventions disponibles dans GenioService.
 
-Cette interface offre un accès en **lecture seule** à l’ensemble des modèles enregistrés, sans possibilité de modification, ajout ou archivage.  
+Cette interface offre un accès en **lecture seule** à l’ensemble des modèles enregistrés, sans possibilité de modification, ajout ou archivage.
 Elle constitue l’interface de consultation standard, simple et sécurisée.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de consultation des modèles – Consultant
 
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-consulter-modeles.png" alt="Page de consultation – Consultant GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de consultation des modèles – Consultant
 
 - L’interface se compose d’un tableau listant tous les modèles de convention enregistrés.
 - L’utilisateur **Consultant** peut :
@@ -392,7 +406,7 @@ Elle constitue l’interface de consultation standard, simple et sécurisée.
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de consultation des modèles – Consultant
 
 - **Rôle requis** : Consultant
 - Les fonctionnalités disponibles sont strictement limitées à la **consultation** :
@@ -409,7 +423,7 @@ Elle constitue l’interface de consultation standard, simple et sécurisée.
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de consultation des modèles – Consultant
 
 - **Framework** : Angular 17
 - **Composants utilisés** :
@@ -433,22 +447,25 @@ Elle constitue l’interface de consultation standard, simple et sécurisée.
 
 ## Écran de consultation des modèles – Exploitant
 
-### Objectif de l’écran
+### Objectif de la page de consultation des modèles – Exploitant
 
 Permet aux utilisateurs ayant le rôle Exploitant de consulter les modèles de conventions disponibles.
 
 Cette interface reprend celle du Consultant, avec quelques différences fonctionnelles et visuelles,
 notamment l’accès à l’onglet “Visualiser” pour suivre les tentatives de génération de conventions.
+
 ---
 
-### Aperçu de la page
+### Aperçu de la page de consultation des modèles – Exploitant
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-consulter-exploitant.png" alt="Page de consultation – Exploitant GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de consultation des modèles – Exploitant
 
 - L’exploitant accède à une interface identique à celle du consultant, à l’exception de deux éléments :
   - Un **badge vert** en haut à droite : Connecté en tant que : Exploitant
@@ -463,24 +480,25 @@ notamment l’accès à l’onglet “Visualiser” pour suivre les tentatives d
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de consultation des modèles – Exploitant
+
 - Rôle requis : Exploitant
 - Le tableau permet :
   - Filtrage par nom, année, texte libre
   - Visualisation des détails d’un modèle (modale)
 - Les boutons ➕ ✏️ 🗃️ sont visibles mais non interactifs
 - L’onglet **Visualiser** est exclusif au rôle Exploitant et Gestionnaire
-- 
+
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de consultation des modèles – Exploitant
 
 - **Framework** : Angular 17
 - **Composants Angular** :
   - ConsulterModeleTousComponent
   - RouterLink vers /historique-conventions
   - AuthService.isExploitant() pour activer le rôle
-  
+
 - **Sécurité** :
   - Droits contrôlés en frontend et backend
   - Actions d’édition désactivées (grisés via disabled-style)
@@ -492,8 +510,8 @@ notamment l’accès à l’onglet “Visualiser” pour suivre les tentatives d
   - Clavier uniquement sur la visualisation (fa-eye)
   - Focus rétabli après navigation
   - Affichage clair du rôle connecté
-  
-- Design :
+
+- **Design** :
   - Badge Connecté en tant que : Exploitant vert
   - Onglet “Visualiser” visible uniquement pour les exploitants
   - Pas de cloche, pas de gestion utilisateurs
@@ -502,57 +520,57 @@ notamment l’accès à l’onglet “Visualiser” pour suivre les tentatives d
 
 ## Écran de consultation des modèles – Gestionnaire
 
-### Objectif de l’écran
+### Objectif de la page de consultation des modèles – Gestionnaire
 
-Permet aux utilisateurs ayant le rôle Gestionnaire de consulter les modèles de conventions disponibles,
-avec des droits complets sur chaque ligne (ajout, modification, archivage).
+Permet aux utilisateurs ayant le rôle Gestionnaire de consulter les modèles de conventions disponibles, avec des droits complets sur chaque ligne (ajout, modification, archivage).
 Cette page est une version enrichie de la vue “Consultant”, avec des outils d’administration intégrés.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de consultation des modèles – Gestionnaire
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-consulter-modele-gestionnaire.png" alt="Page de consultation – Gestionnaire GenioService" width="600"/>
 </div>
 
-
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de consultation des modèles – Gestionnaire
 
 - La page est identique à celle du Consultant en apparence, mais avec :
   - Une **cloche de notification** pour visualiser les demandes d’habilitation utilisateurs.
   - Un **bouton “Gérer les utilisateurs”** pour accéder à l’administration des comptes.
   - **Toutes les actions activées** dans la colonne “Actions” du tableau :
-     - 👁️ Voir le modèle
-     - ➕ Ajouter un modèle (redirige vers l’onglet “Ajouter”)
-     - ✏️ Modifier un modèle (redirige vers l’onglet “Modifier” avec le modèle préchargé)
-     - 🗃️ Archiver un modèle (redirige vers l’onglet “Archiver” avec confirmation)
+    - 👁️ Voir le modèle
+    - ➕ Ajouter un modèle (redirige vers l’onglet “Ajouter”)
+    - ✏️ Modifier un modèle (redirige vers l’onglet “Modifier” avec le modèle préchargé)
+    - 🗃️ Archiver un modèle (redirige vers l’onglet “Archiver” avec confirmation)
 - En cliquant sur ces icônes, l’utilisateur est redirigé vers l’interface de gestion des modèles avec l’onglet correspondant actif (ajouter, modifier, ou archiver).
 - La cloche en haut à droite indique le nombre de demandes d’habilitation en attente :
 
   - ✅ badge vert si aucune demande
   - 🔴 badge rouge si une ou plusieurs demandes
-  - Un message temporaire s’affiche à l’ouverture de la cloche 
+  - Un message temporaire s’affiche à l’ouverture de la cloche
 - Le bouton “Gérer les utilisateurs” permet d’accéder à la page dédiée (non accessible aux autres rôles).
- 
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de consultation des modèles – Gestionnaire
+
 - Rôle requis : Gestionnaire
 - Le tableau permet :
-	- Filtrage par nom, année, texte libre
-	- Consultation des détails
-	- Ajout direct
-	- Modification immédiate
-	- Archivage immédiat
+  - Filtrage par nom, année, texte libre
+  - Consultation des détails
+  - Ajout direct
+  - Modification immédiate
+  - Archivage immédiat
 - Les boutons d’action sont interactifs uniquement pour les gestionnaires :
-	- Désactivés ou absents pour les autres rôles
-	- Accessibles au clavier (avec Tab + Enter)
+  - Désactivés ou absents pour les autres rôles
+  - Accessibles au clavier (avec Tab + Enter)
 - En tête enrichi :
-	- Cloche d’habilitation visible uniquement pour les gestionnaires
-	- Bouton “Gérer les utilisateurs” accessible avec focus clavier
+  - Cloche d’habilitation visible uniquement pour les gestionnaires
+  - Bouton “Gérer les utilisateurs” accessible avec focus clavier
 
 ---
 
@@ -560,9 +578,9 @@ Cette page est une version enrichie de la vue “Consultant”, avec des outils 
 
 - **Framework** : Angular 17
 - **Composants Angular** :
-    - ConsulterModeleTousComponent
-    - RouterLink avec queryParams ({ onglet: 'ajouter' | 'modifier' | 'archiver' })
-    - AuthService pour vérifier le rôle utilisateur
+  - ConsulterModeleTousComponent
+  - RouterLink avec queryParams ({ onglet: 'ajouter' | 'modifier' | 'archiver' })
+  - AuthService pour vérifier le rôle utilisateur
 - **Sécurité** :
   - Vérification du rôle en frontend et backend
   - Redirection sécurisée selon droits
@@ -572,28 +590,30 @@ Cette page est une version enrichie de la vue “Consultant”, avec des outils 
   - Focus automatique sur tableau à chaque navigation
   - Icône de notification : aria-haspopup, aria-live
 - Design :
-    - Icônes : 👁️ fa-eye, ➕ fa-plus, ✏️ fa-edit, 🗃️ fa-archive
-    - Badge dynamique sur cloche (vert/rouge)
-    - Messages temporaires (toast ou infobulle)
+  - Icônes : 👁️ fa-eye, ➕ fa-plus, ✏️ fa-edit, 🗃️ fa-archive
+  - Badge dynamique sur cloche (vert/rouge)
+  - Messages temporaires (toast ou infobulle)
 
 ---
 
 ## Écran de visualisation de l’historique des conventions – Exploitant
 
-### Objectif de l’écran
+### Objectif de la page de visualisation de l’historique des conventions – Exploitant
 
 Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique des tentatives de génération de conventions, avec un détail sur les étapes de traitement (Flux, JSON, DOCX) et la possibilité d’en consulter les erreurs.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de visualisation de l’historique des conventions – Exploitant
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-historique-exploitant.png" alt="Écran de consultation - Consultant" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de visualisation de l’historique des conventions – Exploitant
 
 - Liste paginée des tentatives de génération de conventions.
 - Filtres disponibles :
@@ -610,7 +630,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de visualisation de l’historique des conventions – Exploitant
 
 - **Rôle requis** : Exploitant (affiché en haut à droite)
 - Accès en lecture seule aux historiques
@@ -623,7 +643,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-### Accessibilité
+### Accessibilité de la page de visualisation de l’historique des conventions – Exploitant
 
 - Icônes annotées (`aria-label`)
 - Focus clavier activé sur les lignes
@@ -633,7 +653,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de visualisation de l’historique des conventions – Exploitant
 
 - **Framework** : Angular 17
 - **Contrôle d’accès** : via `AuthService.isExploitant()`
@@ -645,7 +665,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ---
 
-### Aide intégrée
+### Aide intégrée de la page de visualisation de l’historique des conventions – Exploitant
 
 - Bouton ❔ général : explication du fonctionnement de l'écran
 - Boutons ❔ spécifiques pour :
@@ -658,7 +678,7 @@ Permet aux utilisateurs de type **Exploitant** d’accéder à l’historique de
 
 ## Écran de visualisation de l’historique des conventions – Gestionnaire
 
-### Objectif de l’écran
+### Objectif de la page de visualisation de l’historique des conventions – Gestionnaire
 
 Permet aux utilisateurs ayant le rôle **Gestionnaire** de consulter l’ensemble des tentatives de génération de conventions enregistrées dans le système.
 
@@ -666,14 +686,16 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de visualisation de l’historique des conventions – Gestionnaire
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-historique-gestionnaire.png" alt="Écran de visualisation – Gestionnaire GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de visualisation de l’historique des conventions – Gestionnaire
 
 - Le tableau liste toutes les **tentatives de génération de conventions**, paginées.
 - Chaque ligne présente :
@@ -695,7 +717,7 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de visualisation de l’historique des conventions – Gestionnaire
 
 - **Rôle requis** : Gestionnaire
 - Consultation complète de l’historique des générations :
@@ -707,7 +729,7 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ---
 
-### Accessibilité
+### Accessibilité de la page de visualisation de l’historique des conventions – Gestionnaire
 
 - Navigation au **clavier** (touches `Tab`, `Enter`)
 - Icônes avec attributs `aria-label` et `aria-hidden`
@@ -717,7 +739,7 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de visualisation de l’historique des conventions – Gestionnaire
 
 - **Framework** : Angular 17
 - **Composant principal** : `HistoriqueConventionsComponent`
@@ -738,7 +760,7 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ---
 
-### Aide intégrée
+### Aide intégrée de la page de visualisation de l’historique des conventions – Gestionnaire
 
 - **Bouton ❔ général** : affichage d’une modale expliquant l’usage de la page
 - **Boutons ❔ contextuels** dans chaque colonne :
@@ -751,14 +773,14 @@ Cette interface est **identique à celle de l’Exploitant** sur le fond et les 
 
 ## Écran de gestion des modèles – Gestionnaire
 
-### Objectif de l’écran
+### Objectif de la page de gestion des modèles – Gestionnaire
 
-Permet aux utilisateurs ayant le rôle **Gestionnaire** d’ajouter, modifier ou archiver des modèles de conventions au format `.docx`.  
+Permet aux utilisateurs ayant le rôle **Gestionnaire** d’ajouter, modifier ou archiver des modèles de conventions au format `.docx`.
 C’est la seule interface ayant un contrôle complet sur le référentiel de modèles disponibles dans le système.
 
 ---
 
-### Accès et rôles
+### Accès et rôles de la page de gestion des modèles – Gestionnaire
 
 - **Rôle requis** : `Gestionnaire`
 - L'accès est contrôlé dans Angular via : `AuthService.isGestionnaire()`
@@ -767,39 +789,41 @@ C’est la seule interface ayant un contrôle complet sur le référentiel de mo
 
 ---
 
-### Fonctionnement général
+### Fonctionnement général de la page de gestion des modèles – Gestionnaire
 
 L’écran se divise en **trois sous-onglets** :
 
-1. **Ajouter un modèle**  
+1. **Ajouter un modèle**
    Permet d’importer un nouveau modèle `.docx` :
-  - Champ obligatoire : année du modèle (format `YYYY`)
-  - Upload par glisser-déposer ou bouton “Choisir un fichier”
-  - Type accepté : `.docx` uniquement
-  - Taille maximale : 4 Mo
-  - Un champ facultatif permet de saisir le titre du modèle
+     - Champ obligatoire : année du modèle (format `YYYY`)
+     - Upload par glisser-déposer ou bouton “Choisir un fichier”
+     - Type accepté : `.docx` uniquement
+     - Taille maximale : 4 Mo
+     - Un champ facultatif permet de saisir le titre du modèle
 
-2. **Modifier un modèle**  
+2. **Modifier un modèle**
    Permet de :
-  - Rechercher un modèle existant
-  - Modifier son titre
-  - Visualiser les métadonnées
-  - Mettre à jour la description ou l’année (si autorisé)
+     - Rechercher un modèle existant
+     - Modifier son titre
+     - Visualiser les métadonnées
+     - Mettre à jour la description ou l’année (si autorisé)
 
-3. **Archiver un modèle**  
+3. **Archiver un modèle**
    Permet de désactiver un modèle existant :
-  - Le modèle archivé devient invisible aux autres rôles
-  - L’action est irréversible sauf réactivation manuelle via backend
+     - Le modèle archivé devient invisible aux autres rôles
+     - L’action est irréversible sauf réactivation manuelle via backend
 
 ---
 
-### Aperçu de l’interface
+### Aperçu de l’interface de la page de gestion des modèles – Gestionnaire
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-gerer-modeles.png" alt="Écran Gérer les modèles – Gestionnaire" width="600"/>
 </div>
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de gestion des modèles – Gestionnaire
 
 - L’écran affiche dynamiquement les onglets selon le rôle
 - Les actions sont accessibles uniquement au **Gestionnaire**
@@ -813,7 +837,7 @@ L’écran se divise en **trois sous-onglets** :
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de gestion des modèles – Gestionnaire
 
 - **Framework** : Angular 17
 - **Composants** :
@@ -835,7 +859,7 @@ L’écran se divise en **trois sous-onglets** :
 
 ---
 
-### Aide intégrée
+### Aide intégrée de la page de gestion des modèles – Gestionnaire
 
 - Un bouton ❔ d’aide est affiché dans chaque sous-onglet
 - Une modale explique les attentes de chaque section
@@ -845,44 +869,45 @@ L’écran se divise en **trois sous-onglets** :
 
 ## Sous-onglet : Ajouter un modèle
 
-Ce sous-onglet permet à un **Gestionnaire** d’importer un nouveau modèle de convention au format `.docx`.  
+Ce sous-onglet permet à un **Gestionnaire** d’importer un nouveau modèle de convention au format `.docx`.
 Le fichier est automatiquement analysé pour valider sa structure, l’année et la présence des variables attendues.
 
 ---
 
-### Aperçu de l’interface
+### Aperçu de l’interface  - Sous-onglet : Ajouter un modèle
 
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-gerer-modeles.png" alt="Écran Gérer les modèles – Gestionnaire" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement
+### Fonctionnement - Sous-onglet : Ajouter un modèle
 
 1. **Année du modèle** :
-  - Champ obligatoire au format `YYYY`
-  - Validation stricte : comprise entre `2020` et `{{ currentYear + 5 }}`
-  - Vérification d’unicité via l’API `GET /check-nom-exists`
+     - Champ obligatoire au format `YYYY`
+     - Validation stricte : comprise entre `2020` et `{{ currentYear + 5 }}`
+     - Vérification d’unicité via l’API `GET /check-nom-exists`
 
 2. **Fichier modèle** :
-  - Accepté : `.docx` uniquement – Taille maximale : `4 Mo`
-  - Téléversement par **drag-and-drop** ou bouton "Choisir un fichier"
-  - Analyse automatique via `POST /test-generation` :
-    - Vérifie que le document contient des **variables de champs attendues** (ex. `NOM_ETUDIANT`, `TUT_IUT`, etc.)
-    - Retour visuel ✔️ / ❌ pour chaque variable détectée
+     - Accepté : `.docx` uniquement – Taille maximale : `4 Mo`
+     - Téléversement par **drag-and-drop** ou bouton "Choisir un fichier"
+     - Analyse automatique via `POST /test-generation` :
+       - Vérifie que le document contient des **variables de champs attendues** (ex. `NOM_ETUDIANT`, `TUT_IUT`, etc.)
+       - Retour visuel ✔️ / ❌ pour chaque variable détectée
 
 3. **Titre du modèle** :
-  - Auto-généré à partir du nom du fichier si vide
-  - Modifiable manuellement : double-clic ou clic sur l’icône 🖉
+     - Auto-généré à partir du nom du fichier si vide
+     - Modifiable manuellement : double-clic ou clic sur l’icône 🖉
 
 4. **Soumission** :
-  - Le bouton "Valider le modèle" est activé uniquement si tous les champs sont valides
-  - Envoie des données via `POST /conventionServices` (multipart)
+     - Le bouton "Valider le modèle" est activé uniquement si tous les champs sont valides
+     - Envoie des données via `POST /conventionServices` (multipart)
 
 ---
 
-### Cas d’erreurs
+### Cas d’erreurs - Sous-onglet : Ajouter un modèle
 
 - **Année invalide** : modale explicative avec message d’aide
 - **Modèle déjà existant pour l’année** : blocage automatique et message clair
@@ -892,7 +917,7 @@ Le fichier est automatiquement analysé pour valider sa structure, l’année et
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles - Sous-onglet : Ajouter un modèle
 
 - Tous les champs sont requis pour soumettre
 - Vérification dynamique de l’année et du fichier à chaque modification
@@ -904,7 +929,7 @@ Le fichier est automatiquement analysé pour valider sa structure, l’année et
 
 ---
 
-### Exigences techniques
+### Exigences techniques - Sous-onglet : Ajouter un modèle
 
 - **Framework** : Angular 17
 - **Composant utilisé** : `AjouterModeleComponent`
@@ -922,7 +947,7 @@ Le fichier est automatiquement analysé pour valider sa structure, l’année et
 
 Voici la liste complète des variables attendues analysées par `docxParser` :
 
-```
+```plaintext
 annee, NOM_ORGANISME, ADR_ORGANISME, NOM_REPRESENTANT_ORG, QUAL_REPRESENTANT_ORG,
 NOM_DU_SERVICE, TEL_ORGANISME, MEL_ORGANISME, LIEU_DU_STAGE, NOM_ETUDIANT1,
 PRENOM_ETUDIANT, SEXE_ETUDIANT, DATE_NAIS_ETUDIANT, ADR_ETUDIANT,
@@ -952,45 +977,47 @@ Ce sous-onglet permet au **Gestionnaire** de rechercher, visualiser et modifier 
 
 ---
 
-### Aperçu de l’interface
+### Aperçu de l’interface - Sous-onglet : Modifier un modèle
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-modifier-modele.png" alt="Modifier un modèle – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement
+### Fonctionnement - Sous-onglet : Modifier un modèle
 
 1. **Filtres de recherche** :
-  - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
-  - Par **année** (champ numérique avec datalist dynamique)
-  - Recherche avancée possible sur la description et les statuts
+     - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
+     - Par **année** (champ numérique avec datalist dynamique)
+     - Recherche avancée possible sur la description et les statuts
 
 2. **Affichage des modèles** :
-  - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
-  - Pagination ajustable (5, 10, 15 entrées par page)
+     - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
+     - Pagination ajustable (5, 10, 15 entrées par page)
 
 3. **Modification d’un modèle** :
-  - Icône ✏️ pour ouvrir la modale d’édition
-  - Champs modifiables dans la modale :
-    - **Titre** : modifiable (double-clic ou clic sur icône crayon)
-    - **Description de modification** (textarea facultatif)
-    - **Remplacement du fichier .docx** (optionnel, avec vérification automatique)
-  - Vérifications appliquées :
-    - Le titre est modifiable uniquement si l’utilisateur le déverrouille
-    - Le fichier `.docx` est validé par `/test-generation` : variables manquantes signalées
+     - Icône ✏️ pour ouvrir la modale d’édition
+     - Champs modifiables dans la modale :
+       - **Titre** : modifiable (double-clic ou clic sur icône crayon)
+       - **Description de modification** (textarea facultatif)
+       - **Remplacement du fichier .docx** (optionnel, avec vérification automatique)
+     - Vérifications appliquées :
+       - Le titre est modifiable uniquement si l’utilisateur le déverrouille
+       - Le fichier `.docx` est validé par `/test-generation` : variables manquantes signalées
 
 4. **Sauvegarde** :
-  - Si un nouveau fichier est sélectionné :
-    - Upload via `PUT /conventionServices/{id}/file` avec FormData
-    - Puis mise à jour du modèle via `PUT /conventionServices/{id}` avec les métadonnées
-  - Si aucun fichier : seul le `PUT` principal est appelé
-  - Affichage d’un message de succès ou d’erreur
-  - Fermeture automatique de la modale après succès
+     - Si un nouveau fichier est sélectionné :
+       - Upload via `PUT /conventionServices/{id}/file` avec FormData
+       - Puis mise à jour du modèle via `PUT /conventionServices/{id}` avec les métadonnées
+     - Si aucun fichier : seul le `PUT` principal est appelé
+     - Affichage d’un message de succès ou d’erreur
+     - Fermeture automatique de la modale après succès
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles - Sous-onglet : Modifier un modèle
 
 - Accès restreint au **rôle GESTIONNAIRE**
 - Le bouton **Réinitialiser** remet tous les filtres à zéro
@@ -1001,7 +1028,7 @@ Ce sous-onglet permet au **Gestionnaire** de rechercher, visualiser et modifier 
 
 ---
 
-### Exigences techniques
+### Exigences techniques - Sous-onglet : Modifier un modèle
 
 - **Composant Angular** : `ModifierModeleComponent`
 - **Fichiers CSS** :
@@ -1058,7 +1085,7 @@ Ce sous-onglet permet au **Gestionnaire** de rechercher, visualiser et modifier 
 
 ---
 
-### Accès restreint
+### Accès restreint - Sous-onglet : Modifier un modèle
 
 - **Rôle requis** : GESTIONNAIRE
 - Le composant et ses boutons ne sont pas affichés aux autres rôles (désactivation complète)
@@ -1069,44 +1096,46 @@ Ce sous-onglet permet au **Gestionnaire** d’archiver un modèle de convention 
 
 ---
 
-### Aperçu de l’interface
+### Aperçu de l’interface - Sous-onglet : Archiver un modèle
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-archiver-modele.png" alt="Archiver un modèle – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement
+### Fonctionnement - Sous-onglet : Archiver un modèle
 
 1. **Filtres de recherche** :
-  - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
-  - Par **année** (champ numérique avec datalist dynamique)
-  - Bouton **Réinitialiser** pour rétablir tous les filtres
+     - Par **nom de modèle** (texte libre, insensible à la casse et aux accents)
+     - Par **année** (champ numérique avec datalist dynamique)
+     - Bouton **Réinitialiser** pour rétablir tous les filtres
 
 2. **Affichage des modèles** :
-  - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
-  - Choix du nombre d’entrées par page (5, 10, 15)
-  - Pagination dynamique
+     - Tableau dynamique avec colonnes : **Titre**, **Année**, **Format**, **Dernière modification**, **Action**
+     - Choix du nombre d’entrées par page (5, 10, 15)
+     - Pagination dynamique
 
 3. **Archivage d’un modèle** :
-  - Icône 🗃️ dans la colonne "Action" (archive)
-  - Clic ouvre une **modale de confirmation** affichant le **nom du modèle à archiver**
-  - Boutons :
-    - **Annuler** : fermeture sans action
-    - **Archiver** : vérification d’usage, puis suppression (si non utilisé)
+     - Icône 🗃️ dans la colonne "Action" (archive)
+     - Clic ouvre une **modale de confirmation** affichant le **nom du modèle à archiver**
+     - Boutons :
+       - **Annuler** : fermeture sans action
+       - **Archiver** : vérification d’usage, puis suppression (si non utilisé)
 
 4. **Suppression conditionnelle** :
-  - Avant la suppression, appel à `/conventionServices/{id}/isUsed`
-  - Si le modèle est utilisé dans une convention, l’archivage est bloqué
-  - Sinon, suppression via `DELETE /conventionServices/{id}`
+     - Avant la suppression, appel à `/conventionServices/{id}/isUsed`
+     - Si le modèle est utilisé dans une convention, l’archivage est bloqué
+     - Sinon, suppression via `DELETE /conventionServices/{id}`
 
 5. **Retour utilisateur** :
-  - Affichage d’un message temporaire de succès ou d’erreur
-  - Rafraîchissement de la liste sans rechargement de page
+     - Affichage d’un message temporaire de succès ou d’erreur
+     - Rafraîchissement de la liste sans rechargement de page
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles - Sous-onglet : Archiver un modèle
 
 - Accès restreint au **rôle GESTIONNAIRE**
 - Confirmation obligatoire via **modale**
@@ -1115,7 +1144,7 @@ Ce sous-onglet permet au **Gestionnaire** d’archiver un modèle de convention 
 
 ---
 
-### Exigences techniques
+### Exigences techniques - Sous-onglet : Archiver un modèle
 
 - **Composant Angular** : `SupprimerModeleComponent`
 - **CSS** :
@@ -1147,30 +1176,32 @@ Ce sous-onglet permet au **Gestionnaire** d’archiver un modèle de convention 
 
 ---
 
-### Accès restreint
+### Accès restreint - Sous-onglet : Archiver un modèle
 
 - **Rôle requis** : GESTIONNAIRE
 - Fonctionnalité totalement masquée pour les autres rôles
 
 ## Écran de gestion des utilisateurs – Gestionnaire
 
-### Objectif de l’écran
+### Objectif de la page de gestion des utilisateurs – Gestionnaire
 
-Permet aux **Gestionnaires** d’administrer les comptes utilisateurs de la plateforme GenioService.  
+Permet aux **Gestionnaires** d’administrer les comptes utilisateurs de la plateforme GenioService.
 L’écran permet de visualiser, filtrer, activer/désactiver, modifier ou supprimer des comptes.
 
 C’est l’unique interface d’administration des rôles et statuts des utilisateurs.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page de gestion des utilisateurs – Gestionnaire
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-gestion-utilisateur.png" alt="Écran de gestion des utilisateurs – Gestionnaire" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page de gestion des utilisateurs – Gestionnaire
 
 - Liste paginée de tous les comptes utilisateurs enregistrés
 - Filtres disponibles :
@@ -1183,18 +1214,18 @@ C’est l’unique interface d’administration des rôles et statuts des utilis
   - Rôle attribué
   - Date de création du compte
 - Pour chaque utilisateur :
-  -  **Modifier** : ouvre une modale pour éditer le rôle et le statut
+  - **Modifier** : ouvre une modale pour éditer le rôle et le statut
   - **Supprimer** : ouvre une modale de confirmation
 - Une **modale d’aide** ❔ en haut à droite explique le fonctionnement général de la page
 - Un fil d’Ariane dynamique indique depuis quel écran l’administration a été ouverte (`queryParams.source`)
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page de gestion des utilisateurs – Gestionnaire
 
 - **Rôle requis** : Gestionnaire uniquement
 - Actions possibles :
-  -  Activer ou désactiver un compte
+  - Activer ou désactiver un compte
   - Modifier le rôle de l’utilisateur (via menu déroulant)
   - Supprimer un compte définitivement
 - La **modale de modification** permet :
@@ -1205,7 +1236,7 @@ C’est l’unique interface d’administration des rôles et statuts des utilis
 
 ---
 
-### Accessibilité
+### Accessibilité de la page de gestion des utilisateurs – Gestionnaire
 
 - Icônes annotées (`aria-label`, `aria-hidden`)
 - Modales accessibles (`role="dialog"`, `aria-modal`, `aria-labelledby`)
@@ -1215,7 +1246,7 @@ C’est l’unique interface d’administration des rôles et statuts des utilis
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page de gestion des utilisateurs – Gestionnaire
 
 - **Framework** : Angular 17
 - **Composant principal** : `GestionUtilisateursComponent`
@@ -1265,9 +1296,10 @@ C’est l’unique interface d’administration des rôles et statuts des utilis
 
 ## Page – Plan du site
 
-### Objectif de l’écran
+### Objectif de la page Plan du site
 
 Permet aux utilisateurs (connectés ou non) d’avoir une **vue d’ensemble de la structure de l’application GenioService**, incluant :
+
 - L’ensemble des pages accessibles (accueil, connexion, inscription…)
 - Les actions spécifiques possibles selon les rôles
 - Les restrictions d’accès affichées clairement via une modale
@@ -1276,14 +1308,16 @@ Cette page améliore la compréhension de l’architecture et des droits associ�
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page Plan du site
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-plan-du-site.png" alt="Page du plan du site – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page Plan du site
 
 - La page affiche une arborescence complète de toutes les sections du site :
   - **Accueil** : redirection vers les grandes sections
@@ -1302,7 +1336,7 @@ Cette page améliore la compréhension de l’architecture et des droits associ�
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page Plan du site
 
 - **Accès ouvert à tous** (même sans connexion)
 - Les actions accessibles dépendent du rôle utilisateur (simulées ici avec des boutons et une modale)
@@ -1312,7 +1346,7 @@ Cette page améliore la compréhension de l’architecture et des droits associ�
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page Plan du site
 
 - **Framework** : Angular 17
 - **Composant** : `PlanDuSiteComponent` (standalone)
@@ -1343,13 +1377,13 @@ Cette page améliore la compréhension de l’architecture et des droits associ�
 
 ## Page – À propos de GenioService
 
-### Objectif de l’écran
+### Objectif de la page À propos de GenioService
 
 Présenter la **finalité globale** de l’application GenioService, ses **fonctionnalités principales** et les **bénéfices concrets** pour les utilisateurs. Cette page a pour but de familiariser les utilisateurs avec l’outil avant même la connexion, et de rassurer sur sa sécurité, sa simplicité et sa valeur ajoutée.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page À propos de GenioService
 
 <div>
   <img src="./assets/images/page-a-propos.png" alt="Page À propos de GenioService" width="600"/>
@@ -1357,7 +1391,7 @@ Présenter la **finalité globale** de l’application GenioService, ses **fonct
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page À propos de GenioService
 
 - Accessible sans authentification, directement depuis le **footer** ou l’URL `/a-propos`.
 - Le contenu est organisé en sections :
@@ -1371,7 +1405,7 @@ Présenter la **finalité globale** de l’application GenioService, ses **fonct
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page À propos de GenioService
 
 - Page publique (pas besoin d’être connecté)
 - Accessible depuis :
@@ -1383,7 +1417,7 @@ Présenter la **finalité globale** de l’application GenioService, ses **fonct
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page À propos de GenioService
 
 - **Framework** : Angular 17
 - **Composant** : `AboutComponent` (standalone)
@@ -1407,40 +1441,42 @@ Présenter la **finalité globale** de l’application GenioService, ses **fonct
 
 - **Dernière mise à jour** : 29 mai 2025
 - **Rédactrice** : Elsa HADJADJ
-- **Version** : 1.0  
+- **Version** : 1.0
 
 ## Page – Contact
 
-### Objectif de l’écran
+### Objectif de la page Contact
 
 Permettre aux visiteurs du site, connectés ou non, de **contacter le développeur** du projet GenioService en cas de question, retour, ou simple message. La page donne aussi un **contexte clair sur le projet universitaire**, son cadre pédagogique et ses technologies.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page Contact
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-contact.png" alt="Page Contact – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page Contact
 
 - Accessible **publiquement** via le footer ou `/contact`.
 - Deux sections principales :
   1. **Me contacter** :
-    - Adresse email cliquable (mailto)
-    - Lien LinkedIn vers le profil du développeur
-    - Contexte : projet de 3e année du BUT Informatique, tutoré par M. Marcinkowski
-    - Texte d’introduction encourageant le contact (ton cordial et humain)
+       - Adresse email cliquable (mailto)
+       - Lien LinkedIn vers le profil du développeur
+       - Contexte : projet de 3e année du BUT Informatique, tutoré par M. Marcinkowski
+       - Texte d’introduction encourageant le contact (ton cordial et humain)
   2. **À propos du projet** :
-    - Détail sur le stack technique (Angular + Spring Boot)
-    - Objectif purement pédagogique
-    - Application des bonnes pratiques de développement web
+       - Détail sur le stack technique (Angular + Spring Boot)
+       - Objectif purement pédagogique
+       - Application des bonnes pratiques de développement web
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page Contact
 
 - Page disponible sans authentification
 - Lien mail : `mailto:genioservice3@gmail.com`
@@ -1450,7 +1486,7 @@ Permettre aux visiteurs du site, connectés ou non, de **contacter le développe
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page Contact
 
 - **Framework** : Angular 17
 - **Composant** : `ContactComponent` (standalone)
@@ -1472,13 +1508,13 @@ Permettre aux visiteurs du site, connectés ou non, de **contacter le développe
 
 ## Page – Données personnelles & cookies
 
-### Objectif de l’écran
+### Objectif de la page Données personnelles & cookies
 
 Informer l’utilisateur des engagements de GenioService concernant la protection des données personnelles, les droits des utilisateurs, la nature des données collectées et l’usage des cookies. Cette page est obligatoire dans un cadre RGPD.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page Données personnelles & cookies
 
 <div>
   <img src="./assets/images/page-donnees-personnelles.png" alt="Page Données personnelles et cookies – GenioService" width="600"/>
@@ -1486,23 +1522,23 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de l’écran de la page Données personnelles & cookies
 
 - Accessible publiquement depuis le footer (lien "Données personnelles").
 - Structure en **6 sections explicites** :
   1. **Engagement de GenioService** : conformité au RGPD, pas de collecte sans consentement.
   2. **Vos droits** : suppression, opposition, limitation (droit à la vie privée).
-    - Coordonnées de la DPO (Elsa Hadjadj) fournies (email et adresse postale).
-    - Obligation de joindre une pièce d’identité pour toute demande.
+       - Coordonnées de la DPO (Elsa Hadjadj) fournies (email et adresse postale).
+       - Obligation de joindre une pièce d’identité pour toute demande.
   3. **Données collectées** : uniquement celles nécessaires à l’authentification et gestion.
-    - Aucune donnée sensible stockée en clair.
+       - Aucune donnée sensible stockée en clair.
   4. **Utilisation des cookies** : uniquement cookies techniques (aucun traceur pub).
   5. **Gérer vos préférences** : liens vers les paramètres de chaque navigateur.
   6. **Liens utiles** : vers le site de la CNIL pour plus d’infos.
 
 ---
 
-### Exigences fonctionnelles
+### Exigences fonctionnelles de la page Données personnelles & cookies
 
 - Lien accessible dans le footer de toutes les pages.
 - Tous les liens extérieurs ouvrent un nouvel onglet (`target="_blank"`, `rel="noopener"`).
@@ -1513,7 +1549,7 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page Données personnelles & cookies
 
 - **Framework** : Angular 17
 - **Composant** : `DpoComponent` ou `DonnéesPersonnellesComponent` (standalone)
@@ -1538,6 +1574,7 @@ Informer l’utilisateur des engagements de GenioService concernant la protectio
 ### Complément
 
 Cette page est essentielle pour :
+
 - garantir la conformité **juridique** du site (RGPD),
 - rassurer les utilisateurs sur la **sécurité** de leurs données,
 - valoriser la **transparence** du projet GenioService.
@@ -1546,20 +1583,22 @@ Cette page est essentielle pour :
 
 ## Page – Mentions légales
 
-### Objectif de l’écran
+### Objectif de la page Mentions légales
 
 Présenter les informations légales obligatoires liées à l'éditeur du site GenioService dans un cadre académique. Cette page garantit la transparence sur l’identité de l’auteur, les technologies utilisées, la propriété du code source, et les conditions d’usage du site.
 
 ---
 
-### Aperçu de la page
+### Aperçu de la page Mentions légales
+
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="./assets/images/page-mentions-legales.png" alt="Page Mentions légales – GenioService" width="600"/>
 </div>
 
 ---
 
-### Fonctionnement de l’écran
+### Fonctionnement de la page Mentions légales
 
 - Accessible depuis le **footer** sur toutes les pages via le lien « Mentions légales ».
 - Contenu réparti en **5 sections** :
@@ -1571,7 +1610,7 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
 
 ---
 
-### Exigences fonctionnelles
+### Exigences de la page Mentions légales
 
 - Affichage clair et accessible des informations légales, à jour.
 - Liens extérieurs sécurisés (`target="_blank"` et `rel="noopener"`).
@@ -1581,7 +1620,7 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
 
 ---
 
-### Exigences techniques
+### Exigences techniques de la page Mentions légales
 
 - **Composant Angular** : `MentionsLegalesComponent` (standalone)
 - **Technos utilisées** :
@@ -1599,7 +1638,7 @@ Présenter les informations légales obligatoires liées à l'éditeur du site G
 
 ---
 
-### Complément
+### Complément pour la page Mentions légales
 
 Cette page est obligatoire en France, même dans un cadre académique, dès lors qu’un site est mis à disposition d’un public. Elle clarifie la responsabilité éditoriale et le périmètre d’utilisation du projet GenioService.
 

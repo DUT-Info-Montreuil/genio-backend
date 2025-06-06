@@ -102,7 +102,7 @@ Le projet utilise Maven pour la gestion des dépendances, le cycle de vie de con
 
 ## 4. Conclusion
 
-L’architecture de GenioService est moderne, modulaire et maintenable.  
+L’architecture de GenioService est moderne, modulaire et maintenable.
 Elle garantit la sécurité, la qualité du code et facilite les tests tout en utilisant une stack technologique reconnue.
 
 ---

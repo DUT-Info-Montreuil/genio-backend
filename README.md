@@ -1,8 +1,8 @@
 # GenioService
 
-> **Version :** 1.0.0-release  
-> **Auteur :** Elsa HADJADJ  
-> **Email :** elsa.simha.hadjadj@gmail.com  
+> **Version :** 1.0.0-release
+> **Auteur :** Elsa HADJADJ
+> **Email :** <elsa.simha.hadjadj@gmail.com>
 > **GitHub Repository :** [https://github.com/DUT-Info-Montreuil/genio-backend](https://github.com/DUT-Info-Montreuil/genio-backend)
 
 ---
@@ -17,12 +17,13 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 
 ## Audit qualité SonarQube
 
+<!-- markdownlint-disable MD033 -->
 <div>
   <img src="docs/assets/images/sonar-audit.png" alt="Audit SonarCube" width="600"/>
 </div>
 
+> **Résultat : Quality Gate – Passed  ✅**
 
-**Résultat : Quality Gate – Passed  ✅**
 - Sécurité : 0 vulnérabilité
 - Fiabilité : 0 bug
 - Maintenabilité : 0 code smell

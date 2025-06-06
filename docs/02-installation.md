@@ -167,7 +167,7 @@ npm start
 ### 10.3 Tests
 
 ```bash
-./mvnw test
+./mvn test
 ```
 
 ---
@@ -193,7 +193,7 @@ server.port=8081
 
 ## 12. Structure du projet
 
-```
+```plaintext
 GenioApp/
 ├── backend/
 │   ├── src/
@@ -232,7 +232,7 @@ ng build --configuration production
 
 ### Exemple `.gitignore`
 
-```
+```plaintext
 # Backend
 /backend/utils/application-external.properties
 
@@ -273,7 +273,7 @@ Projet sous licence MIT. Voir le fichier `LICENCE.md`.
 ## 19. Contacts
 
 - Elsa Hadjadj
-- elsa.simha.hadjadj@gmail.com
+- <elsa.simha.hadjadj@gmail.com>
 
 ---
 
