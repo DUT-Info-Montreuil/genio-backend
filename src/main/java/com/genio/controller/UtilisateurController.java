@@ -139,4 +139,10 @@ public class UtilisateurController {
         logger.info("Nombre d'utilisateurs non actifs : {}", nonActifs.size());
         return ResponseEntity.ok(nonActifs);
     }
+
+    @GetMapping("/exists")
+    public Map<String, Boolean> checkEmailExists(@RequestParam String email) {
+        boolean exists = utilisateurService.getByEmail(email).isPresent();
+        return Map.of("exists", exists);
+    }
 }
