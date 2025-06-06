@@ -33,3 +33,6 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 # Configuration spécifique Genio
 ##############################
 modele.conventionServices.directory=src/main/resources/conventionServices
+
+#mettre a jour avec l'url de prod
+frontend.url=http://localhost:4200
