@@ -1,12 +1,9 @@
 -- Création de la base si besoin
-CREATE DATABASE IF NOT EXISTS genioservice_db;
-USE genioservice_db;
-
--- Suppression si déjà existante (utile en dev)
---DROP TABLE IF EXISTS utilisateur;
+CREATE DATABASE IF NOT EXISTS genio_db;
+USE genio_db;
 
 -- Création de la table utilisateur
-CREATE TABLE utilisateur (
+CREATE TABLE IF NOT EXISTS utilisateur (
     id BIGINT PRIMARY KEY,
     actif TINYINT(1) NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -17,3 +14,8 @@ CREATE TABLE utilisateur (
     role VARCHAR(50),
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- Création de l'utilisateur MySQL et droits
+CREATE USER IF NOT EXISTS 'genio'@'%' IDENTIFIED BY 'change-me';
+GRANT ALL PRIVILEGES ON genio_db.* TO 'genio'@'%';
+FLUSH PRIVILEGES;

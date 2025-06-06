@@ -15,17 +15,35 @@ services:
       - "3306:3306"
     volumes:
       - ./data:/var/lib/mysql
-      - /opt/DOCKER/genio-service/config/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
-      - /opt/DOCKER/genio-service/config/02_init.sql:/docker-entrypoint-initdb.d/02_init.sql
-  
-  tomcat:
+      - ./config/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./config/02_init.sql:/docker-entrypoint-initdb.d/02_init.sql
+
+  backend:
+      build:
+        context: .
+        dockerfile: backend.dockerfile
+      container_name: genio_backend
+      depends_on:
+        - mysql
+      environment:
+        - VIRTUAL_HOST=genio-back.local
+        - VIRTUAL_PORT=8101:8101
+      ports:
+        - "8101:8101"
+      volumes:
+      - ./config/log4j2.xml:/config/log4j2.xml
+
+  frontend:
     build:
       context: .
-      dockerfile: tomcat.dockerfile
-    container_name: genio_tomcat
+      dockerfile: frontend.dockerfile
+    container_name: genio_frontend
+    environment:
+      - VIRTUAL_HOST=genio-front.local
+      - VIRTUAL_PORT=8100:8100
     depends_on:
-      - mysql
+      - backend
     ports:
-      - "8080:8080"
+      - 8100:8100
     volumes:
-      - ./config/application-external.properties:/usr/local/tomcat/conf/application-external.properties
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf

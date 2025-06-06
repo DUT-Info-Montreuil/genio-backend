@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    GenioService
+    Copyright (c) 2025
+    Elsa HADJADJ <elsa.simha.hadjadj@gmail.com>
+
+    Licence sous Creative Commons CC-BY-NC-SA 4.0.
+    Vous pouvez obtenir une copie de la licence à l'adresse suivante :
+    https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+    Dépôt GitHub (Back) :
+    https://github.com/DUT-Info-Montreuil/GenioService
+-->
+<Configuration>
+    <Properties>
+        <Property name="LOGS_BASE_REP" value="logs"/>
+        <!-- TODO : modifier avec le nom de votre application. -->
+        <Property name="LOGS_APP_REP" value="${LOGS_BASE_REP}/prod"/>
+        <!-- TODO : modifier avec l'environnement voulu (REC/PROD) -->
+        <Property name="ENVIRONNEMENT" value="PROD"/>
+        <Property name="APPLICATION" value="GENIO"/>
+        <!-- Formatage Exception -->
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <!-- Niveau de log -->
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <!-- Horodatage -->
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
+        <!-- Mode console -->
+        <Property name="CONSOLE_LOG_PATTERN">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}{Europe/Paris}}{faint} %clr{[CONS]}{yellow} %clr{[$${env:APPLICATION}]}{cyan} %clr{${sys:LOG_LEVEL_PATTERN}} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{blue} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+        <!-- Mode fichier -->
+        <Property name="FILE_LOG_PATTERN">%d{${LOG_DATEFORMAT_PATTERN}}{Europe/Paris} [${env:ENVIRONNEMENT}] [${env:APPLICATION}]${LOG_LEVEL_PATTERN} %pid --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+    </Properties>
+
+    <!-- Les loggers -->
+    <Appenders>
+        <!-- logger par default sur la console STDOUT -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" disableAnsi="false"/>
+        </Console>
+
+        <!-- application.log : toutes les logs -->
+        <RollingFile name="application-file" fileName="${LOGS_APP_REP}/application.log"
+                    filePattern="${LOGS_APP_REP}/application-%d{yyyy-MM-dd}-%i.log.gz">
+        <PatternLayout pattern="${sys:FILE_LOG_PATTERN}" disableAnsi="true"/>
+        <Policies>
+            <OnStartupTriggeringPolicy/>
+            <TimeBasedTriggeringPolicy/>
+        </Policies>
+        <DefaultRolloverStrategy max="366" fileIndex="min" compressionLevel="9">
+        </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!-- error.log : toutes les traces des traitements en erreur -->
+        <RollingFile name="error-file" fileName="${LOGS_APP_REP}/error.log"
+                    filePattern="${LOGS_APP_REP}/error-%d{yyyy-MM-dd}.log.gz">
+        <PatternLayout pattern="${sys:FILE_LOG_PATTERN}" disableAnsi="true"/>
+        <Policies>
+            <OnStartupTriggeringPolicy/>
+            <TimeBasedTriggeringPolicy/>
+        </Policies>
+        <DefaultRolloverStrategy max="366" fileIndex="min" compressionLevel="9"></DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <!-- Logger applicatif -->
+    <Loggers>
+        <Logger name="org.springframework" level="info"/>
+        <Logger name="com.genio" level="info"/>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="application-file"/>
+            <AppenderRef ref="error-file" level="error"/>
+        </Root>
+    </Loggers>
+</Configuration>
