@@ -1,6 +1,6 @@
 # Liste des évolutions et défauts corrigés
 
-## v1.0.1 - 06/06/2025 - Mise à jour environnement & RGPD
+## v1.0.1 - 08/06/2025 - Mise à jour environnement & RGPD
 
 ### Front-End
 
@@ -8,9 +8,12 @@
 * [RGPD] Ajout de la case à cocher obligatoire RGPD dans le formulaire d’inscription.
 * [Green IT] Intégration de bonnes pratiques d’éco-conception numérique (optimisation des images, chargement paresseux, réduction des requêtes).
 * [Gestion_Erreurs] Messages d’erreur améliorés et gestion esthétique avec croix ✘ pour fermeture manuelle.
-* [Tests locaux] Validation en local avant commit pour garantir que la branche main reste stable.
-* [Changelog] Mise à jour du changelog pour documenter ces évolutions.
 * [UX] Ajustements mineurs pour la cohérence des messages et feedback utilisateurs.
+* [Modale] Harmonisation des boutons :
+  * Centrage vertical parfait du texte (plus de décalage vers le bas) ;
+  * Couleurs unifiées pour `.primary`, `.secondary`, `.danger`, `.close-modal-btn` ;
+  * Suppression du fond gris inattendu à la fermeture ;
+* [Footer] Affichage dynamique de la version depuis `package.json` (automatique) dans le pied de page.
 
 ### Back-End
 
@@ -20,13 +23,17 @@
 
 ### Technique
 
-* [Docker] Préparation pour déploiement avec configuration dynamique (reverse proxy, variables d’environnement).
-* [Compilation] Modification locale et compilation Angular avec prise en compte des variables d’environnement.
+* [Docker] Mise en place complète de la configuration :
+  * Déploiement avec reverse proxy ;
+  * Intégration des variables d’environnement Angular dans le build ;
+  * Volume pour la base de données configuré.
+* [Compilation] Compilation Angular avec prise en compte des variables d’environnement.
 
 ### Tests Unitaires
 
 * [Couverture] Tests sur les nouvelles fonctionnalités d’environnement et RGPD.
 * [Stabilité] Aucune régression détectée lors des tests locaux.
+* [Validation] Tests manuels sur les modales, le footer dynamique, et les interactions utilisateur.
 
 ---
 
