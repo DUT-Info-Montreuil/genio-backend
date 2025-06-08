@@ -75,6 +75,7 @@ class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/genio/api/auth/**").permitAll()
                         .requestMatchers("/api/utilisateurs/me").authenticated()
                         .anyRequest().permitAll()
                 )
