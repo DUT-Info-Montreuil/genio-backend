@@ -1,15 +1,5 @@
 # Déploiement en production
 
-> ⚠️ **Note importante :**
->
-> La configuration Docker est en cours de finalisation.
-> À ce stade, l’application fonctionne parfaitement en local via IntelliJ avec la base MySQL, mais le déploiement via `docker compose` n’est pas encore opérationnel.
->
-> La construction des images et le paramétrage de la communication entre les services (backend, frontend, base de données) nécessitent encore des ajustements.
->
-> Faute de temps, cette étape n’a pas pu être terminée avant la remise.
-> Une démonstration locale de l’application est possible à tout moment.
-
 ## Prérequis
 
 Vous devez préalablement clonner les deux repository avant de lancer le docker compose.
@@ -19,12 +9,12 @@ Vous devez préalablement clonner les deux repository avant de lancer le docker 
 
 ## Organisation des projets
 
-Par exemple pour la version 1.0.0 :
+Par exemple pour la version 1.0.1 :
 
 ```plaintext
-project-root/
+genio-service/
 ├── genio-backend/
-│   │   └── target/GenioService-1.0.0-RELEASE.jar
+│   │   └── target/GenioService-1.0.1-RELEASE.jar
 ├── genio-frontend/
 │   ├── nginx.conf
 │   └── dist/genio-ui/
@@ -39,20 +29,86 @@ project-root/
 ├── backend.dockefile
 ```
 
-> Les fichiers sont présents dans le dossier DOCKER des projets genio-frontend et genio-backend.
+> Les fichiers sont présents dans le dossier DOCKER du projet `genio-backend`.
 
 ## Lancement du docker compose
 
-- [x] Copier à la racine du projet docker, ie. project-root le fichier `docker-compose.yml`
-- [x] Copier à la racine du projet docker, ie. project-root le fichier `frontend.dockerfile`
-- [x] Copier à la racine du projet docker, ie. project-root le fichier `backend.dockerfile`
-- [ ] Modifier si besoin le fichier `docker-compose.yml` pour changer les informations d'authentification pour la base de données.
-- [x] Les repos clonnés doivent avoir comme nom de dossier : `genio-backend` et `genio-frontend`
-- [ ] Mettre à jour le fichier `backend.dockerfile` avec la version du JAR de l'application. Par exemple : `GenioService-1.0.1-RELEASE.jar`
-- [x] Le dossier `config` contient les fichiers initialisation de la base de données et de configuration pour le serveur web et l'application JAVA
-- [x] Le fichier `application-external.properties.template` doit être renommé et mis à jour avec les informations de production
+> ⚠️ **Note à l’attention des développeurs**
+>
+> Les fichiers Docker sont préremplis avec des valeurs par défaut afin de permettre une exécution rapide avec un minimum de modifications.
+> Cependant, **il est essentiel d’adapter ces fichiers en fonction de votre infrastructure**, notamment :
+>
+> - Le fichier `nginx.conf`, qui devra être ajusté selon votre configuration réseau.
+> - Les fichiers `.env` ou `docker-compose.override.yml`, si utilisés.
+>
+> Dans ce projet, nous utilisons un **reverse proxy** tel que **Nginx Proxy Manager** pour exposer l'application frontend.
+>
+> - L’application est accessible via l’URL : `https://genioservice.<domain>/genio/`
+> - Le frontend communique avec le backend via l’URL : `https://genioservice.<domain>/genio/api`
+>
+> Pensez à vérifier et modifier les chemins et ports si nécessaire pour qu’ils correspondent à votre environnement.
 
-Lancer la commande de démmarege et de construiction de l'image dockerfile
+### Procédure de déploiement
+
+#### 1. Copier les fichiers nécessaires à la racine du projet Docker (`project-root`)
+
+- [x] `docker-compose.yml`
+- [x] `frontend.dockerfile`
+- [x] `backend.dockerfile` (dans le dossier `genesio-service`)
+
+#### 2. 🛠️ Modifier le fichier d’environnement du frontend
+
+- [ ] Éditer `environnement.prod.ts` pour définir l'URL de l'API :
+
+  ```ts
+  apiUrl: 'https://genioservice.<votre_domaine>/genio/api'
+  ```
+
+#### 3. Configurer l’accès à la base de données
+
+- Renommer .env.template en .env
+
+- [ ] Modifier .env pour y renseigner :
+  - Le nom de la base de données
+  - Le nom d'utilisateur
+  - Le mot de passe
+
+- [ ]  Vérifier la cohérence des paramètres avec :
+  - Le fichier application-external.properties
+  - Le script SQL d'initialisation (`01-init.sql` et `02-schema.sql`)
+
+#### 4.  Modifier le docker-compose.yml si nécessaire
+
+Adapter les ports ou les identifiants de la base de données selon votre environnement
+
+- [ ] Ports utilisés par défaut :
+  - MySQL : 3307:3306
+  - Backend : 8101:8081
+  - Frontend : 8100:8080
+
+#### 5. Préparer les dossiers requis
+
+- Cloner les dépôts avec les noms exacts :
+  - genio-backend
+  - genio-frontend
+- Copier le dossier config depuis le dossier docker vers genio-service
+- Vérifier et adapter le contenu du dossier config :
+  - Script SQL d’initialisation
+  - Configuration serveur
+- Fichier application-external.properties.template :
+  - Le renommer en application-external.properties
+  - Mettre à jour les informations de production (DB, utilisateur, mot de passe)
+
+#### 6. Configurer Nginx
+
+ Adapter le fichier nginx.conf en fonction de votre infrastructure (domaine, proxy, certificats, etc.)
+
+#### 7. Configurer le build du backend
+
+- [ ] Modifier le fichier backend.dockerfile pour utiliser la bonne version du JAR :
+  - Exemple : GenioService-1.0.1-RELEASE.jar
+
+#### 8.Lancer la construction et le déploiement
 
 ```bash
 docker compose up --build -d
@@ -60,4 +116,4 @@ docker compose up --build -d
 
 ## Ouverture de l'application
 
-Dans un navigateur : <http://localhost:8100/genio/>
+Dans un navigateur : `http://genio.<domain>/genio/`

@@ -1,5 +1,5 @@
 -- Création de la base si besoin
-CREATE DATABASE IF NOT EXISTS genioservice_db;
+CREATE DATABASE IF NOT EXISTS genio_db;
 USE genio_db;
 
 -- Suppression si déjà existante (utile en dev)

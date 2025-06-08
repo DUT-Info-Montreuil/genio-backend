@@ -15,6 +15,18 @@ Ce projet a été développé dans le cadre de la troisième année du Bachelor 
 
 ---
 
+> ⚠️ **Note à l’attention des développeurs**
+>
+> Pour faciliter le déploiement local et le développement, **les mots de passe sont externalisés** :
+>
+> - Pour les applications Java : dans un fichier `application-external.properties` externe.
+> - Pour les environnements Docker : dans les fichiers de configuration (`docker-compose.yml`, fichiers `.env`, `.sql`, etc.).
+> - Des fichiers modèles avec des mots de passe de test sont fournis avec l’extension `.template` (par exemple : `application-external.properties.template`, `.env.template`).
+>
+> Ces fichiers `.template` contiennent des **valeurs de test** à adapter. Ils sont accompagnés de **commentaires `TODO`** pour aider les développeurs à repérer rapidement les paramètres sensibles à modifier.
+>
+> **Important** : tous les mots de passe et identifiants présents dans ces fichiers doivent impérativement être **remplacés avant tout déploiement en production**. Ne laissez jamais de secrets ou d’identifiants en clair dans le code ou les fichiers versionnés.
+
 ## Audit qualité SonarQube
 
 <!-- markdownlint-disable MD033 -->

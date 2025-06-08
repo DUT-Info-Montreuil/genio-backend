@@ -3,11 +3,11 @@
 # =========================
 
 # URL FRONTEND
-# TODO : a modifier
+# TODO: Modifier l'URL du frontend
 frontend.url=https://genioservice.xxxxx.fr
 
 # Base de données MySQL
-# TODO : a modifier
+# TODO: Modifier les informations de connexion
 spring.datasource.url=jdbc:mysql://localhost:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
@@ -19,6 +19,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.defer-datasource-initialization=true
 
 # Port de l'application
+# TODO: Changez le port de communication pour l'application backend
 server.port=8101
 
 # Niveau de logs SQL
@@ -26,7 +27,7 @@ logging.level.org.hibernate.SQL=INFO
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 
 # Configuration mail (SMTP)
-# TODO : a modifier
+# TODO: Mettre à jour les informations de connexion au serveur de messagerie.
 spring.mail.host=${SMTP_HOST}
 spring.mail.port=${SMTP_PORT}
 spring.mail.username=${SMTP_USERNAME}
