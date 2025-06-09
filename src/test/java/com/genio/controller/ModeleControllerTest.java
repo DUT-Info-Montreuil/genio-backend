@@ -342,7 +342,7 @@ class ModeleControllerTest {
         modele.setTitre("exemple");
         modeleRepository.saveAndFlush(modele);
 
-        ResponseEntity<Map<String, Boolean>> response = modeleController.checkModelNameExists("2026");
+        ResponseEntity<Map<String, Boolean>> response = modeleController.checkModelAnneeExists("2026");
 
         assertEquals(200, response.getStatusCodeValue());
         assertTrue(response.getBody().get("exists"));

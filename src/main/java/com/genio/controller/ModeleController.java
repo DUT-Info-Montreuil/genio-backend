@@ -158,11 +158,9 @@ public class ModeleController {
         }
     }
 
-    @GetMapping("/check-nom-exists")
-    public ResponseEntity<Map<String, Boolean>> checkModelNameExists(@RequestParam("annee") String annee) {
-        String nom = "modeleConvention_" + annee + ".docx";
-        boolean exists = modeleRepository.findFirstByNomAndArchivedFalse(nom).isPresent();
-        logger.info("Vérification de l'existence du nom de modèle {} : {}", nom, exists);
+    @GetMapping("/check-annee-exists")
+    public ResponseEntity<Map<String, Boolean>> checkModelAnneeExists(@RequestParam("annee") String annee) {
+        boolean exists = modeleRepository.findFirstByAnneeAndArchivedFalse(annee).isPresent();
         return ResponseEntity.ok(Map.of("exists", exists));
     }
 
